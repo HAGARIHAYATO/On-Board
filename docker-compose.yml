@@ -1,0 +1,40 @@
+version: "3.5"
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    command: ["sh", "build.sh"]
+    tty: true
+    links:
+      - db
+    volumes:
+      - .:/go/src/github.com/hagarihayato/portfolio-field
+    ports:
+      - 8080:8080
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    tty: true
+    volumes:
+      - ./client/:/app/
+      - /app/node_modules
+    command: npm run dev
+    ports:
+      - "3000:3000"
+  db:
+    container_name: db
+    image: postgres:10-alpine
+    volumes:
+      - .:/private/
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=pg
+      - PGPASSWORD=pg
+      - POSTGRES_DB=pg
+      - DATABASE_HOST=db
