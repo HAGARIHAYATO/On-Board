@@ -33,6 +33,12 @@ func FetchWorkByID(DB *gorm.DB, id uint) (*Work, error) {
 	return &work, err
 }
 
+func FetchWorkItemByID(DB *gorm.DB, id uint) (*WorkItem, error) {
+	var item WorkItem
+	err = DB.First(&item, id).Error
+	return &item, err
+}
+
 func FetchWorkItemsByWorkID(DB *gorm.DB, workid uint) ([]*WorkItem, error) {
 	var items []*WorkItem
 	err = DB.Find(&items, "work_id=?", workid).Error

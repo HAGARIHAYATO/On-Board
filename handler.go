@@ -274,6 +274,7 @@ func RequestSession(w http.ResponseWriter, r *http.Request) {
 	w.Write(ParseJSON(rw))
 }
 
+// CreateWorks is
 func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	type Result struct {
 		ID uint
@@ -287,7 +288,7 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Name = r.FormValue("name")
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
-	work.UserID = 1
+	work.UserID = cast.ToUint(r.FormValue("user_id"))
 
 	// imageFile := r.FormValue("file")
 	// fmt.Println(imageFile)
@@ -297,8 +298,6 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
 	// 	return
 	// }
-	// TODO
-	// work.UserID = cast.ToUint(r.FormValue("user_id"))
 	// AWS S3のURLをwork.ImageURLに挿入
 
 	err = DB.Create(&work).Error
@@ -311,5 +310,133 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 }
 
 // Puts
+
+// UpdateUser is function
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		ID uint
+	}
+	userID := chi.URLParam(r, "userID")
+	id := cast.ToUint(userID)
+	user, err := FetchUserByID(DB, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	var res Result
+	////////////
+	if user.ID == cast.ToUint(r.FormValue("user_id")) {
+		if cast.ToBool(r.FormValue("windowOpt")) {
+			user.Name = r.FormValue("name")
+			user.URL = r.FormValue("url")
+			user.Introduction = r.FormValue("introduction")
+			// user.ImageURL
+		} else {
+			user.Email = r.FormValue("email")
+			pass := r.FormValue("password")
+			hashedPassword := user.Password
+			err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(pass))
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			userPass := r.FormValue("new_password")
+			hash, err := bcrypt.GenerateFromPassword([]byte(userPass), 10)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			user.Password = string(hash)
+		}
+	}
+	////////////
+	err = DB.Save(&user).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	res.ID = user.ID
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}
+
+// UpdateWorks is handler
+func UpdateWorks(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		ID uint
+	}
+	var res Result
+	workID := chi.URLParam(r, "workID")
+	id := cast.ToUint(workID)
+	work, err := FetchWorkByID(DB, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	//////
+	work.Name = r.FormValue("name")
+	work.Description = r.FormValue("description")
+	work.URL = r.FormValue("url")
+	// work.ImageURL = r.FormValue("file")
+	//////
+	err = DB.Save(&work).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	res.ID = work.ID
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}
+
+// UpdateWorkItems is handler with PUT
+func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
+	workID := chi.URLParam(r, "workID")
+	type Result struct {
+		ID uint
+	}
+	var res Result
+	////
+	// 配列でitemsを受け取る
+	type Data struct {
+		ID       uint
+		Body     string
+		ImageURL string
+	}
+	type Request struct {
+		DataSets []*Data
+	}
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var req Request
+	json.Unmarshal(body, &req)
+	for _, data := range req.DataSets {
+		if cast.ToUint(data.ID) > 0 {
+			item, err := FetchWorkItemByID(DB, data.ID)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusNotFound)
+			}
+			item.Body = data.Body
+			item.ImageURL = data.ImageURL
+			err = DB.Save(&item).Error
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+		} else {
+			var item WorkItem
+			item.WorkID = cast.ToUint(workID)
+			item.Body = data.Body
+			item.ImageURL = data.ImageURL
+			err = DB.Create(&item).Error
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+		}
+	}
+	////
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}
 
 // Deletes

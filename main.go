@@ -18,14 +18,14 @@ func main() {
 			r.Post("/", CreateWorks)
 			r.Route("/{workID}", func(r chi.Router) {
 				r.Get("/", GetWorkByID)
-				// middleware認証系
+				r.Put("/", UpdateWorks)
 			})
 		})
 		r.Route("/users", func(r chi.Router) {
 			r.Get("/", GetUsers)
 			r.Route("/{userID}", func(r chi.Router) {
 				r.Get("/", GetUserByID)
-				// middleware認証系
+				r.Put("/", UpdateUser)
 			})
 		})
 		r.Post("/login", RequestSession)

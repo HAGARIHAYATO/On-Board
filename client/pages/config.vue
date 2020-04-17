@@ -1,18 +1,11 @@
 <template>
   <div class="config-container">
     <div class="form-wrapper">
-      <form :action="returnEndPoint" method="post" enctype="multipart/form-data">
+      <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">
           <p>
             <label for="name">名前</label>
-            <input
-              type="text"
-              name="name"
-              autocomplete="on"
-              placeholder="名前"
-              :value="user.name"
-              required
-            />
+            <input type="text" name="name" autocomplete="on" v-model="user.name" required />
           </p>
           <p>
             <label for="url">サイトURL</label>
@@ -20,7 +13,7 @@
               type="text"
               name="url"
               autocomplete="on"
-              :value="user.url"
+              v-model="user.url"
               min="1"
               pattern="^[0-9A-Za-z.@/:-]+$"
             />
@@ -45,21 +38,21 @@
           </div>
           <p>
             <label for="text">紹介文</label>
-            <textarea name="introduction" type="text" rows="4" />
+            <textarea name="introduction" type="text" rows="4" v-model="user.introduction" />
           </p>
         </div>
         <div v-else class="secret__form">
           <p>
             <label for="email">メール</label>
-            <input name="email" type="email" autocomplete="on" pattern="^[0-9A-Za-z.@/:-_]+$" />
+            <input name="email" type="email" autocomplete="on" v-model="user.email" />
           </p>
           <p>
             <label for="password">現在のパスワード</label>
-            <input name="password" type="password" autocomplete="on" pattern="^[0-9A-Za-z.@/:-_]+$" />
+            <input name="password" type="password" autocomplete="on" v-model="user.password" />
           </p>
           <p>
             <label for="new-password">新しいパスワード</label>
-            <input name="new-password" type="password" pattern="^[0-9A-Za-z.@/:-_]+$" />
+            <input name="new-password" type="password" v-model="user.newPass" />
           </p>
         </div>
         <div class="form__transform">
@@ -75,7 +68,7 @@
 </template>
 <script>
 export default {
-  // middleware: ["auth"],
+  middleware: ["auth"],
   data() {
     return {
       data: {
@@ -85,23 +78,56 @@ export default {
       returnFile: null,
       generalWindow: false,
       user: {
-        name: "tanaka",
-        url: "hsssss.com",
-        ImageURL: "https://images.app.goo.gl/Td6Ab2G5EFEJLKeh9"
-      }
+        id: "",
+        name: "",
+        url: "",
+        email: "",
+        password: "",
+        newPass: ""
+      },
+      APIURL: "http://localhost:8080/api/v1"
     };
   },
   mounted() {
-    if (this.user.ImageURL) {
-      this.data.image = this.user.ImageURL;
-    }
-  },
-  computed: {
-    returnEndPoint: function() {
-      return this.generalWindow ? "/users/update" : "/users/password/refresh";
+    if (this.$auth.user) {
+      this.data.image = this.$auth.user.ImageURL;
+      this.user.id = this.$auth.user.ID;
+      this.user.url = this.$auth.user.URL;
+      this.user.name = this.$auth.user.Name;
+      this.user.introduction = this.$auth.user.Introduction;
+      this.user.email = this.$auth.user.Email;
     }
   },
   methods: {
+    async submit() {
+      try {
+        const data = new FormData();
+        if (this.generalWindow) {
+          data.append("user_id", this.user.id);
+          data.append("name", this.user.name);
+          data.append("url", this.user.url);
+          data.append("introduction", this.user.introduction);
+          data.append("file", this.data.image);
+          data.append("windowOpt", true);
+        } else {
+          data.append("user_id", this.user.id);
+          data.append("email", this.user.email);
+          data.append("password", this.user.password);
+          data.append("new_password", this.user.newPass);
+          data.append("windowOpt", false);
+        }
+        const headers = { "content-type": "multipart/form-data" };
+        await this.$axios
+          .put(this.APIURL + "/users/" + this.user.id, data, {
+            headers
+          })
+          .then(res => {
+            if (res.data.ID) {
+              this.$router.push("/users/" + res.data.ID);
+            }
+          });
+      } catch (e) {}
+    },
     selectGeneral: function() {
       this.generalWindow = true;
     },

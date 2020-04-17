@@ -16,7 +16,7 @@
             <nuxt-link to="/login">ログイン</nuxt-link>
           </template>
           <template v-else>
-            <nuxt-link :to="'/users/3'">マイページ</nuxt-link>
+            <nuxt-link :to="'/users/'+$auth.user.ID">マイページ</nuxt-link>
             <nuxt-link to="/works/new">新規投稿</nuxt-link>
             <nuxt-link to="/config">設定</nuxt-link>
             <a @click="showConfirm()">ログアウト</a>
@@ -76,7 +76,6 @@ export default {
     doLogout: function() {
       this.$nextTick(async () => {
         await this.showBubble();
-        // TODO ログアウト
         this.$auth.logout();
         this.confirmModal = false;
         this.$router.push("/");

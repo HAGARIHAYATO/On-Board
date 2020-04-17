@@ -54,7 +54,7 @@
 </template>
 <script>
 export default {
-  // middleware: ["auth"],
+  middleware: ["auth"],
   data() {
     return {
       data: {
@@ -71,7 +71,7 @@ export default {
     async submit() {
       try {
         const data = new FormData();
-        // data.append("user_id", this.$auth.user.ID);
+        data.append("user_id", this.$auth.user.ID);
         data.append("name", this.workName);
         data.append("description", this.workDesc);
         data.append("url", this.workURL);

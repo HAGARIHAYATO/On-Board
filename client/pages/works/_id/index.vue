@@ -6,11 +6,7 @@
         <div class="show__url">
           <a :href="work.URL">
             <div class="show__container__image">
-              <img
-                :src="returnURL(work.ImageURL)"
-                :alt="work.Name"
-                class="show__image"
-              />
+              <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
             </div>
             {{ work.URL }}
           </a>
@@ -19,9 +15,11 @@
             <p class="info__name">{{ work.Name }}</p>
             <p class="info__name__sub">作成者名</p>
             <p class="info__name">
-              <nuxt-link :to="'/users/' + work.UserID">{{
+              <nuxt-link :to="'/users/' + work.UserID">
+                {{
                 work.UserName
-              }}</nuxt-link>
+                }}
+              </nuxt-link>
             </p>
           </div>
         </div>
@@ -41,11 +39,7 @@
         <p v-else>▲</p>
       </div>
     </div>
-    <div
-      class="select__item"
-      :class="isOpenModal()"
-      v-if="isArrayExist(work.WorkItems)"
-    >
+    <div class="select__item" :class="isOpenModal()" v-if="isArrayExist(work.WorkItems)">
       <div class="select__item__image" v-if="selectItem">
         <img :src="returnURL(selectItem.ImageURL)" alt="作品画像" />
       </div>
@@ -54,10 +48,8 @@
       </div>
     </div>
     <p class="operation" v-if="isMine">
-      <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link> |
-      <nuxt-link :to="'/works/' + work.ID + '/edit_item'"
-        >アイテム編集</nuxt-link
-      >
+      <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link>|
+      <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
     </p>
   </div>
 </template>
@@ -69,7 +61,8 @@ export default {
   },
   computed: {
     isMine: function() {
-      if (this.work.UserID) {
+      if (!this.$auth.user || !this.work.UserID) return;
+      if (this.work.UserID === this.$auth.user.ID) {
         return true;
       }
       return false;

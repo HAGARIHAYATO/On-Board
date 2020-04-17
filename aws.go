@@ -1,44 +1,37 @@
 package main
 
-import (
-	"fmt"
-	"log"
-	"os"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/joho/godotenv"
-)
+// import (
+// 	"github.com/aws/aws-sdk-go/aws/session"
+// 	"github.com/aws/aws-sdk-go/service/s3"
+// )
 
 // Sess is variable
-var Sess *session.Session
+// var Sess *session.Session
 
 // SVC is variable
-var SVC *s3.S3
+// var SVC *s3.S3
 
 // Bucket is variable
-var bucket string = "on-board-project"
+// var bucket string = "on-board-project"
 
-func init() {
-	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
-	if err != nil {
-		log.Fatal(err)
-	}
-	awsID := os.Getenv("AWSID")
-	awsKey := os.Getenv("AWSKEY")
-	creds := credentials.NewStaticCredentials(awsID, awsKey, "")
-	Sess, err = session.NewSession(&aws.Config{
-		Credentials: creds,
-		Region:      aws.String("ap-northeast-1"),
-	})
-	if err != nil {
-		panic(err)
-	}
-	SVC = s3.New(Sess)
-	fmt.Println("----------access---successfully------")
-}
+// func init() {
+// 	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	awsID := os.Getenv("AWSID")
+// 	awsKey := os.Getenv("AWSKEY")
+// 	creds := credentials.NewStaticCredentials(awsID, awsKey, "")
+// 	Sess, err = session.NewSession(&aws.Config{
+// 		Credentials: creds,
+// 		Region:      aws.String("ap-northeast-1"),
+// 	})
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	SVC = s3.New(Sess)
+// 	fmt.Println("----------access---successfully------")
+// }
 
 // UploadFileToBucket is repository of aws funcitons
 // func UploadFileToBucket(filename string) (*s3manager.UploadOutput, error) {

@@ -70,41 +70,47 @@
           <textarea v-model="data6.body"></textarea>
         </div>
       </div>
-      <input type="submit" @submit="submit" value="保存" />
+      <input type="submit" value="保存" />
     </form>
     <p class="operation">
-      <nuxt-link :to="'/works/' + work.ID">戻る</nuxt-link> |
+      <nuxt-link :to="'/works/' + work.ID">戻る</nuxt-link>|
       <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link>
     </p>
   </div>
 </template>
 <script>
 export default {
-  // middleware: ["auth"],
+  middleware: ["auth"],
   data() {
     return {
       work: {},
       data1: {
+        id: "",
         image: "",
         body: ""
       },
       data2: {
+        id: "",
         image: "",
         body: ""
       },
       data3: {
+        id: "",
         image: "",
         body: ""
       },
       data4: {
+        id: "",
         image: "",
         body: ""
       },
       data5: {
+        id: "",
         image: "",
         body: ""
       },
       data6: {
+        id: "",
         image: "",
         body: ""
       },
@@ -143,25 +149,28 @@ export default {
     },
     async submit() {
       try {
-        const data = new FormData();
-        data.append("file1", this.data1.image);
-        data.append("body1", this.data1.body);
-        data.append("file2", this.data2.image);
-        data.append("body2", this.data2.body);
-        data.append("file3", this.data3.image);
-        data.append("body3", this.data3.body);
-        data.append("file4", this.data4.image);
-        data.append("body4", this.data4.body);
-        data.append("file5", this.data5.image);
-        data.append("body5", this.data5.body);
-        data.append("file6", this.data6.image);
-        data.append("body6", this.data6.body);
-        const headers = { "content-type": "multipart/form-data" };
+        const data = [];
+        data.push(this.data1);
+        data.push(this.data2);
+        data.push(this.data3);
+        data.push(this.data4);
+        data.push(this.data5);
+        data.push(this.data6);
+        console.log(data);
+        const headers = { "content-type": "application/json" };
         await this.$axios
-          .post(this.APIURL + "/works/" + this.work.ID, data, {
-            headers
-          })
-          .then(res => console.log(res));
+          .put(
+            this.APIURL + "/works/" + this.work.ID,
+            {
+              data: data
+            },
+            {
+              headers
+            }
+          )
+          .then(res => {
+            this.$router.push("/works/" + res.data.ID);
+          });
       } catch (error) {
         // handling
       }
@@ -171,6 +180,7 @@ export default {
       if (item[i]) {
         data.image = item[i].ImageURL;
         data.body = item[i].Body;
+        data.id = item[i].ID;
       }
     }
   }

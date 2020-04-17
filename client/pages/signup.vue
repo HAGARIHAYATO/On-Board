@@ -1,27 +1,16 @@
 <template>
   <div class="signup-container">
+    <Loading v-if="isLoading" />
     <div class="signup-form-wrapper">
       <form @submit.prevent="submit">
         <div class="signup__form">
           <p>
             <label for="name">名前</label>
-            <input
-              type="text"
-              name="name"
-              v-model="name"
-              autocomplete="on"
-              required
-            />
+            <input type="text" name="name" v-model="name" autocomplete="on" required />
           </p>
           <p>
             <label for="email">メール</label>
-            <input
-              v-model="email"
-              name="email"
-              type="email"
-              autocomplete="on"
-              required
-            />
+            <input v-model="email" name="email" type="email" autocomplete="on" required />
           </p>
           <p>
             <label for="password">パスワード</label>
@@ -47,21 +36,21 @@
           </p>
         </div>
         <p>
-          <input
-            class="signup__form__btn"
-            type="submit"
-            value="無料登録"
-            :disabled="returnCheck"
-          />
+          <input class="signup__form__btn" type="submit" value="無料登録" :disabled="returnCheck" />
         </p>
       </form>
     </div>
   </div>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
 export default {
+  components: {
+    Loading
+  },
   data() {
     return {
+      isLoading: false,
       name: "",
       email: "",
       password: "",
@@ -76,23 +65,29 @@ export default {
     }
   },
   methods: {
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
     async submit() {
       try {
         const data = new FormData();
-        // data.append("user_id", this.$auth.user.ID);
         data.append("name", this.name);
         data.append("email", this.email);
         data.append("password", this.password);
         const headers = { "content-type": "application/x-www-form-urlencoded" };
-        await this.$axios
-          .post(this.APIURL + "/signup", data, {
-            headers
-          })
-          .then(res => {
-            if (res.data.ID) {
-              this.$router.push("/users/" + res.data.ID);
-            }
-          });
+        this.$nextTick(async () => {
+          await this.showBubble();
+          await this.$axios
+            .post(this.APIURL + "/signup", data, {
+              headers
+            })
+            .then(res => {
+              if (res.data.ID) {
+                this.$router.push("/users/" + res.data.ID);
+              }
+            });
+          await setTimeout(() => this.showBubble(), 1000);
+        });
       } catch (error) {
         // handling show message
       }

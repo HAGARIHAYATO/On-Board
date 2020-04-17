@@ -23,19 +23,9 @@
           </div>
           <div class="edit__url__info">
             <p class="info__name__sub">作品名</p>
-            <input
-              name="work_name"
-              type="text"
-              class="info__name"
-              v-model="workName"
-            />
+            <input name="work_name" type="text" class="info__name" v-model="workName" />
             <p class="info__name__sub">作品URL</p>
-            <input
-              name="work_url"
-              type="url"
-              class="info__name"
-              v-model="workURL"
-            />
+            <input name="work_url" type="url" class="info__name" v-model="workURL" />
           </div>
         </div>
       </div>
@@ -44,23 +34,21 @@
         name="work_description"
         cols="30"
         rows="10"
-        v-model="work.Description"
+        v-model="workDesc"
       ></textarea>
     </div>
     <div class="edit__btn">
-      <input type="submit" @click="submit" value="保存" />
+      <input type="submit" value="保存" />
     </div>
     <p class="operation">
-      <nuxt-link :to="'/works/' + work.ID">戻る</nuxt-link> |
-      <nuxt-link :to="'/works/' + work.ID + '/edit_item'"
-        >アイテム編集</nuxt-link
-      >
+      <nuxt-link :to="'/works/' + work.ID">戻る</nuxt-link>|
+      <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
     </p>
   </form>
 </template>
 <script>
 export default {
-  // middleware: ["auth"],
+  middleware: ["auth"],
   data() {
     return {
       data: {
@@ -103,10 +91,14 @@ export default {
         data.append("file", this.data.image);
         const headers = { "content-type": "multipart/form-data" };
         await this.$axios
-          .post(this.APIURL + "/works/" + this.work.ID, data, {
+          .put(this.APIURL + "/works/" + this.work.ID, data, {
             headers
           })
-          .then(res => console.log(res));
+          .then(res => {
+            if (res.data) {
+              this.$router.push("/works/" + res.data.ID);
+            }
+          });
       } catch (error) {
         // handling
       }
