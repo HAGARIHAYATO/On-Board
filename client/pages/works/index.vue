@@ -36,10 +36,11 @@ export default {
       maxCardCount: 8,
       isSearch: false,
       isLoading: false,
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: ""
     };
   },
   mounted() {
+    this.APIURL = this.GetURL();
     try {
       this.$nextTick(async () => {
         await this.showBubble();

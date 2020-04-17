@@ -32,10 +32,11 @@ export default {
     Loading
   },
   async mounted() {
+    this.APIURL = this.GetURL();
     this.$nextTick(async () => {
       await this.showBubble();
       await this.$axios
-        .get(`http://localhost:8080/api/v1${this.$route.path}`)
+        .get(this.APIURL + this.$route.path)
         .then(response => {
           this.user = response.data;
           this.works = response.data.Works;
@@ -111,7 +112,8 @@ export default {
       maxCardCount: 8,
       user: {},
       works: [],
-      isLoading: false
+      isLoading: false,
+      APIURL: ""
     };
   }
 };

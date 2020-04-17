@@ -62,10 +62,11 @@ export default {
       selectId: "",
       selectItem: {},
       work: {},
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: ""
     };
   },
   async mounted() {
+    this.APIURL = this.GetURL();
     const url = this.$route.path.slice(0, -5);
     await this.$axios
       .get(this.APIURL + url)

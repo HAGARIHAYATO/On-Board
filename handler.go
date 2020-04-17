@@ -396,45 +396,34 @@ func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
 		ID uint
 	}
 	var res Result
-	////
-	// 配列でitemsを受け取る
-	type Data struct {
-		ID       uint
-		Body     string
-		ImageURL string
-	}
-	type Request struct {
-		DataSets []*Data
-	}
 	len := r.ContentLength
 	body := make([]byte, len)
 	r.Body.Read(body)
-	var req Request
-	json.Unmarshal(body, &req)
-	for _, data := range req.DataSets {
-		if cast.ToUint(data.ID) > 0 {
-			item, err := FetchWorkItemByID(DB, data.ID)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusNotFound)
-			}
-			item.Body = data.Body
-			item.ImageURL = data.ImageURL
-			err = DB.Save(&item).Error
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-		} else {
-			var item WorkItem
-			item.WorkID = cast.ToUint(workID)
-			item.Body = data.Body
-			item.ImageURL = data.ImageURL
-			err = DB.Create(&item).Error
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-			}
-		}
-	}
+	// for _, data := range req.DataSets {
+	// 	if cast.ToUint(data.ID) > 0 {
+	// 		item, err := FetchWorkItemByID(DB, data.ID)
+	// 		if err != nil {
+	// 			http.Error(w, err.Error(), http.StatusNotFound)
+	// 		}
+	// 		item.Body = data.Body
+	// 		item.ImageURL = data.ImageURL
+	// 		err = DB.Save(&item).Error
+	// 		if err != nil {
+	// 			http.Error(w, err.Error(), http.StatusBadRequest)
+	// 		}
+	// 	} else {
+	// 		var item WorkItem
+	// 		item.WorkID = cast.ToUint(workID)
+	// 		item.Body = data.Body
+	// 		item.ImageURL = data.ImageURL
+	// 		err = DB.Create(&item).Error
+	// 		if err != nil {
+	// 			http.Error(w, err.Error(), http.StatusBadRequest)
+	// 		}
+	// 	}
+	// }
 	////
+	res.ID = cast.ToUint(workID)
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))
 }

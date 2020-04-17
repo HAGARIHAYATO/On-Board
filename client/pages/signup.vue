@@ -55,7 +55,7 @@ export default {
       email: "",
       password: "",
       passwordConfirm: "",
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: ""
     };
   },
   computed: {
@@ -63,6 +63,9 @@ export default {
       if (this.password != this.passwordConfirm) return true;
       return false;
     }
+  },
+  mounted() {
+    this.APIURL = this.GetURL();
   },
   methods: {
     showBubble: function() {

@@ -85,39 +85,40 @@ export default {
     return {
       work: {},
       data1: {
-        id: "",
+        id: null,
         image: "",
         body: ""
       },
       data2: {
-        id: "",
+        id: null,
         image: "",
         body: ""
       },
       data3: {
-        id: "",
+        id: null,
         image: "",
         body: ""
       },
       data4: {
-        id: "",
+        id: null,
         image: "",
         body: ""
       },
       data5: {
-        id: "",
+        id: null,
         image: "",
         body: ""
       },
       data6: {
-        id: "",
+        id: null,
         image: "",
         body: ""
       },
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: ""
     };
   },
   async mounted() {
+    this.APIURL = this.GetURL();
     const url = this.$route.path.slice(0, -10);
     await this.$axios
       .get(this.APIURL + url)
@@ -149,18 +150,11 @@ export default {
     },
     async submit() {
       try {
-        const data = [];
-        data.push(this.data1);
-        data.push(this.data2);
-        data.push(this.data3);
-        data.push(this.data4);
-        data.push(this.data5);
-        data.push(this.data6);
-        console.log(data);
+        // TODO
         const headers = { "content-type": "application/json" };
         await this.$axios
           .put(
-            this.APIURL + "/works/" + this.work.ID,
+            this.APIURL + "/works/" + this.work.ID + "/edit_item",
             {
               data: data
             },

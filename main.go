@@ -19,6 +19,7 @@ func main() {
 			r.Route("/{workID}", func(r chi.Router) {
 				r.Get("/", GetWorkByID)
 				r.Put("/", UpdateWorks)
+				r.Put("/edit_item", UpdateWorkItems)
 			})
 		})
 		r.Route("/users", func(r chi.Router) {

@@ -23,19 +23,9 @@
           </div>
           <div class="new__url__info">
             <p class="info__name__sub">作品名</p>
-            <input
-              name="work_name"
-              type="text"
-              class="info__name"
-              v-model="workName"
-            />
+            <input name="work_name" type="text" class="info__name" v-model="workName" />
             <p class="info__name__sub">作品URL</p>
-            <input
-              name="work_url"
-              type="url"
-              class="info__name"
-              v-model="workURL"
-            />
+            <input name="work_url" type="url" class="info__name" v-model="workURL" />
           </div>
         </div>
       </div>
@@ -48,7 +38,7 @@
       ></textarea>
     </div>
     <div class="new__btn">
-      <input type="submit" value="保存">
+      <input type="submit" value="保存" />
     </div>
   </form>
 </template>
@@ -64,8 +54,11 @@ export default {
       workName: "",
       workURL: "",
       workDesc: "",
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: ""
     };
+  },
+  mounted() {
+    this.APIURL = this.GetURL();
   },
   methods: {
     async submit() {

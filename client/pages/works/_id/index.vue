@@ -105,9 +105,10 @@ export default {
   },
   async mounted() {
     this.$nextTick(async () => {
+      this.APIURL = this.GetURL();
       await this.showBubble();
       await this.$axios
-        .get(`http://localhost:8080/api/v1${this.$route.path}`)
+        .get(this.APIURL + this.$route.path)
         .then(response => {
           this.work = response.data;
         })
@@ -121,7 +122,8 @@ export default {
       selectId: "",
       selectItem: {},
       work: {},
-      isLoading: false
+      isLoading: false,
+      APIURL: ""
     };
   }
 };

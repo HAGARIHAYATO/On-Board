@@ -85,10 +85,11 @@ export default {
         password: "",
         newPass: ""
       },
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: ""
     };
   },
   mounted() {
+    this.APIURL = this.GetURL();
     if (this.$auth.user) {
       this.data.image = this.$auth.user.ImageURL;
       this.user.id = this.$auth.user.ID;
