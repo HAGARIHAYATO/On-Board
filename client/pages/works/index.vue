@@ -66,6 +66,7 @@ export default {
     },
     init: function() {
       this.worksList = [];
+      if (!this.works) return;
       if (this.works.length > 0) {
         for (let i = 0; i < this.maxCardCount; i++) {
           if (this.works[i]) {

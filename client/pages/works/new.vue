@@ -38,7 +38,7 @@
       ></textarea>
     </div>
     <div class="new__btn">
-      <input type="submit" value="保存" />
+      <input type="submit" value="保存" @submit="submit" />
     </div>
   </form>
 </template>
@@ -68,7 +68,7 @@ export default {
         data.append("name", this.workName);
         data.append("description", this.workDesc);
         data.append("url", this.workURL);
-        data.append("file", this.data.image);
+        data.append("file", this.data.name);
         const headers = { "content-type": "multipart/form-data" };
         await this.$axios
           .post(this.APIURL + "/works", data, {
@@ -91,8 +91,7 @@ export default {
       const fileImg = files.files[0];
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
-        this.data.name = fileImg.name;
-        this.data.type = fileImg.type;
+        this.data.name = e.target.files[0];
       }
     },
     resetImage(e) {

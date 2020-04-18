@@ -4,13 +4,13 @@ services:
     container_name: backend
     build:
       context: .
-      dockerfile: ./docker/backend/Dockerfile
+      dockerfile: ./backend/Dockerfile
     command: ["sh", "build.sh"]
     tty: true
     links:
       - db
     volumes:
-      - .:/go/src/github.com/hagarihayato/portfolio-field
+      - ./backend/:/backend/
     ports:
       - 8080:8080
   frontend:
@@ -29,7 +29,7 @@ services:
     container_name: db
     image: postgres:10-alpine
     volumes:
-      - .:/private/
+      - ./db/:/private/
     ports:
       - "5432:5432"
     environment:

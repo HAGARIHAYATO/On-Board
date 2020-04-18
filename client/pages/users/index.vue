@@ -74,6 +74,7 @@ export default {
     },
     init: function() {
       this.usersList = [];
+      if (!this.users) return
       if (this.users.length > 0) {
         for (let i = 0; i < this.maxDataCount; i++) {
           if (this.users[i]) {
