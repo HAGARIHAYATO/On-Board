@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="submit" class="new__wrapper">
+    <Loading v-if="isLoading" />
     <div class="new__user__bar">
       <div class="new__user__bar__top">
         <div class="new__url">
@@ -38,12 +39,16 @@
       ></textarea>
     </div>
     <div class="new__btn">
-      <input type="submit" value="保存" @submit="submit" />
+      <input type="submit" value="保存" />
     </div>
   </form>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
 export default {
+  components: {
+    Loading
+  },
   middleware: ["auth"],
   data() {
     return {
@@ -54,34 +59,42 @@ export default {
       workName: "",
       workURL: "",
       workDesc: "",
-      APIURL: ""
+      APIURL: "",
+      isLoading: false
     };
   },
   mounted() {
     this.APIURL = this.GetURL();
   },
   methods: {
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
     async submit() {
-      try {
-        const data = new FormData();
-        data.append("user_id", this.$auth.user.ID);
-        data.append("name", this.workName);
-        data.append("description", this.workDesc);
-        data.append("url", this.workURL);
-        data.append("file", this.data.name);
-        const headers = { "content-type": "multipart/form-data" };
-        await this.$axios
-          .post(this.APIURL + "/works", data, {
-            headers
-          })
-          .then(res => {
-            if (res.data.ID) {
-              this.$router.push("/works/" + res.data.ID);
-            }
-          });
-      } catch (error) {
-        // handling show message
-      }
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          data.append("user_id", this.$auth.user.ID);
+          data.append("name", this.workName);
+          data.append("description", this.workDesc);
+          data.append("url", this.workURL);
+          data.append("file", this.data.name);
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .post(this.APIURL + "/works", data, {
+              headers
+            })
+            .then(res => {
+              if (res.data.ID) {
+                this.$router.push("/works/" + res.data.ID);
+              }
+            });
+        } catch (error) {
+          // handling show message
+        }
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     returnURL: function(url) {
       return url ? url : "/NO_IMAGE.jpeg";
@@ -89,6 +102,10 @@ export default {
     setImage(e) {
       const files = this.$refs.file;
       const fileImg = files.files[0];
+      if (fileImg.size > 3000000) {
+        alert(this.AlertMessage());
+        return;
+      }
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
         this.data.name = e.target.files[0];

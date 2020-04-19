@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="submit" class="edit__wrapper">
+    <Loading v-if="isLoading" />
     <div class="edit__user__bar">
       <div class="edit__user__bar__top">
         <div class="edit__url">
@@ -12,7 +13,7 @@
                 id="edit__image"
                 type="file"
                 ref="file"
-                accept="image/png, image/jpeg"
+                accept="image/png, image/jpg, image/jpeg"
                 @change="setImage"
               />
             </label>
@@ -47,7 +48,11 @@
   </form>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
 export default {
+  components: {
+    Loading
+  },
   middleware: ["auth"],
   data() {
     return {
@@ -62,47 +67,59 @@ export default {
       selectId: "",
       selectItem: {},
       work: {},
-      APIURL: ""
+      APIURL: "",
+      isLoading: false
     };
   },
   async mounted() {
-    this.APIURL = this.GetURL();
-    const url = this.$route.path.slice(0, -5);
-    await this.$axios
-      .get(this.APIURL + url)
-      .then(response => {
-        this.work = response.data;
-        this.workName = response.data.Name;
-        this.workURL = response.data.URL;
-        this.workDesc = response.data.Description;
-        if (response.data.ImageURL) {
-          this.data.image = response.data.ImageURL;
-          this.data.name = response.data.Name;
-        }
-      })
-      .catch(response => console.error(response));
+    this.$nextTick(async () => {
+      await this.showBubble();
+      this.APIURL = this.GetURL();
+      const url = this.$route.path.slice(0, -5);
+      await this.$axios
+        .get(this.APIURL + url)
+        .then(response => {
+          this.work = response.data;
+          this.workName = response.data.Name;
+          this.workURL = response.data.URL;
+          this.workDesc = response.data.Description;
+          if (response.data.ImageURL) {
+            this.data.image = response.data.ImageURL;
+            this.data.name = response.data.Name;
+          }
+        })
+        .catch(response => console.error(response));
+      await setTimeout(() => this.showBubble(), 1000);
+    });
   },
   methods: {
-    async submit() {
-      try {
-        const data = new FormData();
-        data.append("name", this.workName);
-        data.append("description", this.workDesc);
-        data.append("url", this.workURL);
-        data.append("file", this.data.image);
-        const headers = { "content-type": "multipart/form-data" };
-        await this.$axios
-          .put(this.APIURL + "/works/" + this.work.ID, data, {
-            headers
-          })
-          .then(res => {
-            if (res.data) {
-              this.$router.push("/works/" + res.data.ID);
-            }
-          });
-      } catch (error) {
-        // handling
-      }
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
+    submit: async function() {
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          data.append("name", this.workName);
+          data.append("description", this.workDesc);
+          data.append("url", this.workURL);
+          data.append("file", this.data.name);
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .put(this.APIURL + "/works/" + this.work.ID, data, {
+              headers
+            })
+            .then(res => {
+              if (res.data) {
+                this.$router.push("/works/" + res.data.ID);
+              }
+            });
+        } catch (error) {
+          // handling
+        }
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     returnURL: function(url) {
       return url ? url : "/NO_IMAGE.jpeg";
@@ -110,10 +127,13 @@ export default {
     setImage(e) {
       const files = this.$refs.file;
       const fileImg = files.files[0];
+      if (fileImg.size > 3000000) {
+        alert(this.AlertMessage());
+        return;
+      }
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
-        this.data.name = fileImg.name;
-        this.data.type = fileImg.type;
+        this.data.name = e.target.files[0];
       }
     },
     resetImage(e) {

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -290,21 +289,23 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
 	work.UserID = cast.ToUint(r.FormValue("user_id"))
-
-	file, _, err := r.FormFile("file")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	file, fileHeader, _ := r.FormFile("file")
+	if file != nil {
+		filename, err := CreateFile(file, fileHeader.Filename)
+		result, err := UploadFileToBucket(filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		work.ImageURL = string(result.Location)
+		err = RemoveFile(filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 	}
-	result, err := UploadFileToBucket(file)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	fmt.Println(result)
-	// // AWS S3のURLをwork.ImageURLに挿入
-	// work.ImageURL = string(result)
 
+	///////////////////////////////////////////////
 	err = DB.Create(&work).Error
 	if err != nil {
 		log.Fatal(err)
@@ -335,7 +336,21 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.Name = r.FormValue("name")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
-			// user.ImageURL
+			file, fileHeader, _ := r.FormFile("file")
+			if file != nil {
+				filename, err := CreateFile(file, fileHeader.Filename)
+				result, err := UploadFileToBucket(filename)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				user.ImageURL = string(result.Location)
+				err = RemoveFile(filename)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				}
+			}
 		} else {
 			user.Email = r.FormValue("email")
 			pass := r.FormValue("password")
@@ -382,7 +397,26 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Name = r.FormValue("name")
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
-	// work.ImageURL = r.FormValue("file")
+	// 前使っていた画像は削除する
+	// if work.ImageURL != "" {
+	// 	err = DeleteFileByBucket(work.ImageURL)
+	// }
+	work.ImageURL = ""
+	file, fileHeader, _ := r.FormFile("file")
+	if file != nil {
+		filename, err := CreateFile(file, fileHeader.Filename)
+		result, err := UploadFileToBucket(filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		work.ImageURL = string(result.Location)
+		err = RemoveFile(filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
 	//////
 	err = DB.Save(&work).Error
 	if err != nil {
@@ -401,9 +435,7 @@ func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
 		ID uint
 	}
 	var res Result
-	len := r.ContentLength
-	body := make([]byte, len)
-	r.Body.Read(body)
+	
 	// for _, data := range req.DataSets {
 	// 	if cast.ToUint(data.ID) > 0 {
 	// 		item, err := FetchWorkItemByID(DB, data.ID)
@@ -434,3 +466,31 @@ func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
 }
 
 // Deletes
+
+func DeleteWorks(w http.ResponseWriter, r *http.Request) {
+	workID := chi.URLParam(r, "workID")
+	type Result struct {
+		ID     uint
+		Status int
+	}
+	work, err := FetchWorkByID(DB, cast.ToUint(workID))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	err = DB.Delete(&work).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	err = DB.Where("work_id=?", cast.ToUint(workID)).Delete(WorkItem{}).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	var res Result
+	res.Status = http.StatusOK
+	res.ID = cast.ToUint(workID)
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}

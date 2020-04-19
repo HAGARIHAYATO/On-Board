@@ -1,11 +1,17 @@
 <template>
   <div class="item__wrapper">
+    <Loading v-if="isLoading" />
     <h1 class="work__name">{{ work.Name }}</h1>
     <form class="form" @submit.prevent="submit">
       <div class="item__container">
         <div class="item">
           <label for="image1">
-            <input id="image1" type="file" @change="setImage($event, data1)" />
+            <input
+              id="image1"
+              accept="image/png, image/jpg, image/jpeg"
+              type="file"
+              @change="setImage($event, data1)"
+            />
             <p>クリックor画像をドロップ</p>
           </label>
           <div class="set__file" v-if="data1.image">
@@ -16,7 +22,12 @@
         </div>
         <div class="item">
           <label for="image2">
-            <input id="image2" type="file" @change="setImage($event, data2)" />
+            <input
+              id="image2"
+              type="file"
+              accept="image/png, image/jpg, image/jpeg"
+              @change="setImage($event, data2)"
+            />
             <p>クリックor画像をドロップ</p>
           </label>
           <div class="set__file" v-if="data2.image">
@@ -27,7 +38,12 @@
         </div>
         <div class="item">
           <label for="image3">
-            <input id="image3" type="file" @change="setImage($event, data3)" />
+            <input
+              id="image3"
+              type="file"
+              accept="image/png, image/jpg, image/jpeg"
+              @change="setImage($event, data3)"
+            />
             <p>クリックor画像をドロップ</p>
           </label>
           <div class="set__file" v-if="data3.image">
@@ -38,7 +54,12 @@
         </div>
         <div class="item">
           <label for="image4">
-            <input id="image4" type="file" @change="setImage($event, data4)" />
+            <input
+              id="image4"
+              type="file"
+              accept="image/png, image/jpg, image/jpeg"
+              @change="setImage($event, data4)"
+            />
             <p>クリックor画像をドロップ</p>
           </label>
           <div class="set__file" v-if="data4.image">
@@ -49,7 +70,12 @@
         </div>
         <div class="item">
           <label for="image5">
-            <input id="image5" type="file" @change="setImage($event, data5)" />
+            <input
+              id="image5"
+              type="file"
+              accept="image/png, image/jpg, image/jpeg"
+              @change="setImage($event, data5)"
+            />
             <p>クリックor画像をドロップ</p>
           </label>
           <div class="set__file" v-if="data5.image">
@@ -60,7 +86,12 @@
         </div>
         <div class="item">
           <label for="image6">
-            <input id="image6" type="file" @change="setImage($event, data6)" />
+            <input
+              id="image6"
+              type="file"
+              accept="image/png, image/jpg, image/jpeg"
+              @change="setImage($event, data6)"
+            />
             <p>クリックor画像をドロップ</p>
           </label>
           <div class="set__file" v-if="data6.image">
@@ -79,7 +110,11 @@
   </div>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
 export default {
+  components: {
+    Loading
+  },
   middleware: ["auth"],
   data() {
     return {
@@ -87,58 +122,77 @@ export default {
       data1: {
         id: null,
         image: "",
+        name: "",
         body: ""
       },
       data2: {
         id: null,
         image: "",
+        name: "",
         body: ""
       },
       data3: {
         id: null,
         image: "",
+        name: "",
         body: ""
       },
       data4: {
         id: null,
         image: "",
+        name: "",
         body: ""
       },
       data5: {
         id: null,
         image: "",
+        name: "",
         body: ""
       },
       data6: {
         id: null,
         image: "",
+        name: "",
         body: ""
       },
-      APIURL: ""
+      APIURL: "",
+      isLoading: false
     };
   },
   async mounted() {
-    this.APIURL = this.GetURL();
-    const url = this.$route.path.slice(0, -10);
-    await this.$axios
-      .get(this.APIURL + url)
-      .then(response => {
-        this.work = response.data;
-        this.insertData(this.data1, 0);
-        this.insertData(this.data2, 1);
-        this.insertData(this.data3, 2);
-        this.insertData(this.data4, 3);
-        this.insertData(this.data5, 4);
-        this.insertData(this.data6, 5);
-      })
-      .catch(response => console.error(response));
+    this.$nextTick(async () => {
+      await this.showBubble();
+      this.APIURL = this.GetURL();
+      const url = this.$route.path.slice(0, -10);
+      await this.$axios
+        .get(this.APIURL + url)
+        .then(response => {
+          this.work = response.data;
+          this.insertData(this.data1, 0);
+          this.insertData(this.data2, 1);
+          this.insertData(this.data3, 2);
+          this.insertData(this.data4, 3);
+          this.insertData(this.data5, 4);
+          this.insertData(this.data6, 5);
+        })
+        .catch(response => console.error(response));
+      await setTimeout(() => this.showBubble(), 1000);
+    });
   },
   methods: {
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
     setImage: function(e, data) {
       if (data) {
         const fileImg = e.target.files[0];
+        if (fileImg.size > 3000000) {
+          alert(this.AlertMessage());
+          return;
+        }
         if (fileImg.type.startsWith("image/")) {
           data.image = window.URL.createObjectURL(fileImg);
+          data.name = e.target.files[0];
         }
       }
     },
@@ -146,28 +200,46 @@ export default {
       if (data) {
         e.path[2].childNodes[0].children[0].value = "";
         data.image = "";
+        data.name = "";
       }
     },
+    async pushData(data) {
+      const json = JSON.stringify(
+        {
+          id: data.id,
+          image: data.name,
+          body: data.body
+        },
+        undefined,
+        1
+      );
+      return json;
+    },
     async submit() {
-      try {
-        // TODO
-        const headers = { "content-type": "application/json" };
-        await this.$axios
-          .put(
-            this.APIURL + "/works/" + this.work.ID + "/edit_item",
-            {
-              data: data
-            },
-            {
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          data.append("data1", this.pushData(this.data1));
+          data.append("data2", this.pushData(this.data2));
+          data.append("data3", this.pushData(this.data3));
+          data.append("data4", this.pushData(this.data4));
+          data.append("data5", this.pushData(this.data5));
+          data.append("data6", this.pushData(this.data6));
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .put(this.APIURL + "/works/" + this.work.ID + "/edit_item", data, {
               headers
-            }
-          )
-          .then(res => {
-            this.$router.push("/works/" + res.data.ID);
-          });
-      } catch (error) {
-        // handling
-      }
+            })
+            .then(res => {
+              this.$router.push("/works/" + res.data.ID);
+            })
+            .catch(res => console.error(res));
+        } catch (error) {
+          // handling
+        }
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     insertData: function(data, i) {
       const item = this.work.WorkItems;

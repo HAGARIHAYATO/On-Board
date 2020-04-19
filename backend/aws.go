@@ -35,7 +35,7 @@ func init() {
 		Region:      aws.String("ap-northeast-1"),
 	})
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	SVC = s3.New(Sess)
 	fmt.Println("----------access---successfully------")
@@ -52,15 +52,15 @@ func UploadFileToBucket(filename string) (*s3manager.UploadOutput, error) {
 	uploader := s3manager.NewUploader(Sess)
 	res, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(file),
+		Key:    aws.String(filename),
 		Body:   file,
 	})
 	return res, err
 }
 
 // DeleteFileByBucket is repository of aws functions
-func DeleteFileByBucket(filename string) {
-
+func DeleteFileByBucket(filename string) error {
+	// TODO
 	obj := filename
 
 	_, err = SVC.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(obj)})
@@ -69,4 +69,5 @@ func DeleteFileByBucket(filename string) {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(obj),
 	})
+	return err
 }

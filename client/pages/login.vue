@@ -32,11 +32,9 @@ export default {
   methods: {
     async submit() {
       try {
-        await this.$auth
-          .loginWith("local", {
-            data: this.form
-          })
-          .then(res => console.log(res));
+        await this.$auth.loginWith("local", {
+          data: this.form
+        });
       } catch (e) {
         //
       }

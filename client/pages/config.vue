@@ -54,6 +54,7 @@
             <label for="new-password">新しいパスワード</label>
             <input name="new-password" type="password" v-model="user.newPass" />
           </p>
+          <p class="deleteModalBtn" @click="openDeleteModal">アカウントを削除</p>
         </div>
         <div class="form__transform">
           <p class="form__transform__btn1" @click="selectGeneral()">▲</p>
@@ -64,10 +65,21 @@
         </p>
       </form>
     </div>
+    <Delete-Modal
+      v-if="isOpenDeleteModal"
+      @delete="deleteWork"
+      @back="closeDeleteModal"
+      confirmStr="削除してしまうと復元することはできません。よろしいですか?"
+      btnStr="同意してアカウントを削除"
+    />
   </div>
 </template>
 <script>
+import DeleteModal from "~/components/DeleteModal.vue";
 export default {
+  components: {
+    DeleteModal
+  },
   middleware: ["auth"],
   data() {
     return {
@@ -85,7 +97,8 @@ export default {
         password: "",
         newPass: ""
       },
-      APIURL: ""
+      APIURL: "",
+      isOpenDeleteModal: false
     };
   },
   mounted() {
@@ -100,6 +113,18 @@ export default {
     }
   },
   methods: {
+    closeDeleteModal: function() {
+      this.isOpenDeleteModal = false;
+    },
+    openDeleteModal: function() {
+      this.isOpenDeleteModal = true;
+    },
+    deleteWork: function() {
+      ///user削除処理
+      this.isOpenDeleteModal = false;
+      this.$auth.logout();
+      this.$router.push("/");
+    },
     async submit() {
       try {
         const data = new FormData();
@@ -108,7 +133,7 @@ export default {
           data.append("name", this.user.name);
           data.append("url", this.user.url);
           data.append("introduction", this.user.introduction);
-          data.append("file", this.data.image);
+          data.append("file", this.data.name);
           data.append("windowOpt", true);
         } else {
           data.append("user_id", this.user.id);
@@ -138,10 +163,13 @@ export default {
     setImage(e) {
       const files = this.$refs.file;
       const fileImg = files.files[0];
+      if (fileImg.size > 3000000) {
+        alert(this.AlertMessage());
+        return;
+      }
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
-        this.data.name = fileImg.name;
-        this.data.type = fileImg.type;
+        this.data.name = e.target.files[0];
       }
     },
     resetImage(e) {
@@ -368,5 +396,18 @@ textarea,
       font-weight: bold;
     }
   }
+}
+.deleteModalBtn {
+  margin: 10px 0 0 0;
+  outline: 0;
+  background-color: red;
+  color: white;
+  border-radius: 20px;
+  padding: 0 20px;
+  font-size: 12px;
+  height: 30px;
+  width: 300px !important;
+  line-height: 30px;
+  font-weight: bold;
 }
 </style>

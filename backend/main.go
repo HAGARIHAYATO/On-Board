@@ -20,6 +20,7 @@ func main() {
 				r.Get("/", GetWorkByID)
 				r.Put("/", UpdateWorks)
 				r.Put("/edit_item", UpdateWorkItems)
+				r.Delete("/", DeleteWorks)
 			})
 		})
 		r.Route("/users", func(r chi.Router) {

@@ -51,13 +51,34 @@
       <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link>|
       <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
     </p>
+    <button class="deleteBtn" v-if="isMine" @click="openDeleteModal">削除する</button>
+    <Delete-Modal
+      v-if="isOpenDeleteModal"
+      @delete="deleteWork"
+      @back="closeDeleteModal"
+      confirmStr="削除してしまうと復元することはできません。よろしいですか?"
+      btnStr="同意して削除する"
+    />
   </div>
 </template>
 <script>
 import Loading from "~/components/Loading.vue";
+import DeleteModal from "~/components/DeleteModal.vue";
 export default {
   components: {
-    Loading
+    Loading,
+    DeleteModal
+  },
+  data() {
+    return {
+      selectWindow: false,
+      selectId: "",
+      selectItem: {},
+      work: {},
+      isLoading: false,
+      APIURL: "",
+      isOpenDeleteModal: false
+    };
   },
   computed: {
     isMine: function() {
@@ -69,6 +90,26 @@ export default {
     }
   },
   methods: {
+    closeDeleteModal: function() {
+      this.isOpenDeleteModal = false;
+    },
+    openDeleteModal: function() {
+      this.isOpenDeleteModal = true;
+    },
+    deleteWork: function() {
+      this.$nextTick(async () => {
+        this.APIURL = this.GetURL();
+        await this.showBubble();
+        await this.$axios
+          .delete(this.APIURL + this.$route.path)
+          .then(response => {
+            this.$router.push("/works");
+          })
+          .catch(response => console.error(response));
+        await setTimeout(() => this.showBubble(), 1000);
+      });
+      this.isOpenDeleteModal = false;
+    },
     isArrayExist: function(array) {
       if (array) {
         return array.length > 0 ? true : false;
@@ -115,16 +156,6 @@ export default {
         .catch(response => console.error(response));
       await setTimeout(() => this.showBubble(), 1000);
     });
-  },
-  data() {
-    return {
-      selectWindow: false,
-      selectId: "",
-      selectItem: {},
-      work: {},
-      isLoading: false,
-      APIURL: ""
-    };
   }
 };
 </script>
@@ -316,5 +347,19 @@ body {
 .operation {
   text-align: center;
   font-weight: bold;
+}
+.deleteBtn {
+  margin: 10px auto;
+  height: 40px;
+  width: 180px;
+  display: block;
+  outline: none;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  &:hover {
+    box-shadow: 0 0 5px grey;
+  }
 }
 </style>
