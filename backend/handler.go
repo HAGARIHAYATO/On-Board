@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -336,6 +337,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.Name = r.FormValue("name")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
+			if user.ImageURL != "" {
+				err = DeleteFileByBucket(user.ImageURL)
+				if err != nil {
+					fmt.Println("--------%v--------", err)
+				}
+			}
+			user.ImageURL = ""
 			file, fileHeader, _ := r.FormFile("file")
 			if file != nil {
 				filename, err := CreateFile(file, fileHeader.Filename)
@@ -393,14 +401,15 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	//////
+	if work.ImageURL != "" {
+		err = DeleteFileByBucket(work.ImageURL)
+		if err != nil {
+			fmt.Println("--------%v--------", err)
+		}
+	}
 	work.Name = r.FormValue("name")
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
-	// 前使っていた画像は削除する
-	// if work.ImageURL != "" {
-	// 	err = DeleteFileByBucket(work.ImageURL)
-	// }
 	work.ImageURL = ""
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
@@ -435,7 +444,7 @@ func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
 		ID uint
 	}
 	var res Result
-	
+
 	// for _, data := range req.DataSets {
 	// 	if cast.ToUint(data.ID) > 0 {
 	// 		item, err := FetchWorkItemByID(DB, data.ID)
@@ -467,6 +476,7 @@ func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
 
 // Deletes
 
+// DeleteWorks is handler
 func DeleteWorks(w http.ResponseWriter, r *http.Request) {
 	workID := chi.URLParam(r, "workID")
 	type Result struct {
@@ -478,12 +488,12 @@ func DeleteWorks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	err = DB.Delete(&work).Error
+	err = DB.Unscoped().Delete(&work).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	err = DB.Where("work_id=?", cast.ToUint(workID)).Delete(WorkItem{}).Error
+	err = DB.Unscoped().Where("work_id=?", cast.ToUint(workID)).Delete(WorkItem{}).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -491,6 +501,41 @@ func DeleteWorks(w http.ResponseWriter, r *http.Request) {
 	var res Result
 	res.Status = http.StatusOK
 	res.ID = cast.ToUint(workID)
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}
+
+// DeleteUser is handler
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		ID     uint
+		Status int
+	}
+	token := r.Header.Get("Authorization")
+	token = strings.Trim(token, "Bearer%20")
+	email := DecodeToken(token)
+	user, err := FetchUserByEmail(DB, email)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	works, _ := FetchWorks(DB, user.ID)
+	for _, work := range works {
+		err = DB.Delete(&work).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+	var res Result
+	res.ID = user.ID
+
+	err = DB.Delete(&user).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	res.Status = http.StatusOK
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))
 }

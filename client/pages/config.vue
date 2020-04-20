@@ -1,5 +1,6 @@
 <template>
   <div class="config-container">
+    <Loading v-if="isLoading" />
     <div class="form-wrapper">
       <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">
@@ -75,10 +76,12 @@
   </div>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
 import DeleteModal from "~/components/DeleteModal.vue";
 export default {
   components: {
-    DeleteModal
+    DeleteModal,
+    Loading
   },
   middleware: ["auth"],
   data() {
@@ -98,7 +101,8 @@ export default {
         newPass: ""
       },
       APIURL: "",
-      isOpenDeleteModal: false
+      isOpenDeleteModal: false,
+      isLoading: false
     };
   },
   mounted() {
@@ -113,6 +117,9 @@ export default {
     }
   },
   methods: {
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
     closeDeleteModal: function() {
       this.isOpenDeleteModal = false;
     },
@@ -120,39 +127,52 @@ export default {
       this.isOpenDeleteModal = true;
     },
     deleteWork: function() {
-      ///user削除処理
-      this.isOpenDeleteModal = false;
-      this.$auth.logout();
-      this.$router.push("/");
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          await this.$axios
+            .delete(this.APIURL + "/delete_account")
+            .then(res => {
+              this.isOpenDeleteModal = false;
+              this.$auth.logout();
+              this.$router.push("/");
+            });
+        } catch (error) {}
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     async submit() {
-      try {
-        const data = new FormData();
-        if (this.generalWindow) {
-          data.append("user_id", this.user.id);
-          data.append("name", this.user.name);
-          data.append("url", this.user.url);
-          data.append("introduction", this.user.introduction);
-          data.append("file", this.data.name);
-          data.append("windowOpt", true);
-        } else {
-          data.append("user_id", this.user.id);
-          data.append("email", this.user.email);
-          data.append("password", this.user.password);
-          data.append("new_password", this.user.newPass);
-          data.append("windowOpt", false);
-        }
-        const headers = { "content-type": "multipart/form-data" };
-        await this.$axios
-          .put(this.APIURL + "/users/" + this.user.id, data, {
-            headers
-          })
-          .then(res => {
-            if (res.data.ID) {
-              this.$router.push("/users/" + res.data.ID);
-            }
-          });
-      } catch (e) {}
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          if (this.generalWindow) {
+            data.append("user_id", this.user.id);
+            data.append("name", this.user.name);
+            data.append("url", this.user.url);
+            data.append("introduction", this.user.introduction);
+            data.append("file", this.data.name);
+            data.append("windowOpt", true);
+          } else {
+            data.append("user_id", this.user.id);
+            data.append("email", this.user.email);
+            data.append("password", this.user.password);
+            data.append("new_password", this.user.newPass);
+            data.append("windowOpt", false);
+          }
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .put(this.APIURL + "/users/" + this.user.id, data, {
+              headers
+            })
+            .then(res => {
+              if (res.data.ID) {
+                this.$router.push("/users/" + res.data.ID);
+              }
+            });
+        } catch (e) {}
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     selectGeneral: function() {
       this.generalWindow = true;

@@ -78,7 +78,6 @@ func CORS(next http.Handler) http.Handler {
 func CreateFile(file multipart.File, name string) (string, error) {
 	extention := SplitExtention(name)
 	filename := fmt.Sprintf("./images/uploaded_%d.%s", time.Now().UnixNano(), extention)
-	fmt.Println(filename)
 	saveFile, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)

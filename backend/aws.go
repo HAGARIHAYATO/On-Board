@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -60,14 +61,11 @@ func UploadFileToBucket(filename string) (*s3manager.UploadOutput, error) {
 
 // DeleteFileByBucket is repository of aws functions
 func DeleteFileByBucket(filename string) error {
-	// TODO
-	obj := filename
-
-	_, err = SVC.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(obj)})
-
+	trimedName := strings.Trim(filename, "https://on-board-pub.s3.ap-northeast-1.amazonaws.com/")
+	_, err = SVC.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(trimedName)})
 	err = SVC.WaitUntilObjectNotExists(&s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(obj),
+		Key:    aws.String(trimedName),
 	})
 	return err
 }
