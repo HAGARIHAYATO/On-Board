@@ -13,6 +13,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/k-washi/jwt-decode/jwtdecode"
+	"github.com/spf13/cast"
 )
 
 //ParseJSON function is Parse Data To Json
@@ -24,6 +25,7 @@ func ParseJSON(data interface{}) []byte {
 	return json
 }
 
+// DecodeToken is analyze JWT token
 func DecodeToken(token string) string {
 	hCS, err := jwtdecode.JwtDecode.DecomposeFB(token)
 	if err != nil {
@@ -49,9 +51,6 @@ func CreateToken(user User) (string, error) {
 
 	tokenString, err := token.SignedString([]byte(secret))
 
-	fmt.Println("-----------------------------")
-	fmt.Println("tokenString:", tokenString)
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,9 +74,13 @@ func CORS(next http.Handler) http.Handler {
 }
 
 // CreateFile is function whitch create file in /images/
-func CreateFile(file multipart.File, name string) (string, error) {
+func CreateFile(file multipart.File, name string, userID uint) (string, error) {
+	dirname := fmt.Sprintf("./images/%d", userID)
+	if _, err := os.Stat(dirname); os.IsNotExist(err) {
+		os.Mkdir(dirname, 0777)
+	}
 	extention := SplitExtention(name)
-	filename := fmt.Sprintf("./images/uploaded_%d.%s", time.Now().UnixNano(), extention)
+	filename := fmt.Sprintf("./images/%d/uploaded_%d.%s", userID, time.Now().UnixNano(), extention)
 	saveFile, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -91,8 +94,9 @@ func CreateFile(file multipart.File, name string) (string, error) {
 }
 
 // RemoveFile is function whitch delete file by /images/
-func RemoveFile(filename string) error {
-	err := os.Remove(filename)
+func RemoveFile(uid uint) error {
+	dirname := fmt.Sprintf("./images/%d", uid)
+	err := os.RemoveAll(dirname)
 	return err
 }
 
@@ -103,4 +107,14 @@ func SplitExtention(str string) string {
 		return ""
 	}
 	return slice[len(slice)-1]
+}
+
+// DeleteDependent is function
+func DeleteDependent(uid uint) {
+	err = DB.Unscoped().Where("user_id=?", cast.ToUint(uid)).Delete(Work{}).Error
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	//Userのbucketも削除する
 }

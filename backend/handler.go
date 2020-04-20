@@ -265,12 +265,6 @@ func RequestSession(w http.ResponseWriter, r *http.Request) {
 	}
 	var rw ResultWork
 	rw.Token = token
-	user.Token = rw.Token
-	err = DB.Save(&user).Error
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(rw))
 }
@@ -292,21 +286,19 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	work.UserID = cast.ToUint(r.FormValue("user_id"))
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
-		filename, err := CreateFile(file, fileHeader.Filename)
+		filename, err := CreateFile(file, fileHeader.Filename, work.UserID)
 		result, err := UploadFileToBucket(filename)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		work.ImageURL = string(result.Location)
-		err = RemoveFile(filename)
+		err = RemoveFile(work.UserID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
-
-	///////////////////////////////////////////////
 	err = DB.Create(&work).Error
 	if err != nil {
 		log.Fatal(err)
@@ -331,7 +323,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var res Result
-	////////////
 	if user.ID == cast.ToUint(r.FormValue("user_id")) {
 		if cast.ToBool(r.FormValue("windowOpt")) {
 			user.Name = r.FormValue("name")
@@ -346,14 +337,14 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.ImageURL = ""
 			file, fileHeader, _ := r.FormFile("file")
 			if file != nil {
-				filename, err := CreateFile(file, fileHeader.Filename)
+				filename, err := CreateFile(file, fileHeader.Filename, user.ID)
 				result, err := UploadFileToBucket(filename)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 				user.ImageURL = string(result.Location)
-				err = RemoveFile(filename)
+				err = RemoveFile(user.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
@@ -377,7 +368,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.Password = string(hash)
 		}
 	}
-	////////////
 	err = DB.Save(&user).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -413,20 +403,19 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	work.ImageURL = ""
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
-		filename, err := CreateFile(file, fileHeader.Filename)
+		filename, err := CreateFile(file, fileHeader.Filename, work.UserID)
 		result, err := UploadFileToBucket(filename)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		work.ImageURL = string(result.Location)
-		err = RemoveFile(filename)
+		err = RemoveFile(work.UserID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 	}
-	//////
 	err = DB.Save(&work).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -530,11 +519,12 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	var res Result
 	res.ID = user.ID
 
-	err = DB.Delete(&user).Error
+	err = DB.Unscoped().Delete(&user).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	DeleteDependent(res.ID)
 	res.Status = http.StatusOK
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))

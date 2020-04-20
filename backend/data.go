@@ -31,10 +31,4 @@ type User struct {
 	Introduction string
 	Password     string
 	URL          string
-	Token        string `gorm:"type:varchar(255);unique_index;"`
-}
-
-type Error struct {
-	Status  int64
-	Message string
 }
