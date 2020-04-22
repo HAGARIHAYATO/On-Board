@@ -303,6 +303,14 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	for i := 0; i < 6; i++ {
+		var item WorkItem
+		item.WorkID = work.ID
+		err = DB.Create(&item).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 	var res Result
 	res.ID = work.ID
 	w.Write(ParseJSON(res))
@@ -334,7 +342,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 					fmt.Println("--------%v--------", err)
 				}
 			}
-			user.ImageURL = ""
 			file, fileHeader, _ := r.FormFile("file")
 			if file != nil {
 				filename, err := CreateFile(file, fileHeader.Filename, user.ID)
@@ -427,38 +434,42 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateWorkItems is handler with PUT
-func UpdateWorkItems(w http.ResponseWriter, r *http.Request) {
-	workID := chi.URLParam(r, "workID")
+func UpdateWorkItem(w http.ResponseWriter, r *http.Request) {
 	type Result struct {
 		ID uint
 	}
 	var res Result
+	workID := cast.ToUint(chi.URLParam(r, "workID"))
+	itemid := r.FormValue("id")
+	uid := cast.ToUint(r.FormValue("uid"))
+	item, err := FetchWorkItemByID(DB, cast.ToUint(itemid))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	item.Body = r.FormValue("body")
+	file, fileHeader, _ := r.FormFile("file")
+	if file != nil {
+		filename, err := CreateFile(file, fileHeader.Filename, uid)
+		result, err := UploadFileToBucket(filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		item.ImageURL = string(result.Location)
+		err = RemoveFile(uid)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+	err = DB.Save(&item).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
-	// for _, data := range req.DataSets {
-	// 	if cast.ToUint(data.ID) > 0 {
-	// 		item, err := FetchWorkItemByID(DB, data.ID)
-	// 		if err != nil {
-	// 			http.Error(w, err.Error(), http.StatusNotFound)
-	// 		}
-	// 		item.Body = data.Body
-	// 		item.ImageURL = data.ImageURL
-	// 		err = DB.Save(&item).Error
-	// 		if err != nil {
-	// 			http.Error(w, err.Error(), http.StatusBadRequest)
-	// 		}
-	// 	} else {
-	// 		var item WorkItem
-	// 		item.WorkID = cast.ToUint(workID)
-	// 		item.Body = data.Body
-	// 		item.ImageURL = data.ImageURL
-	// 		err = DB.Create(&item).Error
-	// 		if err != nil {
-	// 			http.Error(w, err.Error(), http.StatusBadRequest)
-	// 		}
-	// 	}
-	// }
-	////
-	res.ID = cast.ToUint(workID)
+	res.ID = workID
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))
 }

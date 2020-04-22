@@ -3,102 +3,28 @@
     <Loading v-if="isLoading" />
     <h1 class="work__name">{{ work.Name }}</h1>
     <form class="form" @submit.prevent="submit">
+      <div class="image__container">
+        <div class="image__item" :class="isSelectedItem(index)" @click="selectWorkItem(index)" v-for="(item,index) in items" :key="index">
+          <img :src="returnURL(item.ImageURL)">
+        </div>
+      </div>
       <div class="item__container">
         <div class="item">
-          <label for="image1">
+          <label for="image">
             <input
-              id="image1"
+              id="image"
               accept="image/png, image/jpg, image/jpeg"
               type="file"
-              @change="setImage($event, data1)"
+              ref="file"
+              @change="setImage"
             />
             <p>クリックor画像をドロップ</p>
           </label>
-          <div class="set__file" v-if="data1.image">
-            <p @click="resetImage($event, data1)">×</p>
-            <img :src="data1.image" />
+          <div class="set__file" v-if="data.image">
+            <p @click="resetImage">×</p>
+            <img :src="data.image" />
           </div>
-          <textarea v-model="data1.body"></textarea>
-        </div>
-        <div class="item">
-          <label for="image2">
-            <input
-              id="image2"
-              type="file"
-              accept="image/png, image/jpg, image/jpeg"
-              @change="setImage($event, data2)"
-            />
-            <p>クリックor画像をドロップ</p>
-          </label>
-          <div class="set__file" v-if="data2.image">
-            <p @click="resetImage($event, data2)">×</p>
-            <img :src="data2.image" />
-          </div>
-          <textarea v-model="data2.body"></textarea>
-        </div>
-        <div class="item">
-          <label for="image3">
-            <input
-              id="image3"
-              type="file"
-              accept="image/png, image/jpg, image/jpeg"
-              @change="setImage($event, data3)"
-            />
-            <p>クリックor画像をドロップ</p>
-          </label>
-          <div class="set__file" v-if="data3.image">
-            <p @click="resetImage($event, data3)">×</p>
-            <img :src="data3.image" />
-          </div>
-          <textarea v-model="data3.body"></textarea>
-        </div>
-        <div class="item">
-          <label for="image4">
-            <input
-              id="image4"
-              type="file"
-              accept="image/png, image/jpg, image/jpeg"
-              @change="setImage($event, data4)"
-            />
-            <p>クリックor画像をドロップ</p>
-          </label>
-          <div class="set__file" v-if="data4.image">
-            <p @click="resetImage($event, data4)">×</p>
-            <img :src="data4.image" />
-          </div>
-          <textarea v-model="data4.body"></textarea>
-        </div>
-        <div class="item">
-          <label for="image5">
-            <input
-              id="image5"
-              type="file"
-              accept="image/png, image/jpg, image/jpeg"
-              @change="setImage($event, data5)"
-            />
-            <p>クリックor画像をドロップ</p>
-          </label>
-          <div class="set__file" v-if="data5.image">
-            <p @click="resetImage($event, data5)">×</p>
-            <img :src="data5.image" />
-          </div>
-          <textarea v-model="data5.body"></textarea>
-        </div>
-        <div class="item">
-          <label for="image6">
-            <input
-              id="image6"
-              type="file"
-              accept="image/png, image/jpg, image/jpeg"
-              @change="setImage($event, data6)"
-            />
-            <p>クリックor画像をドロップ</p>
-          </label>
-          <div class="set__file" v-if="data6.image">
-            <p @click="resetImage($event, data6)">×</p>
-            <img :src="data6.image" />
-          </div>
-          <textarea v-model="data6.body"></textarea>
+          <textarea v-model="data.body"></textarea>
         </div>
       </div>
       <input type="submit" value="保存" />
@@ -119,37 +45,9 @@ export default {
   data() {
     return {
       work: {},
-      data1: {
-        id: null,
-        image: "",
-        name: "",
-        body: ""
-      },
-      data2: {
-        id: null,
-        image: "",
-        name: "",
-        body: ""
-      },
-      data3: {
-        id: null,
-        image: "",
-        name: "",
-        body: ""
-      },
-      data4: {
-        id: null,
-        image: "",
-        name: "",
-        body: ""
-      },
-      data5: {
-        id: null,
-        image: "",
-        name: "",
-        body: ""
-      },
-      data6: {
+      items: [],
+      selectedIndex: 0,
+      data: {
         id: null,
         image: "",
         name: "",
@@ -168,64 +66,63 @@ export default {
         .get(this.APIURL + url)
         .then(response => {
           this.work = response.data;
-          this.insertData(this.data1, 0);
-          this.insertData(this.data2, 1);
-          this.insertData(this.data3, 2);
-          this.insertData(this.data4, 3);
-          this.insertData(this.data5, 4);
-          this.insertData(this.data6, 5);
+          this.items = response.data.WorkItems
+          if (this.data) {
+            this.data.id = this.items[0].ID
+            this.data.body = this.items[0].Body
+            this.data.image = this.items[0].ImageURL
+          }
         })
         .catch(response => console.error(response));
       await setTimeout(() => this.showBubble(), 1000);
     });
   },
   methods: {
+    isSelectedItem: function(i) {
+      return this.selectedIndex === i ? "item__selected" : ""
+    },
+    returnURL: function(url) {
+      return url ? url : "/NO_IMAGE.jpeg";
+    },
+    selectWorkItem: function(i) {
+      this.selectedIndex = i
+      this.data.id = this.items[i].ID
+      this.data.image = this.items[i].ImageURL
+      this.data.body = this.items[i].Body
+      this.data.name = ""
+    },
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
-    setImage: function(e, data) {
-      if (data) {
-        const fileImg = e.target.files[0];
+    setImage: function(e) {
+      if (this.data) {
+        const files = this.$refs.file;
+        const fileImg = files.files[0];
         if (fileImg.size > 3000000) {
           alert(this.AlertMessage());
           return;
         }
         if (fileImg.type.startsWith("image/")) {
-          data.image = window.URL.createObjectURL(fileImg);
-          data.name = e.target.files[0];
+          this.data.image = window.URL.createObjectURL(fileImg);
+          this.data.name = e.target.files[0];
         }
       }
     },
-    resetImage(e, data) {
-      if (data) {
-        e.path[2].childNodes[0].children[0].value = "";
-        data.image = "";
-        data.name = "";
-      }
-    },
-    async pushData(data) {
-      const json = JSON.stringify(
-        {
-          id: data.id,
-          image: data.name,
-          body: data.body
-        },
-        undefined,
-        1
-      );
-      return json;
+    resetImage(e) {
+        this.$refs.file.value = "";
+        this.data.name = "";
+        this.data.image = "";
     },
     async submit() {
       this.$nextTick(async () => {
         await this.showBubble();
         try {
           const data = new FormData();
-          data.append("data1", this.pushData(this.data1));
-          data.append("data2", this.pushData(this.data2));
-          data.append("data3", this.pushData(this.data3));
-          data.append("data4", this.pushData(this.data4));
-          data.append("data5", this.pushData(this.data5));
-          data.append("data6", this.pushData(this.data6));
+          data.append("id", this.data.id);
+          data.append("body", this.data.body);
+          data.append("uid", this.work.UserID);
+          data.append("file", this.data.name);
+          console.log(data)
           const headers = { "content-type": "multipart/form-data" };
           await this.$axios
             .put(this.APIURL + "/works/" + this.work.ID + "/edit_item", data, {
@@ -240,14 +137,6 @@ export default {
         }
         await setTimeout(() => this.showBubble(), 1000);
       });
-    },
-    insertData: function(data, i) {
-      const item = this.work.WorkItems;
-      if (item[i]) {
-        data.image = item[i].ImageURL;
-        data.body = item[i].Body;
-        data.id = item[i].ID;
-      }
     }
   }
 };
@@ -266,7 +155,6 @@ body {
 }
 .item__container {
   max-width: 1000px;
-  min-height: 65vh;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -346,6 +234,35 @@ input[type="submit"] {
     }
     &:active {
       color: silver;
+    }
+  }
+}
+.image__container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 200px;
+  margin: 40px auto;
+}
+.image__item{
+  cursor: pointer;
+  &:hover{
+    & img{
+      box-shadow: 0 0 5px grey;
+    }
+  }
+  & img{
+    height: 60px;
+  }
+}
+.item__selected{
+  & img {
+    border: solid 3px black;
+    transform: scale(0.95);
+  }
+  &:hover{
+    & img {
+      box-shadow: 0 0 0 black !important;
     }
   }
 }
