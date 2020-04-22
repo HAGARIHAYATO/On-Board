@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="show__description">{{ work.Description }}</div>
+      <div class="show__description">{{ isNone(work.Description) }}</div>
     </div>
     <div class="show__container__main">
       <div
@@ -44,7 +44,7 @@
         <img :src="returnURL(selectItem.ImageURL)" alt="作品画像" />
       </div>
       <div class="select__item__content">
-        <p>{{ selectItem.Body }}</p>
+        <p>{{ isNone(selectItem.Body) }}</p>
       </div>
     </div>
     <p class="operation" v-if="isMine">
@@ -90,6 +90,9 @@ export default {
     }
   },
   methods: {
+    isNone: function(str) {
+      return str == "" ? "本文はありません。" : str
+    },
     closeDeleteModal: function() {
       this.isOpenDeleteModal = false;
     },

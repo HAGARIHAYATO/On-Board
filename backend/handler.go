@@ -407,7 +407,6 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Name = r.FormValue("name")
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
-	work.ImageURL = ""
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
 		filename, err := CreateFile(file, fileHeader.Filename, work.UserID)
