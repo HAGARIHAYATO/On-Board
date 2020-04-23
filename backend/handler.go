@@ -22,14 +22,15 @@ import (
 func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	workID := chi.URLParam(r, "workID")
 	type ResultWork struct {
-		ID          uint
-		Name        string
-		ImageURL    string
-		Description string
-		URL         string
-		UserID      uint
-		UserName    string
-		WorkItems   []*WorkItem
+		ID           uint
+		Name         string
+		ImageURL     string
+		Description  string
+		URL          string
+		UserID       uint
+		UserName     string
+		UserImageURL string
+		WorkItems    []*WorkItem
 	}
 	var rw ResultWork
 	id := cast.ToUint(workID)
@@ -55,6 +56,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	rw.URL = work.URL
 	rw.UserID = work.UserID
 	rw.UserName = user.Name
+	rw.UserImageURL = user.ImageURL
 	rw.WorkItems = items
 	w.Write(ParseJSON(rw))
 }
@@ -336,12 +338,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.Name = r.FormValue("name")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
-			if user.ImageURL != "" {
-				err = DeleteFileByBucket(user.ImageURL)
-				if err != nil {
-					fmt.Println("--------%v--------", err)
-				}
-			}
+			preURL := user.ImageURL
 			file, fileHeader, _ := r.FormFile("file")
 			if file != nil {
 				filename, err := CreateFile(file, fileHeader.Filename, user.ID)
@@ -355,6 +352,12 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
+				}
+				if preURL != "" {
+					err = DeleteFileByBucket(preURL)
+					if err != nil {
+						fmt.Println("--------%v--------", err)
+					}
 				}
 			}
 		} else {
@@ -398,12 +401,7 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	if work.ImageURL != "" {
-		err = DeleteFileByBucket(work.ImageURL)
-		if err != nil {
-			fmt.Println("--------%v--------", err)
-		}
-	}
+	preURL := work.ImageURL
 	work.Name = r.FormValue("name")
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
@@ -420,6 +418,12 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
+		}
+		if preURL != "" {
+			err = DeleteFileByBucket(preURL)
+			if err != nil {
+				fmt.Println("--------%v--------", err)
+			}
 		}
 	}
 	err = DB.Save(&work).Error
@@ -446,6 +450,7 @@ func UpdateWorkItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
+	preURL := item.ImageURL
 	item.Body = r.FormValue("body")
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
@@ -460,6 +465,12 @@ func UpdateWorkItem(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
+		}
+		if preURL != "" {
+			err = DeleteFileByBucket(preURL)
+			if err != nil {
+				fmt.Println("--------%v--------", err)
+			}
 		}
 	}
 	err = DB.Save(&item).Error

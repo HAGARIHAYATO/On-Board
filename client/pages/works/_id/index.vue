@@ -3,24 +3,17 @@
     <Loading v-if="isLoading" />
     <div class="show__user__bar">
       <div class="show__user__bar__top">
+        <h1 class="info__title">{{ work.Name }}</h1>
+        <p class="info__title__sub">{{ work.URL }}</p>
         <div class="show__url">
-          <a :href="work.URL">
-            <div class="show__container__image">
-              <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
-            </div>
-            {{ work.URL }}
+          <a :href="work.URL" class="show__container__image">
+            <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
           </a>
           <div class="show__url__info">
-            <p class="info__name__sub">作品名</p>
-            <p class="info__name">{{ work.Name }}</p>
-            <p class="info__name__sub">作成者名</p>
-            <p class="info__name">
-              <nuxt-link :to="'/users/' + work.UserID">
-                {{
-                work.UserName
-                }}
-              </nuxt-link>
-            </p>
+            <nuxt-link :to="'/users/' + work.UserID" class="info__name">
+              <img :src="returnURL(work.UserImageURL)" class="user__icon">
+              <p>{{ work.UserName }}</p>
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -158,6 +151,7 @@ export default {
         })
         .catch(response => console.error(response));
       await setTimeout(() => this.showBubble(), 1000);
+      console.log(this.work)
     });
   }
 };
@@ -183,8 +177,8 @@ body {
   text-align: left !important;
   padding: 20px;
   min-height: 20vh;
-  width: 600px;
-  margin: 20px auto;
+  width: 400px;
+  margin: 0 auto 20px auto;
   word-break: break-all;
   border-radius: 3px;
   background-color: white;
@@ -193,15 +187,16 @@ body {
 .show__container__image {
   margin: 0 auto;
   min-width: 200px;
-  height: 200px;
+  height: 300px;
 }
 .show__image {
   display: block;
   margin: 0 auto;
-  height: 200px;
+  max-width: 600px;
+  height: 300px;
 }
 .show__url {
-  display: flex;
+  padding: 20px 20px 0 20px;
   max-width: 600px;
   & a {
     display: inline-block;
@@ -225,30 +220,40 @@ body {
 }
 .show__url__info {
   text-align: left;
-  width: 400px;
-  padding: 2% 0 2% 2%;
-}
-.info__name__sub {
-  margin-left: 10px;
-  font-size: 8px;
-  font-weight: bold;
+  max-width: 400px;
+  min-width: 300px;
+  margin: 0 auto;
 }
 .info__name {
+  position: relative;
+  display: block;
+  min-width: 40%;
   background-color: white;
-  border-radius: 2px;
+  border-radius: 25px !important;
   box-shadow: 0 0 5px grey;
-  padding: 0 20px;
-  margin: 10px 0 10px 10px;
-  height: 60px;
-  line-height: 60px;
+  padding: 0 10px;
+  margin: 0 auto;
+  height: 40px;
   word-break: break-all !important;
-  & a {
-    box-shadow: none;
-    color: #192b3d;
-    &:hover {
-      font-weight: bold;
-    }
+  color: #192b3d;
+  & p {
+    display: inline-block;
+    position: absolute;
+    margin: 0 0 0 10px;
+    top: 50%;
+    transform: translateY(-50%);
   }
+  &:hover {
+    box-shadow: 0 0 5px grey;
+  }
+}
+.user__icon{
+  display: inline-block;
+  margin: 5px 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: solid 1px grey;
 }
 .show__container__main {
   width: 660px;
@@ -364,5 +369,13 @@ body {
   &:hover {
     box-shadow: 0 0 5px grey;
   }
+}
+.info__title {
+  text-align: center;
+}
+.info__title__sub {
+  text-align: center;
+  font-size: 8px;
+  color: grey;
 }
 </style>
