@@ -79,7 +79,7 @@ export default {
         const check = "パスワードを確認してください。"
         this.errors.push(check)
       }
-      if (this.password.length < 5 || this.password > 20) {
+      if (this.password.length < 5 || this.password.length > 20) {
         const check = "パスワードは6文字以上20字以下です。"
         this.errors.push(check)
       }
@@ -103,6 +103,9 @@ export default {
             })
             .then(res => {
               if (res.data.ID) {
+                if (res.data.Token) {
+                  this.$auth.setUserToken(res.data.Token)
+                }
                 this.$router.push("/users/" + res.data.ID);
               }
             });
