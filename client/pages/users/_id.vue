@@ -16,6 +16,7 @@
       <div class="user__works">
         <works :works="returnWorks" :isSearch="false" />
       </div>
+      <Git-Hub-Field :hubs="hubs"/>
     </div>
   </div>
 </template>
@@ -24,21 +25,27 @@ import Works from "~/components/Works.vue";
 import SearchForm from "~/components/SearchForm.vue";
 import Pagenate from "~/components/Pagenate.vue";
 import Loading from "~/components/Loading.vue";
+import GitHubField from "~/components/GitHubField.vue";
 export default {
   components: {
     Works,
     SearchForm,
     Pagenate,
-    Loading
+    Loading,
+    GitHubField
   },
   async mounted() {
+    this.APIURL = this.GetURL();
     this.$nextTick(async () => {
       await this.showBubble();
       await this.$axios
-        .get(`http://localhost:8080/api/v1${this.$route.path}`)
+        .get(this.APIURL + this.$route.path)
         .then(response => {
           this.user = response.data;
           this.works = response.data.Works;
+          this.ghToken = response.data.GitHubToken
+        }).then(() => {
+          this.gitHubInit()
         })
         .catch(response => console.error(response));
       await this.init();
@@ -51,6 +58,20 @@ export default {
     }
   },
   methods: {
+    gitHubInit: async function() {
+      if (this.ghToken) {
+        const endpoint = await this.FetchGitInfo(0, this.ghToken)
+        const headers = { 
+          "content-type": "application/json",
+          "Authorization": "",
+        };
+        await this.$axios.get(endpoint, {
+          headers
+        }).then(res => {
+          this.hubs = res.data
+        })
+      }
+    },
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
@@ -111,7 +132,11 @@ export default {
       maxCardCount: 8,
       user: {},
       works: [],
-      isLoading: false
+      isLoading: false,
+      APIURL: "",
+      glToken: "",
+      ghToken: "",
+      hubs: []
     };
   }
 };

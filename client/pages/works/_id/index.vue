@@ -3,30 +3,23 @@
     <Loading v-if="isLoading" />
     <div class="show__user__bar">
       <div class="show__user__bar__top">
+        <h1 class="info__title">{{ work.Name }}</h1>
+        <p class="info__title__sub">{{ work.URL }}</p>
         <div class="show__url">
-          <a :href="work.URL">
-            <div class="show__container__image">
-              <img
-                :src="returnURL(work.ImageURL)"
-                :alt="work.Name"
-                class="show__image"
-              />
-            </div>
-            {{ work.URL }}
-          </a>
+          <div class="show__url__container">
+            <a :href="work.URL" class="show__container__image">
+              <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
+            </a>
+          </div>
           <div class="show__url__info">
-            <p class="info__name__sub">作品名</p>
-            <p class="info__name">{{ work.Name }}</p>
-            <p class="info__name__sub">作成者名</p>
-            <p class="info__name">
-              <nuxt-link :to="'/users/' + work.UserID">{{
-                work.UserName
-              }}</nuxt-link>
-            </p>
+            <nuxt-link :to="'/users/' + work.UserID" class="info__name">
+              <img :src="returnURL(work.UserImageURL)" class="user__icon">
+              <p>{{ work.UserName }}</p>
+            </nuxt-link>
           </div>
         </div>
       </div>
-      <div class="show__description">{{ work.Description }}</div>
+      <div class="show__description">{{ isNone(work.Description) }}</div>
     </div>
     <div class="show__container__main">
       <div
@@ -41,41 +34,80 @@
         <p v-else>▲</p>
       </div>
     </div>
-    <div
-      class="select__item"
-      :class="isOpenModal()"
-      v-if="isArrayExist(work.WorkItems)"
-    >
+    <div class="select__item" :class="isOpenModal()" v-if="isArrayExist(work.WorkItems)">
       <div class="select__item__image" v-if="selectItem">
         <img :src="returnURL(selectItem.ImageURL)" alt="作品画像" />
       </div>
       <div class="select__item__content">
-        <p>{{ selectItem.Body }}</p>
+        <p>{{ isNone(selectItem.Body) }}</p>
       </div>
     </div>
     <p class="operation" v-if="isMine">
-      <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link> |
-      <nuxt-link :to="'/works/' + work.ID + '/edit_item'"
-        >アイテム編集</nuxt-link
-      >
+      <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link>|
+      <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
     </p>
+    <button class="deleteBtn" v-if="isMine" @click="openDeleteModal">削除する</button>
+    <Delete-Modal
+      v-if="isOpenDeleteModal"
+      @delete="deleteWork"
+      @back="closeDeleteModal"
+      confirmStr="削除してしまうと復元することはできません。よろしいですか?"
+      btnStr="同意して削除する"
+    />
   </div>
 </template>
 <script>
 import Loading from "~/components/Loading.vue";
+import DeleteModal from "~/components/DeleteModal.vue";
 export default {
   components: {
-    Loading
+    Loading,
+    DeleteModal
+  },
+  data() {
+    return {
+      selectWindow: false,
+      selectId: "",
+      selectItem: {},
+      work: {},
+      isLoading: false,
+      APIURL: "",
+      isOpenDeleteModal: false
+    };
   },
   computed: {
     isMine: function() {
-      if (this.work.UserID) {
+      if (!this.$auth.user || !this.work.UserID) return;
+      if (this.work.UserID === this.$auth.user.ID) {
         return true;
       }
       return false;
     }
   },
   methods: {
+    isNone: function(str) {
+      return str == "" ? "本文はありません。" : str
+    },
+    closeDeleteModal: function() {
+      this.isOpenDeleteModal = false;
+    },
+    openDeleteModal: function() {
+      this.isOpenDeleteModal = true;
+    },
+    deleteWork: function() {
+      this.$nextTick(async () => {
+        this.APIURL = this.GetURL();
+        await this.showBubble();
+        await this.$axios
+          .delete(this.APIURL + this.$route.path)
+          .then(response => {
+            this.$router.push("/works");
+          })
+          .catch(response => console.error(response));
+        await setTimeout(() => this.showBubble(), 1000);
+      });
+      this.isOpenDeleteModal = false;
+    },
     isArrayExist: function(array) {
       if (array) {
         return array.length > 0 ? true : false;
@@ -112,24 +144,17 @@ export default {
   },
   async mounted() {
     this.$nextTick(async () => {
+      this.APIURL = this.GetURL();
       await this.showBubble();
       await this.$axios
-        .get(`http://localhost:8080/api/v1${this.$route.path}`)
+        .get(this.APIURL + this.$route.path)
         .then(response => {
           this.work = response.data;
         })
         .catch(response => console.error(response));
       await setTimeout(() => this.showBubble(), 1000);
+      console.log(this.work)
     });
-  },
-  data() {
-    return {
-      selectWindow: false,
-      selectId: "",
-      selectItem: {},
-      work: {},
-      isLoading: false
-    };
   }
 };
 </script>
@@ -154,8 +179,8 @@ body {
   text-align: left !important;
   padding: 20px;
   min-height: 20vh;
-  width: 600px;
-  margin: 20px auto;
+  width: 400px;
+  margin: 0 auto 20px auto;
   word-break: break-all;
   border-radius: 3px;
   background-color: white;
@@ -164,15 +189,16 @@ body {
 .show__container__image {
   margin: 0 auto;
   min-width: 200px;
-  height: 200px;
+  height: 300px;
 }
 .show__image {
   display: block;
   margin: 0 auto;
-  height: 200px;
+  max-width: 600px;
+  height: 300px;
 }
 .show__url {
-  display: flex;
+  padding: 20px 20px 0 20px;
   max-width: 600px;
   & a {
     display: inline-block;
@@ -183,7 +209,7 @@ body {
     border-radius: 2px;
     &:hover {
       & .show__image {
-        box-shadow: 0 0 5px grey;
+        box-shadow: 0 0 10px grey;
       }
     }
     &:active {
@@ -194,32 +220,48 @@ body {
   }
   text-align: center;
 }
+.show__url__container{
+  width: 400px;
+  margin: 0 auto 5px auto;
+  height: 300px;
+  background-color: lightgrey;
+}
 .show__url__info {
   text-align: left;
-  width: 400px;
-  padding: 2% 0 2% 2%;
-}
-.info__name__sub {
-  margin-left: 10px;
-  font-size: 8px;
-  font-weight: bold;
+  max-width: 400px;
+  min-width: 300px;
+  margin: 0 auto;
 }
 .info__name {
+  position: relative;
+  display: block;
+  min-width: 40%;
   background-color: white;
-  border-radius: 2px;
+  border-radius: 25px !important;
   box-shadow: 0 0 5px grey;
-  padding: 0 20px;
-  margin: 10px 0 10px 10px;
-  height: 60px;
-  line-height: 60px;
+  padding: 0 10px;
+  margin: 0 auto;
+  height: 40px;
   word-break: break-all !important;
-  & a {
-    box-shadow: none;
-    color: #192b3d;
-    &:hover {
-      font-weight: bold;
-    }
+  color: #192b3d;
+  & p {
+    display: inline-block;
+    position: absolute;
+    margin: 0 0 0 10px;
+    top: 50%;
+    transform: translateY(-50%);
   }
+  &:hover {
+    box-shadow: 0 0 5px grey;
+  }
+}
+.user__icon{
+  display: inline-block;
+  margin: 5px 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: solid 1px grey;
 }
 .show__container__main {
   width: 660px;
@@ -290,7 +332,6 @@ body {
   height: 230px;
   padding: 10px 2%;
   & p {
-    background-color: lighten(lightgrey, 10%);
     word-break: break-all;
     font-size: 10px;
     color: #192b3d;
@@ -321,5 +362,27 @@ body {
 .operation {
   text-align: center;
   font-weight: bold;
+}
+.deleteBtn {
+  margin: 10px auto;
+  height: 40px;
+  width: 180px;
+  display: block;
+  outline: none;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  &:hover {
+    box-shadow: 0 0 5px grey;
+  }
+}
+.info__title {
+  text-align: center;
+}
+.info__title__sub {
+  text-align: center;
+  font-size: 8px;
+  color: grey;
 }
 </style>

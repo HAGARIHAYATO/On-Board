@@ -1,5 +1,7 @@
 <template>
   <form @submit.prevent="submit" class="new__wrapper">
+    <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="new__user__bar">
       <div class="new__user__bar__top">
         <div class="new__url">
@@ -23,19 +25,9 @@
           </div>
           <div class="new__url__info">
             <p class="info__name__sub">作品名</p>
-            <input
-              name="work_name"
-              type="text"
-              class="info__name"
-              v-model="workName"
-            />
+            <input name="work_name" type="text" class="info__name" v-model="workName" />
             <p class="info__name__sub">作品URL</p>
-            <input
-              name="work_url"
-              type="url"
-              class="info__name"
-              v-model="workURL"
-            />
+            <input name="work_url" type="url" class="info__name" v-model="workURL" />
           </div>
         </div>
       </div>
@@ -48,47 +40,80 @@
       ></textarea>
     </div>
     <div class="new__btn">
-      <input type="submit" value="保存">
+      <input type="submit" value="保存" />
     </div>
   </form>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
+import Validation from "~/components/Validation.vue";
 export default {
-  // middleware: ["auth"],
+  components: {
+    Loading,
+    Validation
+  },
+  middleware: ["auth"],
   data() {
     return {
       data: {
         image: "",
         name: ""
       },
+      errors: [],
       workName: "",
       workURL: "",
       workDesc: "",
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: "",
+      isLoading: false
     };
   },
+  mounted() {
+    this.APIURL = this.GetURL();
+  },
   methods: {
-    async submit() {
-      try {
-        const data = new FormData();
-        // data.append("user_id", this.$auth.user.ID);
-        data.append("name", this.workName);
-        data.append("description", this.workDesc);
-        data.append("url", this.workURL);
-        data.append("file", this.data.image);
-        const headers = { "content-type": "multipart/form-data" };
-        await this.$axios
-          .post(this.APIURL + "/works", data, {
-            headers
-          })
-          .then(res => {
-            if (res.data.ID) {
-              this.$router.push("/works/" + res.data.ID);
-            }
-          });
-      } catch (error) {
-        // handling show message
+    valCheck: function() {
+      this.errors = []
+      if (this.workName === "") {
+        const empty = "作品名は必須です。"
+        this.errors.push(empty)
       }
+      if (this.workDesc.length > 300) {
+        const over = "文字数は最大300字です。"
+        this.errors.push(over)
+      }
+    },
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
+    async submit() {
+      this.$nextTick(async () => {
+        this.valCheck()
+        if (this.errors.length !== 0) {
+          return
+        }
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          data.append("user_id", this.$auth.user.ID);
+          data.append("name", this.workName);
+          data.append("description", this.workDesc);
+          data.append("url", this.workURL);
+          data.append("file", this.data.name);
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .post(this.APIURL + "/works", data, {
+              headers
+            })
+            .then(res => {
+              if (res.data.ID) {
+                this.$router.push("/works/" + res.data.ID);
+              }
+            });
+        } catch (error) {
+          // handling show message
+        }
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     returnURL: function(url) {
       return url ? url : "/NO_IMAGE.jpeg";
@@ -96,10 +121,13 @@ export default {
     setImage(e) {
       const files = this.$refs.file;
       const fileImg = files.files[0];
+      if (fileImg.size > 3000000) {
+        alert(this.AlertMessage());
+        return;
+      }
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
-        this.data.name = fileImg.name;
-        this.data.type = fileImg.type;
+        this.data.name = e.target.files[0];
       }
     },
     resetImage(e) {

@@ -1,18 +1,16 @@
 <template>
   <div class="config-container">
+    <Loading v-if="isLoading" />
     <div class="form-wrapper">
-      <form :action="returnEndPoint" method="post" enctype="multipart/form-data">
+      <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">
           <p>
             <label for="name">名前</label>
-            <input
-              type="text"
-              name="name"
-              autocomplete="on"
-              placeholder="名前"
-              :value="user.name"
-              required
-            />
+            <input type="text" name="name" autocomplete="on" v-model="user.name" required />
+          </p>
+          <p>
+            <label for="email">メール</label>
+            <input name="email" type="email" autocomplete="on" v-model="user.email" required/>
           </p>
           <p>
             <label for="url">サイトURL</label>
@@ -20,7 +18,7 @@
               type="text"
               name="url"
               autocomplete="on"
-              :value="user.url"
+              v-model="user.url"
               min="1"
               pattern="^[0-9A-Za-z.@/:-]+$"
             />
@@ -45,22 +43,23 @@
           </div>
           <p>
             <label for="text">紹介文</label>
-            <textarea name="introduction" type="text" rows="4" />
+            <textarea name="introduction" type="text" rows="4" v-model="user.introduction" />
+          </p>
+          <p>
+            <label for="github">GitHubユーザー名</label>
+            <input name="github" type="text" autocomplete="on" v-model="user.github" />
           </p>
         </div>
         <div v-else class="secret__form">
           <p>
-            <label for="email">メール</label>
-            <input name="email" type="email" autocomplete="on" pattern="^[0-9A-Za-z.@/:-_]+$" />
-          </p>
-          <p>
             <label for="password">現在のパスワード</label>
-            <input name="password" type="password" autocomplete="on" pattern="^[0-9A-Za-z.@/:-_]+$" />
+            <input name="password" type="password" autocomplete="on" v-model="user.password" />
           </p>
           <p>
             <label for="new-password">新しいパスワード</label>
-            <input name="new-password" type="password" pattern="^[0-9A-Za-z.@/:-_]+$" />
+            <input name="new-password" type="password" v-model="user.newPass" />
           </p>
+          <p class="deleteModalBtn" @click="openDeleteModal">アカウントを削除</p>
         </div>
         <div class="form__transform">
           <p class="form__transform__btn1" @click="selectGeneral()">▲</p>
@@ -71,11 +70,24 @@
         </p>
       </form>
     </div>
+    <Delete-Modal
+      v-if="isOpenDeleteModal"
+      @delete="deleteWork"
+      @back="closeDeleteModal"
+      confirmStr="削除してしまうと復元することはできません。よろしいですか?"
+      btnStr="同意してアカウントを削除"
+    />
   </div>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
+import DeleteModal from "~/components/DeleteModal.vue";
 export default {
-  // middleware: ["auth"],
+  components: {
+    DeleteModal,
+    Loading
+  },
+  middleware: ["auth"],
   data() {
     return {
       data: {
@@ -85,23 +97,90 @@ export default {
       returnFile: null,
       generalWindow: false,
       user: {
-        name: "tanaka",
-        url: "hsssss.com",
-        ImageURL: "https://images.app.goo.gl/Td6Ab2G5EFEJLKeh9"
-      }
+        id: "",
+        name: "",
+        url: "",
+        email: "",
+        password: "",
+        newPass: "",
+        github: "",
+      },
+      APIURL: "",
+      isOpenDeleteModal: false,
+      isLoading: false
     };
   },
   mounted() {
-    if (this.user.ImageURL) {
-      this.data.image = this.user.ImageURL;
-    }
-  },
-  computed: {
-    returnEndPoint: function() {
-      return this.generalWindow ? "/users/update" : "/users/password/refresh";
+    this.APIURL = this.GetURL();
+    if (this.$auth.user) {
+      this.data.image = this.$auth.user.ImageURL;
+      this.user.id = this.$auth.user.ID;
+      this.user.url = this.$auth.user.URL;
+      this.user.name = this.$auth.user.Name;
+      this.user.introduction = this.$auth.user.Introduction;
+      this.user.email = this.$auth.user.Email;
+      this.user.github = this.$auth.user.GitHubToken;
     }
   },
   methods: {
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
+    closeDeleteModal: function() {
+      this.isOpenDeleteModal = false;
+    },
+    openDeleteModal: function() {
+      this.isOpenDeleteModal = true;
+    },
+    deleteWork: function() {
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          await this.$axios
+            .delete(this.APIURL + "/delete_account")
+            .then(res => {
+              this.isOpenDeleteModal = false;
+              this.$auth.logout();
+              this.$router.push("/");
+            });
+        } catch (error) {}
+        await setTimeout(() => this.showBubble(), 1000);
+      });
+    },
+    async submit() {
+      this.$nextTick(async () => {
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          if (this.generalWindow) {
+            data.append("user_id", this.user.id);
+            data.append("name", this.user.name);
+            data.append("email", this.user.email);
+            data.append("github", this.user.github);
+            data.append("url", this.user.url);
+            data.append("introduction", this.user.introduction);
+            data.append("file", this.data.name);
+            data.append("windowOpt", true);
+          } else {
+            data.append("user_id", this.user.id);
+            data.append("password", this.user.password);
+            data.append("new_password", this.user.newPass);
+            data.append("windowOpt", false);
+          }
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .put(this.APIURL + "/users/" + this.user.id, data, {
+              headers
+            })
+            .then(res => {
+              if (res.data.ID) {
+                this.$router.push("/users/" + res.data.ID);
+              }
+            });
+        } catch (e) {}
+        await setTimeout(() => this.showBubble(), 1000);
+      });
+    },
     selectGeneral: function() {
       this.generalWindow = true;
     },
@@ -111,10 +190,13 @@ export default {
     setImage(e) {
       const files = this.$refs.file;
       const fileImg = files.files[0];
+      if (fileImg.size > 3000000) {
+        alert(this.AlertMessage());
+        return;
+      }
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
-        this.data.name = fileImg.name;
-        this.data.type = fileImg.type;
+        this.data.name = e.target.files[0];
       }
     },
     resetImage(e) {
@@ -341,5 +423,18 @@ textarea,
       font-weight: bold;
     }
   }
+}
+.deleteModalBtn {
+  margin: 10px 0 0 0;
+  outline: 0;
+  background-color: red;
+  color: white;
+  border-radius: 20px;
+  padding: 0 20px;
+  font-size: 12px;
+  height: 30px;
+  width: 300px !important;
+  line-height: 30px;
+  font-weight: bold;
 }
 </style>

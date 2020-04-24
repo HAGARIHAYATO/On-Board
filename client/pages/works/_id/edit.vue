@@ -1,5 +1,7 @@
 <template>
   <form @submit.prevent="submit" class="edit__wrapper">
+    <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="edit__user__bar">
       <div class="edit__user__bar__top">
         <div class="edit__url">
@@ -12,7 +14,7 @@
                 id="edit__image"
                 type="file"
                 ref="file"
-                accept="image/png, image/jpeg"
+                accept="image/png, image/jpg, image/jpeg"
                 @change="setImage"
               />
             </label>
@@ -23,19 +25,9 @@
           </div>
           <div class="edit__url__info">
             <p class="info__name__sub">作品名</p>
-            <input
-              name="work_name"
-              type="text"
-              class="info__name"
-              v-model="workName"
-            />
+            <input name="work_name" type="text" class="info__name" v-model="workName" />
             <p class="info__name__sub">作品URL</p>
-            <input
-              name="work_url"
-              type="url"
-              class="info__name"
-              v-model="workURL"
-            />
+            <input name="work_url" type="url" class="info__name" v-model="workURL" />
           </div>
         </div>
       </div>
@@ -44,25 +36,30 @@
         name="work_description"
         cols="30"
         rows="10"
-        v-model="work.Description"
+        v-model="workDesc"
       ></textarea>
     </div>
     <div class="edit__btn">
-      <input type="submit" @click="submit" value="保存" />
+      <input type="submit" value="保存" />
     </div>
     <p class="operation">
-      <nuxt-link :to="'/works/' + work.ID">戻る</nuxt-link> |
-      <nuxt-link :to="'/works/' + work.ID + '/edit_item'"
-        >アイテム編集</nuxt-link
-      >
+      <nuxt-link :to="'/works/' + work.ID">戻る</nuxt-link>|
+      <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
     </p>
   </form>
 </template>
 <script>
+import Loading from "~/components/Loading.vue";
+import Validation from "~/components/Validation.vue";
 export default {
-  // middleware: ["auth"],
+  components: {
+    Loading,
+    Validation
+  },
+  middleware: ["auth"],
   data() {
     return {
+      errors: [],
       data: {
         image: "",
         name: ""
@@ -74,42 +71,74 @@ export default {
       selectId: "",
       selectItem: {},
       work: {},
-      APIURL: "http://localhost:8080/api/v1"
+      APIURL: "",
+      isLoading: false
     };
   },
   async mounted() {
-    const url = this.$route.path.slice(0, -5);
-    await this.$axios
-      .get(this.APIURL + url)
-      .then(response => {
-        this.work = response.data;
-        this.workName = response.data.Name;
-        this.workURL = response.data.URL;
-        this.workDesc = response.data.Description;
-        if (response.data.ImageURL) {
-          this.data.image = response.data.ImageURL;
-          this.data.name = response.data.Name;
-        }
-      })
-      .catch(response => console.error(response));
+    this.$nextTick(async () => {
+      await this.showBubble();
+      this.APIURL = this.GetURL();
+      const url = this.$route.path.slice(0, -5);
+      await this.$axios
+        .get(this.APIURL + url)
+        .then(response => {
+          this.work = response.data;
+          this.workName = response.data.Name;
+          this.workURL = response.data.URL;
+          this.workDesc = response.data.Description;
+          if (response.data.ImageURL) {
+            this.data.image = response.data.ImageURL;
+            this.data.name = response.data.Name;
+          }
+        })
+        .catch(response => console.error(response));
+      await setTimeout(() => this.showBubble(), 1000);
+    });
   },
   methods: {
-    async submit() {
-      try {
-        const data = new FormData();
-        data.append("name", this.workName);
-        data.append("description", this.workDesc);
-        data.append("url", this.workURL);
-        data.append("file", this.data.image);
-        const headers = { "content-type": "multipart/form-data" };
-        await this.$axios
-          .post(this.APIURL + "/works/" + this.work.ID, data, {
-            headers
-          })
-          .then(res => console.log(res));
-      } catch (error) {
-        // handling
+    showBubble: function() {
+      this.isLoading = !this.isLoading;
+    },
+    valCheck: function() {
+      this.errors = []
+      if (this.workName === "") {
+        const empty = "作品名は必須です。"
+        this.errors.push(empty)
       }
+      if (this.workDesc.length > 300) {
+        const over = "文字数は最大300字です。"
+        this.errors.push(over)
+      }
+    },
+    submit: async function() {
+      this.$nextTick(async () => {
+        this.valCheck()
+        if (this.errors.length !== 0) {
+          return
+        }
+        await this.showBubble();
+        try {
+          const data = new FormData();
+          data.append("name", this.workName);
+          data.append("description", this.workDesc);
+          data.append("url", this.workURL);
+          data.append("file", this.data.name);
+          const headers = { "content-type": "multipart/form-data" };
+          await this.$axios
+            .put(this.APIURL + "/works/" + this.work.ID, data, {
+              headers
+            })
+            .then(res => {
+              if (res.data) {
+                this.$router.push("/works/" + res.data.ID);
+              }
+            });
+        } catch (error) {
+          // handling
+        }
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     },
     returnURL: function(url) {
       return url ? url : "/NO_IMAGE.jpeg";
@@ -117,10 +146,13 @@ export default {
     setImage(e) {
       const files = this.$refs.file;
       const fileImg = files.files[0];
+      if (fileImg.size > 3000000) {
+        alert(this.AlertMessage());
+        return;
+      }
       if (fileImg.type.startsWith("image/")) {
         this.data.image = window.URL.createObjectURL(fileImg);
-        this.data.name = fileImg.name;
-        this.data.type = fileImg.type;
+        this.data.name = e.target.files[0];
       }
     },
     resetImage(e) {

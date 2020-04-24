@@ -8,12 +8,7 @@
         :isSearch="isSearch"
         searchType="works"
       />
-      <pagenate
-        :page="page"
-        @goPrev="goPrev()"
-        @goNext="goNext()"
-        v-if="!isSearch"
-      />
+      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
     <div class="container__main">
       <works :works="returnWorks" :isSearch="isSearch" />
@@ -40,22 +35,25 @@ export default {
       reload: true,
       maxCardCount: 8,
       isSearch: false,
-      isLoading: false
+      isLoading: false,
+      APIURL: ""
     };
   },
   mounted() {
-    this.$nextTick(async () => {
-      await this.showBubble();
-      await this.$axios
-        .get("http://localhost:8080/api/v1/works")
-        .then(response => {
-          this.works = response.data.Works;
-          console.log(this.works);
-        })
-        .catch(response => console.error(response)),
-        await this.init();
-      await setTimeout(() => this.showBubble(), 1000);
-    });
+    this.APIURL = this.GetURL();
+    try {
+      this.$nextTick(async () => {
+        await this.showBubble();
+        await this.$axios
+          .get(this.APIURL + "/works")
+          .then(response => {
+            this.works = response.data.Works;
+          })
+          .catch(response => console.error(response)),
+          await this.init();
+        await setTimeout(() => this.showBubble(), 1000);
+      });
+    } catch (error) {}
   },
   computed: {
     returnWorks: function() {
@@ -68,6 +66,7 @@ export default {
     },
     init: function() {
       this.worksList = [];
+      if (!this.works) return;
       if (this.works.length > 0) {
         for (let i = 0; i < this.maxCardCount; i++) {
           if (this.works[i]) {

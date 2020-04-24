@@ -5,21 +5,11 @@
         <div class="login__form">
           <p>
             <label for="email">メール</label>
-            <input
-              name="email"
-              v-model="form.email"
-              type="email"
-              autocomplete="on"
-            />
+            <input name="email" v-model="form.email" type="email" autocomplete="on" />
           </p>
           <p>
             <label for="password">パスワード</label>
-            <input
-              name="password"
-              type="password"
-              v-model="form.password"
-              autocomplete="on"
-            />
+            <input name="password" type="password" v-model="form.password" autocomplete="on" />
           </p>
         </div>
         <p>
@@ -42,12 +32,9 @@ export default {
   methods: {
     async submit() {
       try {
-        await this.$auth
-          .loginWith("local", {
-            data: this.form
-          })
-          .then(res => console.log(res));
-        // this.$router.push("/");
+        await this.$auth.loginWith("local", {
+          data: this.form
+        });
       } catch (e) {
         //
       }

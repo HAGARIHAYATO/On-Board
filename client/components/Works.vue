@@ -74,6 +74,7 @@ export default {
   position: absolute;
   top: 205px;
   height: 40px;
+  font-size: 10px;
   font-weight: bold;
   color: #192b3d !important;
   display: flex;
@@ -104,7 +105,7 @@ export default {
   font-weight: bold;
   word-break: break-all;
   color: #192b3d !important;
-  font-size: 14px;
+  font-size: 12px;
   text-align: center;
   &:hover {
     text-shadow: 0 0 2px grey;

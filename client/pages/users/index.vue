@@ -8,22 +8,11 @@
         :isSearch="isSearch"
         searchType="users"
       />
-      <pagenate
-        :page="page"
-        @goPrev="goPrev()"
-        @goNext="goNext()"
-        v-if="!isSearch"
-      />
+      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
     <div class="container__main">
-      <h1 class="searchAlert" v-if="isSearch && returnUsers.length == 0">
-        検索結果はありません
-      </h1>
-      <div
-        v-for="(user, index) in returnUsers"
-        :key="index"
-        class="user__bar__wrapper"
-      >
+      <h1 class="searchAlert" v-if="isSearch && returnUsers.length == 0">検索結果はありません</h1>
+      <div v-for="(user, index) in returnUsers" :key="index" class="user__bar__wrapper">
         <nuxt-link :to="'/users/' + user.ID">
           <div class="user__bar">
             <img :src="returnURL(user.ImageURL)" :alt="user.Name" />
@@ -53,14 +42,16 @@ export default {
       isSearch: false,
       users: [],
       maxDataCount: 6,
-      isLoading: false
+      isLoading: false,
+      APIURL: ""
     };
   },
   async mounted() {
+    this.APIURL = this.GetURL();
     this.$nextTick(async () => {
       await this.showBubble();
       await this.$axios
-        .get("http://localhost:8080/api/v1/users")
+        .get(this.APIURL + "/users")
         .then(response => {
           this.users = response.data.Users;
         })
@@ -83,6 +74,7 @@ export default {
     },
     init: function() {
       this.usersList = [];
+      if (!this.users) return
       if (this.users.length > 0) {
         for (let i = 0; i < this.maxDataCount; i++) {
           if (this.users[i]) {
