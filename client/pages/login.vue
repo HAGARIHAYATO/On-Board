@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+  <Validation :messages="errors"/>
     <div class="login-form-wrapper">
       <form @submit.prevent="submit">
         <div class="login__form">
@@ -20,9 +21,14 @@
   </div>
 </template>
 <script>
+import Validation from "~/components/Validation.vue";
 export default {
+  components: {
+    Validation
+  },
   data() {
     return {
+      errors: [],
       form: {
         email: "",
         password: ""
@@ -30,7 +36,22 @@ export default {
     };
   },
   methods: {
+    valCheck: function() {
+      this.errors = []
+      if (this.form.email === "") {
+        const empty = "メールアドレスは必須です。"
+        this.errors.push(empty)
+      }
+      if (this.form.password === "") {
+        const empty = "パスワードは必須です。"
+        this.errors.push(empty)
+      }
+    },
     async submit() {
+      this.valCheck()
+      if (this.errors.length !== 0) {
+        return
+      }
       try {
         await this.$auth.loginWith("local", {
           data: this.form
@@ -48,18 +69,15 @@ export default {
   border: solid 3px #192b3d;
   border-radius: 20px;
   height: 300px;
-  width: 50%;
+  width: 610px;
+  margin: 10px auto;
   position: relative;
 }
 .login-container {
   background-color: lighten(rgb(221, 209, 209), 5%);
-  padding-top: 70px;
+  padding-top: 150px;
   margin: 0 auto;
   min-height: 81vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   width: 100%;
 }
 .login__form__btn {

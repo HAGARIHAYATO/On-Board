@@ -239,7 +239,7 @@ body {
   background-color: white;
   border-radius: 25px !important;
   box-shadow: 0 0 5px grey;
-  padding: 0 10px;
+  padding: 0 4px;
   margin: 0 auto;
   height: 40px;
   word-break: break-all !important;

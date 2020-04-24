@@ -30,8 +30,9 @@ export default {
   color: red;
   width: 600px;
   margin: 0 auto;
+  font-size: 12px;
 }
 .validation__message{
-  margin: 0 0 0 20px;
+  margin: 0 0 0 10px;
 }
 </style>

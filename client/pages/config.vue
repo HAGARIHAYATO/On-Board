@@ -1,16 +1,17 @@
 <template>
   <div class="config-container">
     <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="form-wrapper">
       <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">
           <p>
             <label for="name">名前</label>
-            <input type="text" name="name" autocomplete="on" v-model="user.name" required />
+            <input type="text" name="name" autocomplete="on" v-model="user.name"/>
           </p>
           <p>
             <label for="email">メール</label>
-            <input name="email" type="email" autocomplete="on" v-model="user.email" required/>
+            <input name="email" type="email" autocomplete="on" v-model="user.email"/>
           </p>
           <p>
             <label for="url">サイトURL</label>
@@ -82,14 +83,17 @@
 <script>
 import Loading from "~/components/Loading.vue";
 import DeleteModal from "~/components/DeleteModal.vue";
+import Validation from "~/components/Validation.vue";
 export default {
   components: {
     DeleteModal,
-    Loading
+    Loading,
+    Validation
   },
   middleware: ["auth"],
   data() {
     return {
+      errors: [],
       data: {
         image: "",
         name: ""
@@ -155,8 +159,34 @@ export default {
         await setTimeout(() => this.showBubble(), 1000);
       });
     },
+    valCheck: function(bool) {
+      this.errors = []
+      if (bool) {
+        if (this.user.name === "") {
+          const empty = "ユーザー名は必須です。"
+          this.errors.push(empty)
+        }
+        if (this.user.email === "") {
+          const empty = "メールアドレスは必須です。"
+          this.errors.push(empty)
+        }
+        if (this.user.name.length > 300) {
+          const over = "文字数は最大20字です。"
+          this.errors.push(over)
+        }
+      } else {
+        if (this.user.password === "" || this.user.newPass === "") {
+          const empty = "パスワードは必須です。"
+          this.errors.push(empty)
+        }
+      }
+    },
     async submit() {
       this.$nextTick(async () => {
+        this.valCheck(this.generalWindow)
+        if (this.errors.length !== 0) {
+          return
+        }
         await this.showBubble();
         try {
           const data = new FormData();
@@ -228,13 +258,9 @@ textarea,
   }
 }
 .config-container {
-  padding-top: 70px;
+  padding-top: 90px;
   margin: 0 auto;
   min-height: 81vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   width: 100%;
 }
 .form-wrapper {
@@ -242,10 +268,12 @@ textarea,
   background-color: white;
   border: solid 3px #192b3d;
   border-radius: 5px;
-  height: 600px;
-  margin: 50px;
-  width: 60%;
+  min-height: 600px;
+  padding-bottom: 50px; 
+  margin: 10px auto 50px auto;
+  width: 610px;
   position: relative;
+  text-align: center;
 }
 .form__btn {
   outline: 0;

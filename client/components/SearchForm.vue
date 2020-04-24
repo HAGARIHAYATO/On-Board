@@ -1,5 +1,6 @@
 <template>
   <div class="search-container">
+    <p class="validation">{{error}}</p>
     <div class="search-form-wrapper">
       <input v-model="inputValue" class="search-form__box" type="search" placeholder="キーワード検索" />
       <input
@@ -8,7 +9,6 @@
         class="search-form__button"
         value="検索"
         minlength="1"
-        :disabled="inputValue==''"
       />
     </div>
     <div class="search-form-wrapper" v-if="searchType=='works'">
@@ -37,9 +37,19 @@ export default {
   computed: {},
   methods: {
     search: function() {
+      this.error = ""
+      if (this.inputValue === "") {
+        this.error = "キーワードを入力してください"
+        return
+      }
+      if (this.inputValue.length > 15) {
+        this.error = "入力は最大15字です。"
+        return
+      }
       this.$emit("search", { input: this.inputValue, check: this.isChecked });
     },
     cancel: function() {
+      this.error = ""
       this.inputValue = "";
       this.$emit("cancel");
     }
@@ -47,7 +57,8 @@ export default {
   data() {
     return {
       inputValue: "",
-      isChecked: true
+      isChecked: true,
+      error: ""
     };
   }
 };
@@ -119,5 +130,10 @@ input[type="checkbox"] {
 .checkbtn {
   background-color: #192b3d;
   color: white;
+}
+.validation{
+  color: red;
+  margin: 0 0 0 22px;
+  font-size: 10px;
 }
 </style>

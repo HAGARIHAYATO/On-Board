@@ -50,7 +50,7 @@ export default {
   border-radius: 25px;
   height: 40px;
   min-width: 150px !important;
-  background-color: lightgrey;
+  background-color: lighten(lightgrey, 10%);
   box-shadow: 0 0 2px black;
   line-height: 40px;
   display: inline-flex;

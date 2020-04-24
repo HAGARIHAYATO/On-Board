@@ -44,7 +44,7 @@ export default {
   flex-wrap: wrap;
 }
 .field__item {
-  margin :5px;
+  margin :6px;
 }
 .field__title{
   margin: 0 10px 10px 10px;

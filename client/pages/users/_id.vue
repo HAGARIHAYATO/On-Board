@@ -158,7 +158,7 @@ export default {
   min-height: 81vh;
 }
 .container__side {
-  padding-top: 100px;
+  padding-top: 140px;
   min-height: 100%;
   width: 400px;
   background-color: #fdeaa0;
