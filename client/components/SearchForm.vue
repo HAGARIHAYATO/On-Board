@@ -42,8 +42,8 @@ export default {
         this.error = "キーワードを入力してください"
         return
       }
-      if (this.inputValue.length > 15) {
-        this.error = "入力は最大15字です。"
+      if (this.inputValue.length > 20) {
+        this.error = "入力は最大20字です。"
         return
       }
       this.$emit("search", { input: this.inputValue, check: this.isChecked });
