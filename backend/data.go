@@ -31,4 +31,5 @@ type User struct {
 	Introduction string
 	Password     string
 	URL          string
+	GitHubToken  string
 }

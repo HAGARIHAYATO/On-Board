@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="submit" class="edit__wrapper">
     <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="edit__user__bar">
       <div class="edit__user__bar__top">
         <div class="edit__url">
@@ -49,13 +50,16 @@
 </template>
 <script>
 import Loading from "~/components/Loading.vue";
+import Validation from "~/components/Validation.vue";
 export default {
   components: {
-    Loading
+    Loading,
+    Validation
   },
   middleware: ["auth"],
   data() {
     return {
+      errors: [],
       data: {
         image: "",
         name: ""
@@ -96,8 +100,23 @@ export default {
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
+    valCheck: function() {
+      this.errors = []
+      if (this.workName === "") {
+        const empty = "作品名は必須です。"
+        this.errors.push(empty)
+      }
+      if (this.workDesc.length > 300) {
+        const over = "文字数は最大300字です。"
+        this.errors.push(over)
+      }
+    },
     submit: async function() {
       this.$nextTick(async () => {
+        this.valCheck()
+        if (this.errors.length !== 0) {
+          return
+        }
         await this.showBubble();
         try {
           const data = new FormData();

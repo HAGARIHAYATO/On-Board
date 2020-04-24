@@ -122,7 +122,6 @@ export default {
           data.append("body", this.data.body);
           data.append("uid", this.work.UserID);
           data.append("file", this.data.name);
-          console.log(data)
           const headers = { "content-type": "multipart/form-data" };
           await this.$axios
             .put(this.APIURL + "/works/" + this.work.ID + "/edit_item", data, {
@@ -259,6 +258,7 @@ input[type="submit"] {
   & img {
     border: solid 3px black;
     transform: scale(0.95);
+    transition: all .2s;
   }
   &:hover{
     & img {

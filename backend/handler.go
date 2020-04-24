@@ -148,6 +148,8 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 		ImageURL     string
 		URL          string
 		Introduction string
+		Email        string
+		GitHubToken  string
 		Works        []*ResultWork
 	}
 	var res Result
@@ -172,6 +174,8 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 	res.Name = user.Name
 	res.Introduction = user.Introduction
 	res.URL = user.URL
+	res.Email = user.Email
+	res.GitHubToken = user.GitHubToken
 	w.Write(ParseJSON(res))
 }
 
@@ -184,6 +188,7 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 		ImageURL     string
 		Introduction string
 		URL          string
+		GitHubToken  string
 	}
 	var rw ResultUser
 	// TODO
@@ -201,6 +206,7 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 	rw.ImageURL = user.ImageURL
 	rw.Introduction = user.Introduction
 	rw.URL = user.URL
+	rw.GitHubToken = user.GitHubToken
 	w.Write(ParseJSON(rw))
 }
 
@@ -336,6 +342,8 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if user.ID == cast.ToUint(r.FormValue("user_id")) {
 		if cast.ToBool(r.FormValue("windowOpt")) {
 			user.Name = r.FormValue("name")
+			user.Email = r.FormValue("email")
+			user.GitHubToken = r.FormValue("github")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
 			preURL := user.ImageURL
@@ -361,7 +369,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		} else {
-			user.Email = r.FormValue("email")
 			pass := r.FormValue("password")
 			hashedPassword := user.Password
 			err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(pass))
@@ -436,7 +443,7 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	w.Write(ParseJSON(res))
 }
 
-// UpdateWorkItems is handler with PUT
+// UpdateWorkItem is handler with PUT
 func UpdateWorkItem(w http.ResponseWriter, r *http.Request) {
 	type Result struct {
 		ID uint

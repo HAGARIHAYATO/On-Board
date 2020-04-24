@@ -6,9 +6,11 @@
         <h1 class="info__title">{{ work.Name }}</h1>
         <p class="info__title__sub">{{ work.URL }}</p>
         <div class="show__url">
-          <a :href="work.URL" class="show__container__image">
-            <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
-          </a>
+          <div class="show__url__container">
+            <a :href="work.URL" class="show__container__image">
+              <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
+            </a>
+          </div>
           <div class="show__url__info">
             <nuxt-link :to="'/users/' + work.UserID" class="info__name">
               <img :src="returnURL(work.UserImageURL)" class="user__icon">
@@ -207,7 +209,7 @@ body {
     border-radius: 2px;
     &:hover {
       & .show__image {
-        box-shadow: 0 0 5px grey;
+        box-shadow: 0 0 10px grey;
       }
     }
     &:active {
@@ -217,6 +219,12 @@ body {
     }
   }
   text-align: center;
+}
+.show__url__container{
+  width: 400px;
+  margin: 0 auto 5px auto;
+  height: 300px;
+  background-color: lightgrey;
 }
 .show__url__info {
   text-align: left;
@@ -324,7 +332,6 @@ body {
   height: 230px;
   padding: 10px 2%;
   & p {
-    background-color: lighten(lightgrey, 10%);
     word-break: break-all;
     font-size: 10px;
     color: #192b3d;

@@ -1,6 +1,7 @@
 <template>
   <form @submit.prevent="submit" class="new__wrapper">
     <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="new__user__bar">
       <div class="new__user__bar__top">
         <div class="new__url">
@@ -45,9 +46,11 @@
 </template>
 <script>
 import Loading from "~/components/Loading.vue";
+import Validation from "~/components/Validation.vue";
 export default {
   components: {
-    Loading
+    Loading,
+    Validation
   },
   middleware: ["auth"],
   data() {
@@ -56,6 +59,7 @@ export default {
         image: "",
         name: ""
       },
+      errors: [],
       workName: "",
       workURL: "",
       workDesc: "",
@@ -67,11 +71,26 @@ export default {
     this.APIURL = this.GetURL();
   },
   methods: {
+    valCheck: function() {
+      this.errors = []
+      if (this.workName === "") {
+        const empty = "作品名は必須です。"
+        this.errors.push(empty)
+      }
+      if (this.workDesc.length > 300) {
+        const over = "文字数は最大300字です。"
+        this.errors.push(over)
+      }
+    },
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
     async submit() {
       this.$nextTick(async () => {
+        this.valCheck()
+        if (this.errors.length !== 0) {
+          return
+        }
         await this.showBubble();
         try {
           const data = new FormData();

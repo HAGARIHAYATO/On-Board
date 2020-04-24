@@ -9,6 +9,10 @@
             <input type="text" name="name" autocomplete="on" v-model="user.name" required />
           </p>
           <p>
+            <label for="email">メール</label>
+            <input name="email" type="email" autocomplete="on" v-model="user.email" required/>
+          </p>
+          <p>
             <label for="url">サイトURL</label>
             <input
               type="text"
@@ -41,12 +45,12 @@
             <label for="text">紹介文</label>
             <textarea name="introduction" type="text" rows="4" v-model="user.introduction" />
           </p>
+          <p>
+            <label for="github">GitHubユーザー名</label>
+            <input name="github" type="text" autocomplete="on" v-model="user.github" />
+          </p>
         </div>
         <div v-else class="secret__form">
-          <p>
-            <label for="email">メール</label>
-            <input name="email" type="email" autocomplete="on" v-model="user.email" />
-          </p>
           <p>
             <label for="password">現在のパスワード</label>
             <input name="password" type="password" autocomplete="on" v-model="user.password" />
@@ -98,7 +102,8 @@ export default {
         url: "",
         email: "",
         password: "",
-        newPass: ""
+        newPass: "",
+        github: "",
       },
       APIURL: "",
       isOpenDeleteModal: false,
@@ -114,6 +119,7 @@ export default {
       this.user.name = this.$auth.user.Name;
       this.user.introduction = this.$auth.user.Introduction;
       this.user.email = this.$auth.user.Email;
+      this.user.github = this.$auth.user.GitHubToken;
     }
   },
   methods: {
@@ -149,13 +155,14 @@ export default {
           if (this.generalWindow) {
             data.append("user_id", this.user.id);
             data.append("name", this.user.name);
+            data.append("email", this.user.email);
+            data.append("github", this.user.github);
             data.append("url", this.user.url);
             data.append("introduction", this.user.introduction);
             data.append("file", this.data.name);
             data.append("windowOpt", true);
           } else {
             data.append("user_id", this.user.id);
-            data.append("email", this.user.email);
             data.append("password", this.user.password);
             data.append("new_password", this.user.newPass);
             data.append("windowOpt", false);
