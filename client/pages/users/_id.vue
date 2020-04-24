@@ -16,7 +16,7 @@
       <div class="user__works">
         <works :works="returnWorks" :isSearch="false" />
       </div>
-      <Git-Hub-Field :hubs="hubs"/>
+      <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
     </div>
   </div>
 </template>
@@ -60,11 +60,20 @@ export default {
   methods: {
     gitHubInit: async function() {
       if (this.ghToken) {
-        const endpoint = await this.FetchGitInfo(0, this.ghToken)
         const headers = { 
           "content-type": "application/json",
           "Authorization": "",
         };
+        const github = "https://api.github.com/users/" + this.ghToken
+        await this.$axios.get(github, {
+          headers
+        }).then(res => {
+          this.ghUser = res.data
+          if (res.data.type !== "User") {
+            this.author = 1
+          }
+        })
+        const endpoint = await this.FetchGitInfo(this.author, this.ghToken)
         await this.$axios.get(endpoint, {
           headers
         }).then(res => {
@@ -134,8 +143,9 @@ export default {
       works: [],
       isLoading: false,
       APIURL: "",
-      glToken: "",
       ghToken: "",
+      author: 0,
+      ghUser: {},
       hubs: []
     };
   }

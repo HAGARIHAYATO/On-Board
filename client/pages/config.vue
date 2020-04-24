@@ -110,17 +110,25 @@ export default {
       isLoading: false
     };
   },
-  mounted() {
-    this.APIURL = this.GetURL();
-    if (this.$auth.user) {
-      this.data.image = this.$auth.user.ImageURL;
-      this.user.id = this.$auth.user.ID;
-      this.user.url = this.$auth.user.URL;
-      this.user.name = this.$auth.user.Name;
-      this.user.introduction = this.$auth.user.Introduction;
-      this.user.email = this.$auth.user.Email;
-      this.user.github = this.$auth.user.GitHubToken;
-    }
+  async mounted() {
+    this.$nextTick(async () => {
+      await this.showBubble();
+      try {
+        this.APIURL = this.GetURL();
+        if (this.$auth.user) {
+          this.data.image = this.$auth.user.ImageURL;
+          this.user.id = this.$auth.user.ID;
+          this.user.url = this.$auth.user.URL;
+          this.user.name = this.$auth.user.Name;
+          this.user.introduction = this.$auth.user.Introduction;
+          this.user.email = this.$auth.user.Email;
+          this.user.github = this.$auth.user.GitHubToken;
+        }
+      } catch (error) {
+        // handling
+      }
+      await setTimeout(() => this.showBubble(), 1000);
+    });
   },
   methods: {
     showBubble: function() {
@@ -234,7 +242,8 @@ textarea,
   background-color: white;
   border: solid 3px #192b3d;
   border-radius: 5px;
-  height: 500px;
+  height: 600px;
+  margin: 50px;
   width: 60%;
   position: relative;
 }
@@ -308,7 +317,8 @@ textarea,
       display: block;
       text-align: left;
     }
-    & input[type="text"] {
+    & input[type="text"],
+    input[type="email"] {
       outline: 0;
       border: solid 3px #192b3d;
       border-radius: 20px;
