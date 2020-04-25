@@ -142,6 +142,7 @@ export default {
 }
 .container__side {
   min-height: 100%;
+  padding-top: 70px;
   width: 400px;
   background-color: #fdeaa0;
 }

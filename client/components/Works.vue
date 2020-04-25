@@ -46,11 +46,12 @@ export default {
 }
 .works__wrapper {
   margin: 0 auto 20px auto;
-  max-width: 960px;
-  min-height: 640px;
+  max-width: 870px;
+  // min-height: 640px;
   display: flex;
   flex-wrap: wrap;
 }
+
 .works__card {
   position: relative;
   & img {
@@ -58,7 +59,7 @@ export default {
     height: 200px;
     border-radius: 7px 7px 0 0;
   }
-  margin: 1% auto;
+  margin: 1%;
   width: 200px;
   height: 300px;
   border-radius: 7px;
@@ -113,9 +114,9 @@ export default {
 }
 .searchAlert {
   width: 100%;
-  color: white;
+  color: lightgrey;
   text-align: center;
-  line-height: 80vh;
+  line-height: 40vh;
   font-size: 40px;
 }
 </style>

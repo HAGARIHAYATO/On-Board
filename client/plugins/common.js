@@ -10,13 +10,18 @@ Vue.mixin({
       const message = "画像サイズが大きすぎます。(最大3MB)";
       return message;
     },
-    FetchGitInfo: function(platform, token) {
+    FetchGitInfo: function(author, token) {
       if (token === "") return ""
-      const github = "https://api.github.com/users/"
+      const github = "https://api.github.com"
+      const user = "/users/"
+      const orgs = "/orgs/"
       let endpoint = ""
-      switch (platform) {
+      switch (author) {
         case 0:
-        endpoint = github + token + "/repos"
+        endpoint = github + user + token + "/repos"
+        break;
+        case 1:
+        endpoint = github + orgs + token + "/repos"
         break;
       }
       return endpoint

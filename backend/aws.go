@@ -24,21 +24,29 @@ var SVC *s3.S3
 var bucket string = "on-board-pub"
 
 func init() {
-	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
-	if err != nil {
-		log.Fatal(err)
-	}
-	awsID := os.Getenv("AWSID")
-	awsKey := os.Getenv("AWSKEY")
-	creds := credentials.NewStaticCredentials(awsID, awsKey, "")
-	Sess, err = session.NewSession(&aws.Config{
-		Credentials: creds,
-		Region:      aws.String("ap-northeast-1"),
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
-	SVC = s3.New(Sess)
+	// Product ENV
+	Sess := session.Must(session.NewSession())
+	SVC := ec2.New(
+		sess,
+		aws.NewConfig().WithRegion("ap-northeast-1"),
+	)
+	fmt.Println(svc.DescribeInstances(nil))
+	// DEV ENV
+	// err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// awsID := os.Getenv("AWSID")
+	// awsKey := os.Getenv("AWSKEY")
+	// creds := credentials.NewStaticCredentials(awsID, awsKey, "")
+	// Sess, err = session.NewSession(&aws.Config{
+	// 	Credentials: creds,
+	// 	Region:      aws.String("ap-northeast-1"),
+	// })
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// SVC = s3.New(Sess)
 	fmt.Println("----------access---successfully------")
 }
 

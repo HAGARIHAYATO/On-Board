@@ -1,16 +1,17 @@
 <template>
   <div class="config-container">
     <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="form-wrapper">
       <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">
           <p>
             <label for="name">名前</label>
-            <input type="text" name="name" autocomplete="on" v-model="user.name" required />
+            <input type="text" name="name" autocomplete="on" v-model="user.name"/>
           </p>
           <p>
             <label for="email">メール</label>
-            <input name="email" type="email" autocomplete="on" v-model="user.email" required/>
+            <input name="email" type="email" autocomplete="on" v-model="user.email"/>
           </p>
           <p>
             <label for="url">サイトURL</label>
@@ -59,6 +60,10 @@
             <label for="new-password">新しいパスワード</label>
             <input name="new-password" type="password" v-model="user.newPass" />
           </p>
+          <p>
+            <label for="new-password">新しいパスワード確認</label>
+            <input name="new-password" type="password" v-model="user.newPassConfirm" />
+          </p>
           <p class="deleteModalBtn" @click="openDeleteModal">アカウントを削除</p>
         </div>
         <div class="form__transform">
@@ -82,14 +87,17 @@
 <script>
 import Loading from "~/components/Loading.vue";
 import DeleteModal from "~/components/DeleteModal.vue";
+import Validation from "~/components/Validation.vue";
 export default {
   components: {
     DeleteModal,
-    Loading
+    Loading,
+    Validation
   },
   middleware: ["auth"],
   data() {
     return {
+      errors: [],
       data: {
         image: "",
         name: ""
@@ -103,6 +111,7 @@ export default {
         email: "",
         password: "",
         newPass: "",
+        newPassConfirm: "",
         github: "",
       },
       APIURL: "",
@@ -110,17 +119,25 @@ export default {
       isLoading: false
     };
   },
-  mounted() {
-    this.APIURL = this.GetURL();
-    if (this.$auth.user) {
-      this.data.image = this.$auth.user.ImageURL;
-      this.user.id = this.$auth.user.ID;
-      this.user.url = this.$auth.user.URL;
-      this.user.name = this.$auth.user.Name;
-      this.user.introduction = this.$auth.user.Introduction;
-      this.user.email = this.$auth.user.Email;
-      this.user.github = this.$auth.user.GitHubToken;
-    }
+  async mounted() {
+    this.$nextTick(async () => {
+      await this.showBubble();
+      try {
+        this.APIURL = this.GetURL();
+        if (this.$auth.user) {
+          this.data.image = this.$auth.user.ImageURL;
+          this.user.id = this.$auth.user.ID;
+          this.user.url = this.$auth.user.URL;
+          this.user.name = this.$auth.user.Name;
+          this.user.introduction = this.$auth.user.Introduction;
+          this.user.email = this.$auth.user.Email;
+          this.user.github = this.$auth.user.GitHubToken;
+        }
+      } catch (error) {
+        // handling
+      }
+      await setTimeout(() => this.showBubble(), 1000);
+    });
   },
   methods: {
     showBubble: function() {
@@ -147,8 +164,38 @@ export default {
         await setTimeout(() => this.showBubble(), 1000);
       });
     },
+    valCheck: function(bool) {
+      this.errors = []
+      if (bool) {
+        if (this.user.name === "") {
+          const empty = "ユーザー名は必須です。"
+          this.errors.push(empty)
+        }
+        if (this.user.email === "") {
+          const empty = "メールアドレスは必須です。"
+          this.errors.push(empty)
+        }
+        if (this.user.name.length > 300) {
+          const over = "文字数は最大20字です。"
+          this.errors.push(over)
+        }
+      } else {
+        if (this.user.password === "" || this.user.newPass === "") {
+          const empty = "パスワードは必須です。"
+          this.errors.push(empty)
+        }
+        if (this.user.newPass !== this.user.newPassConfirm) {
+          const check = "新しいパスワードを確認してください。"
+          this.errors.push(check)
+        }
+      }
+    },
     async submit() {
       this.$nextTick(async () => {
+        this.valCheck(this.generalWindow)
+        if (this.errors.length !== 0) {
+          return
+        }
         await this.showBubble();
         try {
           const data = new FormData();
@@ -220,13 +267,9 @@ textarea,
   }
 }
 .config-container {
-  padding-top: 70px;
+  padding-top: 90px;
   margin: 0 auto;
   min-height: 81vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   width: 100%;
 }
 .form-wrapper {
@@ -234,9 +277,12 @@ textarea,
   background-color: white;
   border: solid 3px #192b3d;
   border-radius: 5px;
-  height: 500px;
-  width: 60%;
+  min-height: 600px;
+  padding-bottom: 50px; 
+  margin: 10px auto 50px auto;
+  width: 610px;
   position: relative;
+  text-align: center;
 }
 .form__btn {
   outline: 0;
@@ -308,7 +354,8 @@ textarea,
       display: block;
       text-align: left;
     }
-    & input[type="text"] {
+    & input[type="text"],
+    input[type="email"] {
       outline: 0;
       border: solid 3px #192b3d;
       border-radius: 20px;
@@ -370,6 +417,7 @@ textarea,
   }
 }
 .file-wrapper {
+  position: relative;
   display: flex;
   height: 80px;
   & img {
@@ -402,8 +450,11 @@ textarea,
   }
 }
 .secret__form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-weight: bold;
-  padding-top: 100px;
   & p {
     width: 340px;
     margin: 20px auto;

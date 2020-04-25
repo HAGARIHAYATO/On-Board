@@ -1,16 +1,17 @@
 <template>
   <div class="signup-container">
     <Loading v-if="isLoading" />
+    <Validation :messages="errors"/>
     <div class="signup-form-wrapper">
       <form @submit.prevent="submit">
         <div class="signup__form">
           <p>
             <label for="name">名前</label>
-            <input type="text" name="name" v-model="name" autocomplete="on" required />
+            <input type="text" name="name" v-model="name" autocomplete="on" />
           </p>
           <p>
             <label for="email">メール</label>
-            <input v-model="email" name="email" type="email" autocomplete="on" required />
+            <input v-model="email" name="email" type="email" autocomplete="on" />
           </p>
           <p>
             <label for="password">パスワード</label>
@@ -18,8 +19,6 @@
               name="password"
               type="password"
               autocomplete="on"
-              minlength="6"
-              required
               v-model="password"
             />
           </p>
@@ -29,14 +28,12 @@
               name="password"
               type="password"
               autocomplete="on"
-              minlength="6"
               v-model="passwordConfirm"
-              required
             />
           </p>
         </div>
         <p>
-          <input class="signup__form__btn" type="submit" value="無料登録" :disabled="returnCheck" />
+          <input class="signup__form__btn" type="submit" value="無料登録" />
         </p>
       </form>
     </div>
@@ -44,12 +41,15 @@
 </template>
 <script>
 import Loading from "~/components/Loading.vue";
+import Validation from "~/components/Validation.vue";
 export default {
   components: {
-    Loading
+    Loading,
+    Validation
   },
   data() {
     return {
+      errors: [],
       isLoading: false,
       name: "",
       email: "",
@@ -58,12 +58,6 @@ export default {
       APIURL: ""
     };
   },
-  computed: {
-    returnCheck: function() {
-      if (this.password != this.passwordConfirm) return true;
-      return false;
-    }
-  },
   mounted() {
     this.APIURL = this.GetURL();
   },
@@ -71,7 +65,30 @@ export default {
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
+    valCheck: function() {
+      this.errors = []
+      if (this.name === "") {
+        const empty = "作品名は必須です。"
+        this.errors.push(empty)
+      }
+      if (this.email === "") {
+        const empty = "メールアドレスは必須です。"
+        this.errors.push(empty)
+      }
+      if (this.password === "" || this.password !== this.passwordConfirm) {
+        const check = "パスワードを確認してください。"
+        this.errors.push(check)
+      }
+      if (this.password.length < 5 || this.password.length > 20) {
+        const check = "パスワードは6文字以上20字以下です。"
+        this.errors.push(check)
+      }
+    },
     async submit() {
+      this.valCheck()
+      if (this.errors.length !== 0) {
+        return
+      }
       try {
         const data = new FormData();
         data.append("name", this.name);
@@ -86,6 +103,9 @@ export default {
             })
             .then(res => {
               if (res.data.ID) {
+                if (res.data.Token) {
+                  this.$auth.setUserToken(res.data.Token)
+                }
                 this.$router.push("/users/" + res.data.ID);
               }
             });
@@ -104,18 +124,15 @@ export default {
   border: solid 3px #192b3d;
   border-radius: 20px;
   height: 400px;
-  width: 50%;
+  width: 610px;
+  margin: 10px auto;
   position: relative;
 }
 .signup-container {
   background-color: lighten(rgb(221, 209, 209), 5%);
-  padding-top: 40px;
+  padding-top: 120px;
   margin: 0 auto;
   min-height: 81vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   width: 100%;
 }
 .signup__form__btn {

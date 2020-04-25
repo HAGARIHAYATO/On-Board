@@ -214,6 +214,10 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 
 // CreateUser 1@jwt token
 func CreateUser(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		ID    uint
+		Token string
+	}
 	var user User
 	password := r.FormValue("password")
 	email := r.FormValue("email")
@@ -234,8 +238,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	user.Password = ""
-	w.Write(ParseJSON(user))
+	token, err := CreateToken(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	var res Result
+	res.ID = user.ID
+	res.Token = token
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
 }
 
 // RequestSession 1@jwt token
