@@ -1,6 +1,7 @@
 <template>
   <div class="field__container">
-    <h2 class="field__title">GitHub Account</h2>
+    <h2 class="field__title" v-if="ghUser.type === 'User'">GitHub Account</h2>
+    <h2 class="field__title" v-else>GitHub Team</h2>
     <p class="gh__user"><img :src="ghUser.avatar_url"><a :href="ghUser.html_url">{{ghUser.login}}</a></p>
     <h2 class="field__title">GitHub Projects</h2>
     <div class="field">

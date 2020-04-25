@@ -51,11 +51,11 @@ export default {
   height: 40px;
   min-width: 150px !important;
   background-color: lighten(lightgrey, 10%);
-  box-shadow: 0 0 2px black;
+  box-shadow: 0 0 3px black;
   line-height: 40px;
   display: inline-flex;
   &:hover{
-    box-shadow: 0 0 4px black;
+    box-shadow: 0 0 5px black;
   }
   &:active{
     border: solid 2px lightgreen;

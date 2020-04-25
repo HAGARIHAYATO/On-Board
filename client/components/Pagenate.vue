@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pagenation">
     <p class="pagenation__main__number">{{page}}</p>
     <div class="pagenate__main">
       <p class="pagenation__item" @click="goPrev()">prev</p>
@@ -26,6 +26,8 @@ export default {
 };
 </script>
 <style lang="scss" scopoed>
+.pagenation{
+}
 .pagenate__main {
   display: flex;
   justify-content: center;
@@ -37,11 +39,13 @@ export default {
   line-height: 30px;
   font-size: 22px;
   font-weight: bold;
-  color: white;
+  color: #192b3d;
   cursor: pointer;
   transition: all 0.3s;
+  border-radius: 20px;
+  padding: 4px 2%;
   &:hover {
-    color: #192b3d;
+    color: silver;
   }
   &:active {
     transition: all 0.2s;
@@ -59,6 +63,6 @@ export default {
   border-radius: 50%;
   color: #192b3d;
   background-color: white;
-  box-shadow: 0 0 5px black;
+  box-shadow: 0 0 2px black;
 }
 </style>

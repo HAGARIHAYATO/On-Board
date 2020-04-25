@@ -149,6 +149,11 @@ html {
       transition: all 0.4s;
     }
   }
+  & a {
+    display: inline-block;
+    animation-name: ankerAppear;
+    animation-duration: 0.5s;
+  }
   animation-name: easeAppear;
   animation-fill-mode: forwards;
   animation-duration: 0.2s;
@@ -255,9 +260,14 @@ footer {
   }
   100% {
     height: 100px;
-    & a {
-      display: inline;
-    }
+  }
+}
+@keyframes ankerAppear {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
   }
 }
 </style>

@@ -1,20 +1,24 @@
 <template>
   <div class="container" v-if="reload">
     <Loading v-if="isLoading" />
-    <div class="container__side">
-      <div class="image-wrapper">
-        <img :src="returnURL(user.ImageURL)" :alt="user.Name" />
-      </div>
-      <p class="user__name">{{ user.Name }}</p>
-      <p class="user__url">
-        <a :href="user.URL">{{ user.URL }}</a>
-      </p>
-      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" />
-      <div class="user__intro">{{ user.Introduction }}</div>
-    </div>
     <div class="container__main">
       <div class="user__works">
+        <h2>User</h2>
+        <div class="user">
+          <div class="user__side">
+            <div class="image-wrapper">
+              <img :src="returnURL(user.ImageURL)" :alt="user.Name" />
+            </div>
+          </div>
+          <div class="user__main">
+            <p class="user__name">{{ user.Name }}</p>
+            <a class="user__url" :href="user.URL">{{ user.URL }}</a>
+          </div>
+        </div>
+        <div class="user__intro">{{ user.Introduction }}</div>
+        <h2>Works</h2>
         <works :works="returnWorks" :isSearch="false" />
+        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.worksList.length > 0" />
       </div>
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
     </div>
@@ -153,54 +157,62 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  display: flex;
   width: 100%;
   min-height: 81vh;
 }
-.container__side {
-  padding-top: 140px;
-  min-height: 100%;
-  width: 400px;
-  background-color: #fdeaa0;
-}
 .container__main {
-  padding-top: 70px;
+  padding: 90px 0;
   min-height: 100%;
   width: 100%;
   background-color: lighten(rgb(221, 209, 209), 5%);
 }
-.image-wrapper {
-  margin: 0 auto;
-  width: 200px;
-  height: 200px;
-  & img {
-    box-shadow: 0 0 5px grey;
-    width: 200px;
-    height: 200px;
+.user{
+  display: flex;
+}
+.user__works{
+  position: relative;
+  margin: 30px;
+  background-color: white;
+  border-radius: 10px;
+  border: solid .5px lightgrey;
+  padding: 2%;
+  & h2 {
+    margin: 0 10px 10px 10px;
+    color: #192b3d;
+    font-size: 18px;
   }
 }
+.user__main{
+  min-width:400px;
+}
 .user__name {
-  margin-top: 10px;
-  text-align: center;
+  margin: 10px 0 0 0;
+  text-align: left;
   font-weight: bold;
   color: #192b3d;
   font-size: 24px;
   line-height: 24px;
 }
 .user__url {
-  text-align: center;
-  margin-bottom: 50px;
+  color:grey !important;
+  text-decoration: none !important;
+  font-size: 10px;
 }
 .user__intro {
-  box-shadow: 0 0 5px grey;
+  margin: 0 20px;
   font-size: 10px;
-  margin: 40px auto 60px auto;
-  padding: 3%;
-  border: solid 3px #192b3d;
-  border-radius: 5px;
-  background-color: white;
-  width: 80%;
-  min-height: 120px;
+  padding: 10px;
+  color:grey;
+  width: 100%;
   max-height: 360px;
+}
+.image-wrapper {
+  margin: 0 10px 0 30px;
+  width: 60px;
+  height: 60px;
+  & img {
+    width: 60px;
+    height: 60px;
+  }
 }
 </style>
