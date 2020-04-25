@@ -60,6 +60,10 @@
             <label for="new-password">新しいパスワード</label>
             <input name="new-password" type="password" v-model="user.newPass" />
           </p>
+          <p>
+            <label for="new-password">新しいパスワード確認</label>
+            <input name="new-password" type="password" v-model="user.newPassConfirm" />
+          </p>
           <p class="deleteModalBtn" @click="openDeleteModal">アカウントを削除</p>
         </div>
         <div class="form__transform">
@@ -107,6 +111,7 @@ export default {
         email: "",
         password: "",
         newPass: "",
+        newPassConfirm: "",
         github: "",
       },
       APIURL: "",
@@ -178,6 +183,10 @@ export default {
         if (this.user.password === "" || this.user.newPass === "") {
           const empty = "パスワードは必須です。"
           this.errors.push(empty)
+        }
+        if (this.user.newPass !== this.user.newPassConfirm) {
+          const check = "新しいパスワードを確認してください。"
+          this.errors.push(check)
         }
       }
     },
@@ -408,6 +417,7 @@ textarea,
   }
 }
 .file-wrapper {
+  position: relative;
   display: flex;
   height: 80px;
   & img {
@@ -440,8 +450,11 @@ textarea,
   }
 }
 .secret__form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-weight: bold;
-  padding-top: 100px;
   & p {
     width: 340px;
     margin: 20px auto;

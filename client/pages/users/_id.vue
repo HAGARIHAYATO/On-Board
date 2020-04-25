@@ -18,7 +18,7 @@
         <div class="user__intro">{{ user.Introduction }}</div>
         <h2>Works</h2>
         <works :works="returnWorks" :isSearch="false" />
-        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.worksList.length > 0" />
+        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.works && this.works.length > 6" />
       </div>
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
     </div>
@@ -175,7 +175,7 @@ export default {
   background-color: white;
   border-radius: 10px;
   border: solid .5px lightgrey;
-  padding: 2%;
+  padding: 2% 2% 3% 2%;
   & h2 {
     margin: 0 10px 10px 10px;
     color: #192b3d;
