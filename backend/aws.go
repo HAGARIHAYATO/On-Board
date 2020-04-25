@@ -23,12 +23,11 @@ var bucket string = "on-board-pub"
 
 func init() {
 	// Product ENV
-	Sess := session.Must(session.NewSessionWithOptions(session.Options{
+	Sess = session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
 	creds := stscreds.NewCredentials(Sess, "default")
-	SVC := s3.New(Sess, &aws.Config{Credentials: creds})
-	fmt.Println(SVC.DescribeInstances(nil))
+	SVC = s3.New(Sess, &aws.Config{Credentials: creds})
 	// DEV ENV
 	// err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
 	// if err != nil {
