@@ -2,16 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/joho/godotenv"
 )
 
 // Sess is variable
@@ -27,10 +25,10 @@ func init() {
 	// Product ENV
 	Sess := session.Must(session.NewSession())
 	SVC := ec2.New(
-		sess,
+		Sess,
 		aws.NewConfig().WithRegion("ap-northeast-1"),
 	)
-	fmt.Println(svc.DescribeInstances(nil))
+	fmt.Println(SVC.DescribeInstances(nil))
 	// DEV ENV
 	// err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
 	// if err != nil {
