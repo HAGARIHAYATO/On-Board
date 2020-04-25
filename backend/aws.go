@@ -24,6 +24,14 @@ var SVC *s3.S3
 var bucket string = "on-board-pub"
 
 func init() {
+	// Product ENV
+	// Sess := session.Must(session.NewSession())
+	// SVC := ec2.New(
+	// 	sess,
+	// 	aws.NewConfig().WithRegion("ap-northeast-1"),
+	// )
+	// fmt.Println(svc.DescribeInstances(nil))
+	// DEV ENV
 	err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
 	if err != nil {
 		log.Fatal(err)
