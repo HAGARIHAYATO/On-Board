@@ -8,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
@@ -24,18 +23,11 @@ var bucket string = "on-board-pub"
 
 func init() {
 	// Product ENV
-	config := aws.NewConfig()
-	sessOpts := session.Options{
-		Config:                  *config,
-		Profile:                 "default",
-		AssumeRoleTokenProvider: stscreds.StdinTokenProvider,
-		SharedConfigState:       session.SharedConfigEnable,
-	}
-	Sess := session.Must(session.NewSessionWithOptions(sessOpts))
-	SVC := ec2.New(
-		Sess,
-		aws.NewConfig().WithRegion("ap-northeast-1"),
-	)
+	Sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+	}))
+	creds := stscreds.NewCredentials(Sess, "default")
+	SVC := s3.New(Sess, &aws.Config{Credentials: creds})
 	fmt.Println(SVC.DescribeInstances(nil))
 	// DEV ENV
 	// err := godotenv.Load(fmt.Sprintf("./%s.env", os.Getenv("GO_ENV")))
