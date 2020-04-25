@@ -27,7 +27,7 @@ func init() {
 	config := aws.NewConfig()
 	sessOpts := session.Options{
 		Config:                  *config,
-		Profile:                 profile, // = default
+		Profile:                 "default",
 		AssumeRoleTokenProvider: stscreds.StdinTokenProvider,
 		SharedConfigState:       session.SharedConfigEnable,
 	}
