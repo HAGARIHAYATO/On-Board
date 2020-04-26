@@ -74,10 +74,7 @@ export default {
       }
     }
     : {
-      target: "https://on-board-project",
-      pathRewrite: {
-        "^/api": "/api"
-      }
+      "*": "http://[::1]:8080"
     }
   },
   // nuxtAuth
