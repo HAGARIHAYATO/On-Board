@@ -20,11 +20,13 @@ var SVC *s3.S3
 
 // Bucket is variable
 var bucket string = "on-board-pub"
+var region string = "ap-northeast-1"
 
 func init() {
 	// Product ENV
 	Sess = session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
+		Config:            aws.Config{Region: aws.String(region)},
 	}))
 	creds := stscreds.NewCredentials(Sess, "default")
 	SVC = s3.New(Sess, &aws.Config{Credentials: creds})
@@ -38,7 +40,7 @@ func init() {
 	// creds := credentials.NewStaticCredentials(awsID, awsKey, "")
 	// Sess, err = session.NewSession(&aws.Config{
 	// 	Credentials: creds,
-	// 	Region:      aws.String("ap-northeast-1"),
+	// 	Region:      aws.String(region),
 	// })
 	// if err != nil {
 	// 	log.Fatal(err)
