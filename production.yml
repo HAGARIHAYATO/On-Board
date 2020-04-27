@@ -1,0 +1,38 @@
+version: "3.5"
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    command: ["sh", "build.sh"]
+    tty: true
+    restart: always
+    links:
+      - db
+    ports:
+      - 8000:8080
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    restart: always
+    tty: true
+    depends_on:
+      - backend
+    command: npm run dev
+    ports:
+      - "3030:3000"
+  db:
+    container_name: db
+    image: postgres:10-alpine
+    restart: always
+    ports:
+      - "3036:5432"
+    environment:
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=pg
+      - PGPASSWORD=pg
+      - POSTGRES_DB=pg
+      - DATABASE_HOST=db

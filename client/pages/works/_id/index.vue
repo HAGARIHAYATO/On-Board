@@ -143,7 +143,6 @@ export default {
         })
         .catch(response => console.error(response));
       await setTimeout(() => this.showBubble(), 1000);
-      console.log(this.work)
     });
   }
 };
