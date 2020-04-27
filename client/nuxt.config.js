@@ -31,6 +31,10 @@ export default {
    ** Plugins to load before mounting the App
    */
   // nuxtAuth
+  env: {
+    API_URL: "http://backend:8080",
+    API_URL_BROWSER: "http://localhost:8080"
+  },
   axios: {
     baseURL: process.env.API_URL,
     browserBaseURL: process.env.API_URL_BROWSER
@@ -46,12 +50,12 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: "http://localhost:8080/api/v1/login",
+            url: "/api/v1/login",
             method: "post",
             propertyName: "Token"
           },
           user: {
-            url: "http://localhost:8080/api/v1/credential",
+            url: "/api/v1/credential",
             method: "get",
             propertyName: false
           },
@@ -61,8 +65,16 @@ export default {
     }
   },
   proxy: {
-    "/api": {
-      target: "http://localhost:8080",
+    "/api":
+    process.env.NODE_ENV === 'development'
+    ? {
+      target: "http://backend:8080",
+      pathRewrite: {
+        "^/api": "/api"
+      }
+    }
+    : {
+      target: "http://on-board-project.com/:8080",
       pathRewrite: {
         "^/api": "/api"
       }
@@ -78,10 +90,6 @@ export default {
    ** Nuxt.js modules
    */
   modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy"],
-  env: {
-    API_URL: "http://api:8080/",
-    API_URL_BROWSER: "http://localhost:8080"
-  },
   /*
    ** Build configuration
    */
