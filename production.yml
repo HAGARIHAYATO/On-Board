@@ -11,7 +11,7 @@ services:
     links:
       - db
     ports:
-      - 8000:8080
+      - 8080:8080
   frontend:
     container_name: frontend
     build:
@@ -23,13 +23,13 @@ services:
       - backend
     command: npm run dev
     ports:
-      - "3030:3000"
+      - "3000:3000"
   db:
     container_name: db
     image: postgres:10-alpine
     restart: always
     ports:
-      - "3036:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=pg
       - POSTGRES_PASSWORD=pg
