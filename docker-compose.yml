@@ -7,6 +7,7 @@ services:
       dockerfile: ./backend/Dockerfile
     command: ["sh", "build.sh"]
     tty: true
+    restart: always
     links:
       - db
     volumes:
@@ -19,6 +20,7 @@ services:
       context: .
       dockerfile: ./client/Dockerfile
     tty: true
+    restart: always
     volumes:
       - ./client/:/app/
       - /app/node_modules
@@ -32,6 +34,7 @@ services:
     image: postgres:10-alpine
     volumes:
       - ./db/:/private/
+    restart: always
     ports:
       - "5432:5432"
     environment:
