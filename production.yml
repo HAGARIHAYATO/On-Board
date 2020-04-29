@@ -5,15 +5,18 @@ services:
     build:
       context: .
       dockerfile: ./backend/Dockerfile
+    volumes:
+      - ./backend/:/backend/
     command: ["sh", "build.sh"]
     tty: true
     restart: always
-    links:
-      - db
     ports:
       - 8080:8080
   frontend:
     container_name: frontend
+    volumes:
+      - ./client/:/app/
+      - /app/node_modules
     build:
       context: .
       dockerfile: ./client/Dockerfile
