@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -74,5 +75,8 @@ func DeleteFileByBucket(filename string) error {
 		Bucket: aws.String(bucket),
 		Key:    aws.String(trimedName),
 	})
+	if err != nil {
+		log.Fatal(err)
+	}
 	return err
 }
