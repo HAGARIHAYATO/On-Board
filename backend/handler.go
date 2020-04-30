@@ -358,7 +358,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.GitHubToken = r.FormValue("github")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
-			// preURL := user.ImageURL
+			preURL := user.ImageURL
 			file, fileHeader, _ := r.FormFile("file")
 			if file != nil {
 				filename, err := CreateFile(file, fileHeader.Filename, user.ID)
@@ -375,12 +375,12 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				// TODO eliminate ... aws sdk config about iam role
-				// if preURL != "" {
-				// 	err = DeleteFileByBucket(preURL)
-				// 	if err != nil {
-				// 		fmt.Println("--------%v--------", err)
-				// 	}
-				// }
+				if preURL != "" {
+					err = DeleteFileByBucket(preURL)
+					if err != nil {
+						fmt.Println("--------%v--------", err)
+					}
+				}
 			}
 		} else {
 			pass := r.FormValue("password")
