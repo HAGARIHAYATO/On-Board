@@ -71,6 +71,9 @@ func UploadFileToBucket(filename string) (*s3manager.UploadOutput, error) {
 func DeleteFileByBucket(filename string) error {
 	trimedName := strings.Trim(filename, "https://on-board-pub.s3.ap-northeast-1.amazonaws.com/")
 	_, err = SVC.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(trimedName)})
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = SVC.WaitUntilObjectNotExists(&s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(trimedName),
