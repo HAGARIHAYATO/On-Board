@@ -17,8 +17,8 @@
         </div>
         <div class="user__intro">{{ user.Introduction }}</div>
         <h2>Works</h2>
-        <works :works="returnWorks" :isSearch="false" />
-        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.works && this.works.length > 6" />
+        <works :works="returnWorks" :isSearch="false" :isUserShow="true"/>
+        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.works && this.works.length > 8" />
       </div>
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
     </div>
@@ -183,7 +183,6 @@ export default {
   }
 }
 .user__main{
-  min-width:400px;
 }
 .user__name {
   margin: 10px 0 0 0;

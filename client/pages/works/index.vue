@@ -142,7 +142,7 @@ export default {
   background-color: #fdeaa0;
 }
 .container__main {
-  padding-top: 70px;
+  padding-top: 100px;
   min-height: 100%;
   width: 100%;
   background-color: lighten(rgb(221, 209, 209), 5%);

@@ -172,7 +172,9 @@ h2 {
 }
 .show__bar {
   display: flex;
-  width: 800px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 70%;
   margin: 30px auto 50px auto;
 }
 .show__description {
@@ -182,13 +184,11 @@ h2 {
   min-height: 20vh;
   min-width: 300px;
   color: grey;
-  margin: 0 0 0 50px;
   word-break: break-all;
   background-color: white;
   box-shadow: 0 0 2px grey;
 }
 .show__container__image {
-  margin: 0 auto;
   min-width: 200px;
   height: 300px;
 }
@@ -200,12 +200,11 @@ h2 {
 }
 .show__user {
   text-align: left;
-  margin: 0 0 34px 50px;
+  margin: 0 0 34px 0;
   max-width: 400px;
 }
 .info__name {
-  position: relative;
-  display: inline-block;
+  display: inline-flex;
   min-width: 40%;
   background-color: white;
   border-radius: 25px !important;
@@ -214,20 +213,17 @@ h2 {
   margin: 0 auto;
   height: 40px;
   word-break: break-all !important;
+  text-decoration: none !important;
   color: #192b3d;
   & p {
-    display: inline-block;
-    position: absolute;
-    margin: 0 0 0 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    margin: 0 10px;
+    line-height: 40px;
   }
   &:hover {
     box-shadow: 0 0 5px grey;
   }
 }
 .user__icon{
-  display: inline-block;
   margin: 5px 2px;
   width: 30px;
   height: 30px;
@@ -254,6 +250,7 @@ h2 {
     text-align: center;
   }
   & img {
+    cursor: pointer;
     box-shadow: 0 0 4px grey;
   }
   &:hover {
@@ -276,8 +273,10 @@ h2 {
 }
 .select__item {
   margin: 30px auto 0 auto;
-  width: 660px;
+  width: 70%;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   border-radius: 5px;
   transition: all 0.3s;
 }
@@ -289,11 +288,10 @@ h2 {
   }
 }
 .select__item__content {
-  margin: 0 0 0 50px;
   background-color: white;
   border-radius: 3px;
-  width: 100%;
-  height: 230px;
+  width: 70%;
+  min-height: 50px;
   padding: 10px 2%;
   & p {
     word-break: break-all;
@@ -342,12 +340,15 @@ h2 {
 .info__title {
   text-align: left;
   font-size: 24px;
-  margin: 0 0 0 50px;
+  margin: 0 0 0 0;
 }
 .info__title__sub {
   text-align: left;
-  margin: 0 0 10px 50px;
+  margin: 0 0 10px 0;
   font-size: 8px;
   color: grey;
+}
+.show__main, .show__info{
+  margin: 25px;
 }
 </style>

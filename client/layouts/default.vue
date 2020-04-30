@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <nuxt />
+    <nuxt class="cover__main" />
     <footer>
       <div class="footer__logo"></div>
     </footer>
@@ -88,6 +88,7 @@ export default {
 <style lang="scss" scoped>
 html {
   margin: 0 !important;
+  overflow: hidden !important;
 }
 *,
 *:before,
