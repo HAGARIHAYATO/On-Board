@@ -79,6 +79,6 @@ func DeleteFileByBucket(filename string) error {
 	// if err != nil {
 	// 	fmt.Printf("------------%v------------", err)
 	// }
-	err := nil
+	var err error
 	return err
 }
