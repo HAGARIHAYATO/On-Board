@@ -373,12 +373,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 					http.Error(w, err.Error(), http.StatusBadRequest)
 					return
 				}
-				if preURL != "" {
-					err = DeleteFileByBucket(preURL)
-					if err != nil {
-						fmt.Println("--------%v--------", err)
-					}
-				}
+				// TODO eliminate ... aws sdk config about iam role
+				// if preURL != "" {
+				// 	err = DeleteFileByBucket(preURL)
+				// 	if err != nil {
+				// 		fmt.Println("--------%v--------", err)
+				// 	}
+				// }
 			}
 		} else {
 			pass := r.FormValue("password")
