@@ -33,8 +33,8 @@ export default {
   justify-content: center;
 }
 .pagenation__item {
-  margin: 0 20px;
-  text-align: center;
+  margin: 0 20px !important;
+  text-align: center !important;
   height: 30px;
   line-height: 30px;
   font-size: 22px;

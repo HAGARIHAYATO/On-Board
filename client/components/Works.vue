@@ -10,15 +10,12 @@
       <nuxt-link :to="'/works/' + work.ID">
         <img :src="returnURL(work.ImageURL)" :alt="work.Name" />
       </nuxt-link>
-      <nuxt-link :to="'/users/' + work.UserID">
-        <div class="works__card__user">
-          <img :src="returnURL(work.UserImageURL)" :alt="work.UserName" />
-          <p>{{ work.UserName }}</p>
-        </div>
-      </nuxt-link>
-      <nuxt-link :to="'/works/' + work.ID">
-        <p class="work__card__title">{{ work.Name }}</p>
-      </nuxt-link>
+      <img class="user__image" v-if="!isUserShow" :src="returnURL(work.UserImageURL)" :alt="work.UserName" />
+      <p class="speech__bubble">
+        <nuxt-link :to="'/works/' + work.ID">
+          {{ hideLongTitle(work.Name) }}
+        </nuxt-link>
+      </p>
     </div>
   </div>
 </template>
@@ -30,11 +27,21 @@ export default {
     },
     isSearch: {
       type: Boolean
+    },
+    isUserShow: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     returnURL: function(url) {
       return url ? url : "/NO_IMAGE.jpeg";
+    },
+    hideLongTitle: function(title) {
+      if (title.length > 4) {
+        return title.slice( 0, 3 ) + "..."
+      }
+      return title
     }
   }
 };
@@ -44,72 +51,60 @@ export default {
   text-decoration: none;
   box-sizing: border-box;
 }
+.speech__bubble{
+  position: absolute;
+  min-width: 80px;
+  text-align: center;
+  left: 55%;
+  bottom: -5px;
+  display: none;
+  border: solid 3px #192b3d;
+  border-radius: 20px;
+  padding: 0 3%;
+  background-color: lightgreen;
+  & a {
+    color: white !important;
+  }
+}
+.user__image{
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  display: block;
+  width: 50px !important;
+  height: 50px !important;
+  border: solid 3px #192b3d;
+  border-radius: 20px;
+}
 .works__wrapper {
   margin: 0 auto 20px auto;
   max-width: 870px;
-  // min-height: 640px;
+  min-height: 435px;
   display: flex;
   flex-wrap: wrap;
 }
 
 .works__card {
-  position: relative;
   & img {
-    width: 200px;
-    height: 200px;
-    border-radius: 7px 7px 0 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
   }
+  position: relative;
   margin: 1%;
   width: 200px;
-  height: 300px;
-  border-radius: 7px;
+  height: 200px;
+  border-radius: 50%;
+  border: solid 3px #192b3d;
   background-color: white;
-  box-shadow: 0 0 5px grey;
-  transition: all 0.5s;
+  box-shadow: 0 0 5px #192b3d;
+  transition: all 0.1s;
   &:hover {
     transition: all 0.5s;
-    box-shadow: 0 0 12px darken(grey, 20%);
-  }
-}
-.works__card__user {
-  position: absolute;
-  top: 205px;
-  height: 40px;
-  font-size: 10px;
-  font-weight: bold;
-  color: #192b3d !important;
-  display: flex;
-  & p {
-    line-height: 40px;
-    &:hover {
-      text-shadow: 0 0 2px grey;
+    box-shadow: 0 0 0 black;
+    & .speech__bubble {
+      display: inline-block !important;
     }
-  }
-  & img {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 0 10px 0 10px;
-  }
-  &:hover {
-    & p {
-      color: grey;
-    }
-  }
-}
-.work__card__title {
-  position: absolute;
-  top: 260px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-weight: bold;
-  word-break: break-all;
-  color: #192b3d !important;
-  font-size: 12px;
-  text-align: center;
-  &:hover {
-    text-shadow: 0 0 2px grey;
   }
 }
 .searchAlert {
