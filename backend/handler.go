@@ -358,12 +358,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.GitHubToken = r.FormValue("github")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
-			preURL := user.ImageURL
+			// preURL := user.ImageURL
 			file, fileHeader, _ := r.FormFile("file")
 			if file != nil {
 				filename, err := CreateFile(file, fileHeader.Filename, user.ID)
 				result, err := UploadFileToBucket(filename)
 				if err != nil {
+					fmt.Println("--------%v--------", err)
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
