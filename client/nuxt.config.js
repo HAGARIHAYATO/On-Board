@@ -1,3 +1,4 @@
+const domain = "https://on-board-project/"
 export default {
   mode: "universal",
   /*
@@ -89,9 +90,10 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy", 
-    ['@nuxtjs/google-adsense', { id: 'ca-pub-4712100556499049' }]
-  ],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy", "@nuxtjs/google-adsense"],
+  "google-adsense": {
+    id: "ca-pub-4712100556499049",
+  },
   /*
    ** Build configuration
    */
