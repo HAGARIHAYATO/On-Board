@@ -90,10 +90,13 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy", "@nuxtjs/google-adsense"],
-  "google-adsense": {
-    id: "ca-pub-4712100556499049",
-  },
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy", 
+    ['@nuxtjs/google-adsense', { 
+      id: 'ca-pub-4712100556499049',
+      pageLevelAds: true,
+      analyticsDomainName: domain 
+    }]
+  ],
   /*
    ** Build configuration
    */
