@@ -12,7 +12,8 @@ RUN apk update && \
     npm install --save-dev node-sass sass-loader && \
     npm install --save @nuxtjs/auth && \
     npm i @nuxtjs/proxy -D && \
-    npm install --save vue-loading-template
+    npm install --save vue-loading-template && \
+    npm install --save @nuxtjs/google-adsense
 
 ENV HOST 0.0.0.0
 EXPOSE 3030

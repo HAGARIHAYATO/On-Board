@@ -89,7 +89,9 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/proxy", 
+    ['@nuxtjs/google-adsense', { id: 'ca-pub-4712100556499049' }]
+  ],
   /*
    ** Build configuration
    */
