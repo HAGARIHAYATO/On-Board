@@ -38,6 +38,14 @@ export default {
     Loading,
     GitHubField
   },
+  head () {
+    return {
+      title: "OnBoard / " + this.user.Name,
+      meta: [
+        { hid: this.user.ID, name: this.user.Name, content: this.user.Introduction }
+      ]
+    }
+  },
   async mounted() {
     this.APIURL = this.GetURL();
     this.$nextTick(async () => {

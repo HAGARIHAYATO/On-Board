@@ -76,6 +76,14 @@ export default {
       isOpenDeleteModal: false
     };
   },
+  head () {
+    return {
+      title: "OnBoard / " + this.work.Name,
+      meta: [
+        { hid: this.work.ID, name: this.work.Name, content: this.work.Description }
+      ]
+    }
+  },
   computed: {
     isMine: function() {
       if (!this.$auth.user || !this.work.UserID) return;

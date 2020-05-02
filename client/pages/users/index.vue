@@ -46,6 +46,14 @@ export default {
       APIURL: ""
     };
   },
+  head () {
+    return {
+      title: "OnBoard / 投稿者一覧",
+      meta: [
+        { hid: "users", name: "投稿者一覧", content: "投稿者の一覧画面です。 好きな投稿者をフォローしましょう。" }
+      ]
+    }
+  },
   async mounted() {
     this.APIURL = this.GetURL();
     this.$nextTick(async () => {

@@ -39,6 +39,14 @@ export default {
       APIURL: ""
     };
   },
+  head () {
+    return {
+      title: "OnBoard / 作品一覧",
+      meta: [
+        { hid: "works", name: "作品一覧", content: "作品の一覧画面です。 面白い作品をチェックしましょう。" }
+      ]
+    }
+  },
   mounted() {
     this.APIURL = this.GetURL();
     try {

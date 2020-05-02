@@ -11,7 +11,15 @@
 
 <script>
 export default {
-  components: {}
+  components: {},
+  head () {
+    return {
+      title: "OnBoard",
+      meta: [
+        { hid: "top", name: "トップ", content: "日々新しい作品が作られていきます。" }
+      ]
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>
