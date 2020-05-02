@@ -1,4 +1,5 @@
 const domain = "https://on-board-project/"
+const targetID = "UA-165370681-1"
 export default {
   mode: "universal",
   /*
@@ -86,7 +87,12 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: [['@nuxtjs/google-adsense', { 
+    id: 'ca-pub-4712100556499049',
+    pageLevelAds: true,
+    analyticsUacct: targetID,
+    analyticsDomainName: domain 
+  }]],
   /*
    ** Nuxt.js modules
    */
@@ -94,7 +100,8 @@ export default {
     ['@nuxtjs/google-adsense', { 
       id: 'ca-pub-4712100556499049',
       pageLevelAds: true,
-      analyticsDomainName: domain 
+      analyticsUacct: targetID,
+      analyticsDomainName: domain
     }]
   ],
   /*
