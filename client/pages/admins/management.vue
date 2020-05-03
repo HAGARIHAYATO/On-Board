@@ -60,12 +60,13 @@ export default {
     DeleteModal,
     Loading
   },
+  middleware: ["auth"],
   async mounted() {
+    if (!this.$auth.user.IsAdmin) {
+      await this.$router.push("/")
+    }
     this.APIURL = this.GetURL();
     this.$nextTick(async () => {
-      if (!this.$auth.user.IsAdmin) {
-        await this.$router.push("/")
-      }
       await this.showBubble();
       await this.$axios
         .get(this.APIURL + "/users")
@@ -187,6 +188,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "assets/scss/app";
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 button{
   padding: 1%;
   border-radius: 5px;
@@ -218,8 +224,8 @@ input[type="text"] {
 }
 .select__account{
   margin: 0 50px;
-  width: 500px;
-  height: 300px;
+  width: 550px;
+  height: 350px;
   border: solid 3px $bg-main;
   padding: 20px;
   background-color: white;
@@ -239,17 +245,20 @@ input[type="text"] {
   background-color: white;
 }
 .admin__search{
-  height: 40px;
+  height: 43px;
   background-color: $bg-main;
   text-align: right;
   & input {
     margin: 0;
-    height: 30px;
-    width: 120px;
+    height: 40px;
+    width: 160px;
     border-radius: 20px;
     border: solid 3px grey;
     outline: none;
     padding: 0 15px;
+    &:hover {
+      box-shadow: none;
+    }
   }
 }
 .admin__text{

@@ -12,11 +12,13 @@
         <div class="infoModal__item" v-if="openModal">
           <template v-if="!isLogin">
             <nuxt-link to="/">トップ</nuxt-link>
+            <nuxt-link to="/information">お知らせ</nuxt-link>
             <nuxt-link to="/signup">無料登録</nuxt-link>
             <nuxt-link to="/login">ログイン</nuxt-link>
           </template>
           <template v-else>
             <nuxt-link :to="'/users/'+$auth.user.ID">マイページ</nuxt-link>
+            <nuxt-link to="/information">お知らせ</nuxt-link>
             <nuxt-link to="/works/new">新規投稿</nuxt-link>
             <nuxt-link to="/config">設定</nuxt-link>
             <nuxt-link to="/admins/management" v-if="checkAdmin">管理画面</nuxt-link>

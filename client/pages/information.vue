@@ -25,47 +25,19 @@ export default {
       count: 3,
       search: "",
       lists: [],
-      mails: [
-        {
-          Title: "title1",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        },
-        {
-          Title: "title2",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        },
-        {
-          Title: "title3",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        },
-        {
-          Title: "title4",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        },
-        {
-          Title: "mail1",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        },
-        {
-          Title: "mail2",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        },
-        {
-          Title: "mail3",
-          Message: "message \n message",
-          CreatedAt: "2010-03-11"
-        }
-      ]
+      APIURL: "",
+      mails: []
     }
   },
   mounted() {
-    this.lists = this.mails
+    this.APIURL = this.GetURL();
+    this.$axios
+      .get(this.APIURL + "/users/" + 0 + "/information")
+      .then(response => {
+        this.mails = response.data.Info;
+        this.lists = this.mails
+      })
+      .catch(response => console.error(response));
   },
   methods: {
     searchMail: function(e) {
@@ -78,7 +50,7 @@ export default {
       if (str && str.length > 15) {
         return str.slice( 0, 14 ) + "..."
       }
-      return ""
+      return str
     }
   },
 }

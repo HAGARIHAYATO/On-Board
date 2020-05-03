@@ -27,7 +27,7 @@ func main() {
 			r.Get("/", GetUsers)
 			r.Route("/{userID}", func(r chi.Router) {
 				r.Get("/", GetUserByID)
-				r.Get("/", GetInformation)
+				r.Get("/information", GetInformation)
 				r.Put("/", UpdateUser)
 			})
 		})

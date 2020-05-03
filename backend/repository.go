@@ -17,7 +17,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	DB.AutoMigrate(&User{}, &Work{}, &WorkItem{})
+	DB.AutoMigrate(&User{}, &Work{}, &WorkItem{}, &Info{})
 	fmt.Println("-------------------------------------\n",
 		"-------------------------------------\n",
 		"-----------Migration--Done-----------\n",
