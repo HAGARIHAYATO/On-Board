@@ -57,6 +57,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "assets/scss/app";
+* {
+  box-sizing: border-box;
+}
 .info__container{
   padding: 110px 0 40px 0;
 }
@@ -67,12 +70,12 @@ export default {
   border: solid 3px $bg-main;
 }
 .info__search{
-  height: 40px;
+  height: 43px;
   background-color: $bg-main;
   text-align: right;
   & input {
-    height: 30px;
-    width: 120px;
+    height: 40px;
+    width: 160px;
     border-radius: 20px;
     border: solid 3px grey;
     outline: none;
@@ -95,7 +98,6 @@ export default {
   & .info {
     border-top: solid 1px lightgrey;
     padding: 10px;
-    height: 67px;
   }
   &:last-child {
     border-bottom: solid 1px lightgrey;
