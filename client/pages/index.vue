@@ -23,6 +23,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 .container {
   padding-top: 70px;
   margin: 0 auto;
@@ -41,17 +42,17 @@ export default {
   width: 200px;
   height: 50px;
   border-radius: 10px;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   outline: 0;
   & a {
     font-size: 24px;
     font-weight: bold;
     text-decoration: none;
-    color: #192b3d;
+    color: $bg-main;
   }
   &:hover {
     & a {
-      color: #fdeaa0;
+      color: $bg-yellow;
     }
     animation-name: bg-change;
     animation-fill-mode: forwards;
@@ -66,7 +67,7 @@ export default {
     background-color: lightgrey;
   }
   100% {
-    background-color: #192b3d;
+    background-color: $bg-main;
   }
 }
 </style>

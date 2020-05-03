@@ -32,6 +32,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 .field__container{
   padding: 2%;
   background-color: white;
@@ -49,7 +50,7 @@ export default {
 }
 .field__title{
   margin: 0 10px 10px 10px;
-  color: #192b3d;
+  color: $bg-main;
   font-size: 18px;
 }
 .gh__user{

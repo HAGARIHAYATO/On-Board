@@ -164,6 +164,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 .container {
   width: 100%;
   min-height: 81vh;
@@ -172,7 +173,7 @@ export default {
   padding: 90px 0;
   min-height: 100%;
   width: 100%;
-  background-color: lighten(rgb(221, 209, 209), 5%);
+  background-color: $bg-color;
 }
 .user{
   display: flex;
@@ -186,17 +187,15 @@ export default {
   padding: 2% 2% 3% 2%;
   & h2 {
     margin: 0 10px 10px 10px;
-    color: #192b3d;
+    color: $bg-main;
     font-size: 18px;
   }
-}
-.user__main{
 }
 .user__name {
   margin: 10px 0 0 0;
   text-align: left;
   font-weight: bold;
-  color: #192b3d;
+  color: $bg-main;
   font-size: 24px;
   line-height: 24px;
 }

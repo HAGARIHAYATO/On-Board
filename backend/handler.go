@@ -189,6 +189,7 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 		Introduction string
 		URL          string
 		GitHubToken  string
+		IsAdmin      bool
 	}
 	var rw ResultUser
 	// TODO
@@ -207,6 +208,10 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 	rw.Introduction = user.Introduction
 	rw.URL = user.URL
 	rw.GitHubToken = user.GitHubToken
+	rw.IsAdmin = false
+	if user.IsAdmin == true {
+		rw.IsAdmin = true
+	}
 	w.Write(ParseJSON(rw))
 }
 
@@ -568,6 +573,36 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 	DeleteDependent(res.ID)
 	res.Status = http.StatusOK
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}
+
+// ExecutedUser is
+func ExecutedUser(w http.ResponseWriter, r *http.Request) {
+	// json => uid
+}
+
+// PostInformation is
+func PostInformation(w http.ResponseWriter, r *http.Request) {
+	// json => { if } uid == 0 => all__user { else } user(uid)
+	// json => message
+	// json => title
+}
+
+// GetInformation is
+func GetInformation(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Info []*Info
+	}
+	userID := chi.URLParam(r, "userID")
+	id := cast.ToUint(userID)
+	aLotOfInfo, err := FetchInfoByUID(DB, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	var res Result
+	res.Info = aLotOfInfo
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))
 }

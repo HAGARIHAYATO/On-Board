@@ -47,6 +47,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 * {
   text-decoration: none;
   box-sizing: border-box;
@@ -58,7 +59,7 @@ export default {
   left: 55%;
   bottom: -5px;
   display: none;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   border-radius: 20px;
   padding: 0 3%;
   background-color: lightgreen;
@@ -73,7 +74,7 @@ export default {
   display: block;
   width: 50px !important;
   height: 50px !important;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   border-radius: 20px;
 }
 .works__wrapper {
@@ -95,9 +96,9 @@ export default {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   background-color: white;
-  box-shadow: 0 0 5px #192b3d;
+  box-shadow: 0 0 5px $bg-main;
   transition: all 0.1s;
   &:hover {
     transition: all 0.5s;

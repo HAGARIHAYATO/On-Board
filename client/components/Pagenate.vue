@@ -26,6 +26,7 @@ export default {
 };
 </script>
 <style lang="scss" scopoed>
+@import "assets/scss/app";
 .pagenation{
 }
 .pagenate__main {
@@ -39,7 +40,7 @@ export default {
   line-height: 30px;
   font-size: 22px;
   font-weight: bold;
-  color: #192b3d;
+  color: $bg-main;
   cursor: pointer;
   transition: all 0.3s;
   border-radius: 20px;
@@ -61,7 +62,7 @@ export default {
   font-size: 30px;
   font-weight: bold;
   border-radius: 50%;
-  color: #192b3d;
+  color: $bg-main;
   background-color: white;
   box-shadow: 0 0 2px black;
 }

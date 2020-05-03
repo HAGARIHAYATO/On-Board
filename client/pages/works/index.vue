@@ -138,6 +138,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 .container {
   display: flex;
   width: 100%;
@@ -147,12 +148,12 @@ export default {
   padding-top: 70px;
   min-height: 100%;
   width: 400px;
-  background-color: #fdeaa0;
+  background-color: $bg-yellow;
 }
 .container__main {
   padding-top: 100px;
   min-height: 100%;
   width: 100%;
-  background-color: lighten(rgb(221, 209, 209), 5%);
+  background-color: $bg-color;
 }
 </style>

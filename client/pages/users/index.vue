@@ -140,6 +140,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 * {
   text-decoration: none;
 }
@@ -152,22 +153,22 @@ export default {
   min-height: 100%;
   padding-top: 70px;
   width: 400px;
-  background-color: #fdeaa0;
+  background-color: $bg-yellow;
 }
 .container__main {
   padding: 140px 0 70px 0;
   min-height: 100%;
   width: 100%;
-  background-color: lighten(rgb(221, 209, 209), 5%);
+  background-color: $bg-color;
 }
 .user__bar__wrapper {
   &:first-child {
-    border-top: solid 3px #192b3d;
+    border-top: solid 3px $bg-main;
   }
   padding-top: 10px;
   background-color: white;
   margin-left: 20px;
-  border-bottom: solid 3px #192b3d;
+  border-bottom: solid 3px $bg-main;
   margin: auto 0;
   &:hover {
     & div {
@@ -181,7 +182,7 @@ export default {
   height: 60px;
   width: 70%;
   font-weight: bold;
-  color: #192b3d !important;
+  color: $bg-main !important;
   display: flex;
   justify-content: space-between;
   & p {

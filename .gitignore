@@ -10,7 +10,8 @@ yarn-error.log*
 *-lock.json
 /backend/images/*
 !Resource
-/backend/app/*
+/backend/app
+!Resource
 # Runtime data
 pids
 *.pid

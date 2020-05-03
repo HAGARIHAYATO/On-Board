@@ -64,6 +64,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 input[type="checkbox"] {
   transform: scale(1.5);
 }
@@ -81,7 +82,7 @@ input[type="checkbox"] {
     text-align: center;
     margin-left: 15px;
     font-weight: bold;
-    color: #192b3d;
+    color: $bg-main;
     line-height: 50px;
   }
 }
@@ -103,17 +104,17 @@ input[type="checkbox"] {
   position: absolute;
   left: 200px;
   top: 0;
-  background: #192b3d;
+  background: $bg-main;
   color: #fff;
   border: none;
   font-weight: bold;
   transition: all 0.2s;
   &:hover {
-    color: #fdeaa0;
+    color: $bg-yellow;
   }
   &:active {
     transition: all 0.2s;
-    color: #192b3d;
+    color: $bg-main;
   }
 }
 .search-form__button__reset {
@@ -128,7 +129,7 @@ input[type="checkbox"] {
   border-radius: 25px;
 }
 .checkbtn {
-  background-color: #192b3d;
+  background-color: $bg-main;
   color: white;
 }
 .validation{

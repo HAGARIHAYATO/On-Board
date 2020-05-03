@@ -255,6 +255,7 @@ export default {
 };
 </script>
 <style lang="scss" scopped>
+@import "assets/scss/app";
 * {
   box-sizing: border-box;
   margin: 0;
@@ -275,7 +276,7 @@ textarea,
 .form-wrapper {
   box-shadow: 0 0 5px grey;
   background-color: white;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   border-radius: 5px;
   min-height: 600px;
   padding-bottom: 50px; 
@@ -296,9 +297,9 @@ textarea,
   font-weight: bold;
   font-size: 14px;
   border-radius: 15px 15px 0 0;
-  background-color: #192b3d;
+  background-color: $bg-main;
   &:hover {
-    color: #fdeaa0;
+    color: $bg-yellow;
   }
   &:active {
     color: silver;
@@ -332,7 +333,7 @@ textarea,
     }
   }
   & .form__transform__btn2 {
-    background-color: #192b3d;
+    background-color: $bg-main;
     border-radius: 0 0 20px 20px;
     &:hover {
       box-shadow: 0 0 5px black;
@@ -357,7 +358,7 @@ textarea,
     & input[type="text"],
     input[type="email"] {
       outline: 0;
-      border: solid 3px #192b3d;
+      border: solid 3px $bg-main;
       border-radius: 20px;
       padding: 0 20px;
       font-size: 18px;
@@ -370,13 +371,13 @@ textarea,
       height: 70px;
     }
     & .file {
-      border: solid 3px #192b3d;
+      border: solid 3px $bg-main;
       outline: 0;
       border-radius: 5px;
       padding: 10px;
       height: 80px;
       width: 150px;
-      background-color: #192b3d;
+      background-color: $bg-main;
       color: white;
       font-size: 8px;
       & span {
@@ -408,7 +409,7 @@ textarea,
       outline: 0;
       width: 300px;
       min-height: 100px;
-      border: solid 3px #192b3d;
+      border: solid 3px $bg-main;
       border-radius: 5px;
       padding: 20px;
       font-weight: bold;
@@ -442,7 +443,7 @@ textarea,
     line-height: 18px;
     cursor: pointer;
     &:hover {
-      color: #fdeaa0;
+      color: $bg-yellow;
     }
     &:active {
       color: silver;
@@ -465,7 +466,7 @@ textarea,
     & input {
       margin: 0;
       outline: 0;
-      border: solid 3px #192b3d;
+      border: solid 3px $bg-main;
       border-radius: 20px;
       padding: 0 20px;
       font-size: 18px;

@@ -19,6 +19,7 @@
             <nuxt-link :to="'/users/'+$auth.user.ID">マイページ</nuxt-link>
             <nuxt-link to="/works/new">新規投稿</nuxt-link>
             <nuxt-link to="/config">設定</nuxt-link>
+            <nuxt-link to="/admins/management" v-if="checkAdmin">管理画面</nuxt-link>
             <a @click="showConfirm()">ログアウト</a>
           </template>
         </div>
@@ -58,6 +59,9 @@ export default {
   computed: {
     isLogin: function() {
       return this.$store.$auth.loggedIn ? true : false;
+    },
+    checkAdmin: function() {
+      return this.$store.$auth.user.IsAdmin ? true : false;
     }
   },
   methods: {
@@ -86,6 +90,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 html {
   margin: 0 !important;
   overflow: hidden !important;
@@ -127,7 +132,7 @@ html {
 }
 .infoModal {
   width: 100%;
-  background-color: #192b3d;
+  background-color: $bg-main;
   display: flex;
   justify-content: flex-end;
   z-index: 1;
@@ -146,7 +151,7 @@ html {
     line-height: 100px;
     margin-left: 20px;
     &:hover {
-      color: #fdeaa0;
+      color: $bg-yellow;
       transition: all 0.4s;
     }
   }
@@ -166,7 +171,7 @@ html {
   display: flex;
   & a {
     display: inline-block;
-    color: #192b3d;
+    color: $bg-main;
     font-weight: bold;
     transition: all 0.4s;
     line-height: 70px;
@@ -177,7 +182,7 @@ html {
   text-align: center;
   min-width: 100px;
   height: 70px;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   border-top: none;
   box-shadow: 0 32px 30px -30px black;
   border-radius: 0 0 6px 6px;
@@ -186,7 +191,7 @@ html {
   margin-left: 5px;
   &:hover {
     & a {
-      color: #fdeaa0;
+      color: $bg-yellow;
     }
     animation-name: colorChange;
     animation-fill-mode: forwards;
@@ -219,7 +224,7 @@ html {
     height: 50px;
     width: 250px;
     font-size: 16px;
-    background: #192b3d;
+    background: $bg-main;
     font-weight: bold;
     color: #fff;
     border: none;
@@ -236,7 +241,7 @@ html {
   }
 }
 footer {
-  background-color: #192b3d;
+  background-color: $bg-main;
   min-height: 150px;
 }
 .footer__logo {
@@ -252,7 +257,7 @@ footer {
     background-color: white;
   }
   100% {
-    background-color: #192b3d;
+    background-color: $bg-main;
   }
 }
 @keyframes easeAppear {
