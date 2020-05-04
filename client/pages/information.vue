@@ -7,7 +7,7 @@
       <p class="info__text">{{lists.length}}件表示</p>
       <div class="info__rows">
         <div class="info__bar">
-          <div class="info" v-for="(mail, index) in lists" :key="index">
+          <div class="info" v-for="(mail, index) in lists" :key="index" @click="getMail(mail)">
             <p class="title"><span v-if="mail.UserID > 0">●</span>{{ mail.Title }}</p>
             <p class="date">{{ mail.CreatedAt }}</p>
             <p class="message">{{ cutSTR(mail.Message) }}</p>
@@ -15,7 +15,9 @@
         </div>
       </div>
     </div>
-    <div class="layer"></div>
+    <div class="layer">
+      <div class="mail__box"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -26,7 +28,8 @@ export default {
       search: "",
       lists: [],
       APIURL: "",
-      mails: []
+      mails: [],
+      selectedMail: {}
     }
   },
   head () {
@@ -50,6 +53,9 @@ export default {
       .catch(response => console.error(response));
   },
   methods: {
+    getMail: function(mail) {
+      this.selectedMail = mail
+    },
     isLoginUser: function() {
       return !this.$auth.user.loggedIn ? this.$auth.user.ID : 0
     },

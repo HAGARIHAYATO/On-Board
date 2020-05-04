@@ -1,4 +1,4 @@
-const domain = "https://on-board-project/"
+const domain = "https://on-board-project.com/"
 const targetID = "UA-165370681-1"
 export default {
   mode: "universal",
@@ -76,7 +76,7 @@ export default {
       }
     }
     : {
-      target: "http://on-board-project.com/",
+      target: "https://on-board-project.com/",
       pathRewrite: {
         "^/api": "/api"
       }
