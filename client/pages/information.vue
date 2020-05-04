@@ -50,7 +50,6 @@ export default {
   mounted() {
     this.APIURL = this.GetURL();
     const uid = this.isLoginUser()
-    console.log(uid)
     this.$axios
       .get(this.APIURL + "/users/" + uid + "/information")
       .then(response => {
