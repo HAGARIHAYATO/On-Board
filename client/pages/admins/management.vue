@@ -95,6 +95,14 @@ export default {
       APIURL: ""
     }
   },
+  head () {
+    return {
+      title: "OnBoard / 管理者",
+      meta: [
+        { hid: "admin", name: "管理者", content: "管理者専用ページです。" }
+      ]
+    }
+  },
   methods: {
     userSelect: function(e, user) {
       this.selectedUser = user
@@ -125,6 +133,10 @@ export default {
       return ""
     },
     sendAlert: function(e) {
+      if (this.alertTitle === "" || this.alert === "") {
+        this.status = "入力を確認してください。"
+        return
+      }
       const data = {
         uid: this.selectedUser.ID,
         message: this.alert,
@@ -145,6 +157,10 @@ export default {
         });
     },
     sendInfo: function(e) {
+      if (this.inform === "" || this.informTitle === "") {
+        this.infoStatus = "入力を確認してください。"
+        return
+      }
       const data = {
         uid: 0,
         message: this.inform,
@@ -166,14 +182,14 @@ export default {
     },
     deleteUser: function() {
       this.$nextTick(async () => {
+        const data = {
+          uid: this.selectedUser.ID
+        }
+        const headers = {"content-type": "application/json"}
         await this.showBubble();
         try {
-          const data = {
-            uid: this.selectedUser.ID
-          }
-          const headers = {"content-type": "application/json"}
           await this.$axios
-            .delete(this.APIURL + "/execute_account", data, {
+            .post(this.APIURL + "/execute_account", data, {
               headers
             })
             .then(res => {

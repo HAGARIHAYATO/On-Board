@@ -580,6 +580,41 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 // ExecutedUser is
 func ExecutedUser(w http.ResponseWriter, r *http.Request) {
 	// json => uid
+	type Request struct {
+		UID uint
+	}
+	type Result struct {
+		ID     uint
+		Status int
+	}
+	var res Result
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var req Request
+	json.Unmarshal(body, &req)
+	user, err := FetchUserByID(DB, req.UID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	works, _ := FetchWorks(DB, user.ID)
+	for _, work := range works {
+		DB.Unscoped().Where("work_id=?", work.ID).Delete(WorkItem{})
+		err = DB.Unscoped().Delete(&work).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+	res.ID = user.ID
+	err = DB.Unscoped().Delete(&user).Error
+	if err != nil {
+		res.Status = http.StatusBadRequest
+	} else {
+		res.Status = http.StatusOK
+	}
+	w.Write(ParseJSON(res))
 }
 
 // PostInformation is
@@ -587,6 +622,31 @@ func PostInformation(w http.ResponseWriter, r *http.Request) {
 	// json => { if } uid == 0 => all__user { else } user(uid)
 	// json => message
 	// json => title
+	type Request struct {
+		UID     uint
+		Message string
+		Title   string
+	}
+	type Result struct {
+		Status int
+	}
+	var res Result
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var req Request
+	json.Unmarshal(body, &req)
+	var info Info
+	info.UserID = req.UID
+	info.Title = req.Title
+	info.Message = req.Message
+	err = DB.Create(&info).Error
+	if err != nil {
+		res.Status = http.StatusBadRequest
+	} else {
+		res.Status = http.StatusOK
+	}
+	w.Write(ParseJSON(res))
 }
 
 // GetInformation is

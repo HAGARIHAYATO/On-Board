@@ -8,7 +8,7 @@
       <div class="info__rows">
         <div class="info__bar">
           <div class="info" v-for="(mail, index) in lists" :key="index">
-            <p class="title">{{ mail.Title }}</p>
+            <p class="title"><span v-if="mail.UserID > 0">●</span>{{ mail.Title }}</p>
             <p class="date">{{ mail.CreatedAt }}</p>
             <p class="message">{{ cutSTR(mail.Message) }}</p>
           </div>
@@ -29,10 +29,20 @@ export default {
       mails: []
     }
   },
+  head () {
+    return {
+      title: "OnBoard / おしらせ",
+      meta: [
+        { hid: "information", name: "おしらせ　", content: "日々のおしらせ。" }
+      ]
+    }
+  },
   mounted() {
     this.APIURL = this.GetURL();
+    const uid = this.isLoginUser()
+    console.log(uid)
     this.$axios
-      .get(this.APIURL + "/users/" + 0 + "/information")
+      .get(this.APIURL + "/users/" + uid + "/information")
       .then(response => {
         this.mails = response.data.Info;
         this.lists = this.mails
@@ -40,6 +50,9 @@ export default {
       .catch(response => console.error(response));
   },
   methods: {
+    isLoginUser: function() {
+      return !this.$auth.user.loggedIn ? this.$auth.user.ID : 0
+    },
     searchMail: function(e) {
       this.lists = this.mails.filter(
         mail =>
@@ -104,6 +117,9 @@ export default {
   }
 }
 .title{
+  & span {
+    color: red;
+  }
   padding: 3px 0 0 10px;
   font-weight: bold;
 }
