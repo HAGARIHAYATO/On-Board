@@ -76,7 +76,7 @@ export default {
       }
     }
     : {
-      target: "http://on-board-project.com/:8080",
+      target: "http://on-board-project.com/",
       pathRewrite: {
         "^/api": "/api"
       }
