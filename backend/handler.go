@@ -126,7 +126,11 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 		ru.WorksCount = len(works)
-		res.Users = append(res.Users, &ru)
+		if user.IsAdmin {
+			continue
+		} else {
+			res.Users = append(res.Users, &ru)
+		}
 	}
 	w.Write(ParseJSON(res))
 }
