@@ -69,7 +69,10 @@ export default {
       this.appearMailBox = true
     },
     isLoginUser: function() {
-      return this.$auth.user.loggedIn !== null ? this.$auth.user.ID : 0
+      if (this.$auth.user && this.$auth.user.loggedIn) {
+        return this.$auth.user.ID
+      }
+      return 0
     },
     searchMail: function(e) {
       this.lists = this.mails.filter(
