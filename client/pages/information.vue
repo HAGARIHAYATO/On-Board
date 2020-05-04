@@ -106,6 +106,7 @@ export default {
 }
 .mail__bar{
   width: 460px;
+  margin: 20px 30px 20px 12px;
   word-break: break-all;
   & p {
     margin-bottom: 20px;
@@ -114,7 +115,6 @@ export default {
 .mail__box {
   overflow-y: scroll;
   z-index: 4;
-  padding: 20px;
   background-color: white;
   border: solid 3px grey;
   border-radius: 25px;
