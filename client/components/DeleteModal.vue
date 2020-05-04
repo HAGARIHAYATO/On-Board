@@ -28,6 +28,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 .overlay {
   position: fixed;
   z-index: 3;
@@ -66,7 +67,7 @@ export default {
   width: 180px;
   display: block;
   outline: none;
-  background-color: #192b3d;
+  background-color: $bg-main;
   color: white;
   border-radius: 5px;
   font-weight: bold;
@@ -77,7 +78,7 @@ export default {
 .strMessage {
   margin: 10px auto 10px auto;
   text-align: center;
-  color: #192b3d;
+  color: $bg-main;
   word-wrap: break;
 }
 </style>

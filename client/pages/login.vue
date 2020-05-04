@@ -64,9 +64,10 @@ export default {
 };
 </script>
 <style lang="scss" scopped>
+@import "assets/scss/app";
 .login-form-wrapper {
   background-color: white;
-  border: solid 3px #192b3d;
+  border: solid 3px $bg-main;
   border-radius: 20px;
   height: 300px;
   width: 610px;
@@ -74,7 +75,7 @@ export default {
   position: relative;
 }
 .login-container {
-  background-color: lighten(rgb(221, 209, 209), 5%);
+  background-color: $bg-color;
   padding-top: 150px;
   margin: 0 auto;
   min-height: 81vh;
@@ -92,9 +93,9 @@ export default {
   font-weight: bold;
   font-size: 14px;
   border-radius: 15px 15px 0 0;
-  background-color: #192b3d;
+  background-color: $bg-main;
   &:hover {
-    color: #fdeaa0;
+    color: $bg-yellow;
   }
   &:active {
     color: silver;
@@ -113,7 +114,7 @@ export default {
     & input {
       margin: 0;
       outline: 0;
-      border: solid 3px #192b3d;
+      border: solid 3px $bg-main;
       border-radius: 20px;
       padding: 0 20px;
       font-size: 18px;

@@ -189,6 +189,7 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 		Introduction string
 		URL          string
 		GitHubToken  string
+		IsAdmin      bool
 	}
 	var rw ResultUser
 	// TODO
@@ -207,6 +208,10 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 	rw.Introduction = user.Introduction
 	rw.URL = user.URL
 	rw.GitHubToken = user.GitHubToken
+	rw.IsAdmin = false
+	if user.IsAdmin == true {
+		rw.IsAdmin = true
+	}
 	w.Write(ParseJSON(rw))
 }
 
@@ -568,6 +573,96 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 	DeleteDependent(res.ID)
 	res.Status = http.StatusOK
+	w.WriteHeader(http.StatusOK)
+	w.Write(ParseJSON(res))
+}
+
+// ExecutedUser is
+func ExecutedUser(w http.ResponseWriter, r *http.Request) {
+	// json => uid
+	type Request struct {
+		UID uint
+	}
+	type Result struct {
+		ID     uint
+		Status int
+	}
+	var res Result
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var req Request
+	json.Unmarshal(body, &req)
+	user, err := FetchUserByID(DB, req.UID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	works, _ := FetchWorks(DB, user.ID)
+	for _, work := range works {
+		DB.Unscoped().Where("work_id=?", work.ID).Delete(WorkItem{})
+		err = DB.Unscoped().Delete(&work).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+	res.ID = user.ID
+	err = DB.Unscoped().Delete(&user).Error
+	if err != nil {
+		res.Status = http.StatusBadRequest
+	} else {
+		res.Status = http.StatusOK
+	}
+	w.Write(ParseJSON(res))
+}
+
+// PostInformation is
+func PostInformation(w http.ResponseWriter, r *http.Request) {
+	// json => { if } uid == 0 => all__user { else } user(uid)
+	// json => message
+	// json => title
+	type Request struct {
+		UID     uint
+		Message string
+		Title   string
+	}
+	type Result struct {
+		Status int
+	}
+	var res Result
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+	var req Request
+	json.Unmarshal(body, &req)
+	var info Info
+	info.UserID = req.UID
+	info.Title = req.Title
+	info.Message = req.Message
+	err = DB.Create(&info).Error
+	if err != nil {
+		res.Status = http.StatusBadRequest
+	} else {
+		res.Status = http.StatusOK
+	}
+	w.Write(ParseJSON(res))
+}
+
+// GetInformation is
+func GetInformation(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Info []*Info
+	}
+	userID := chi.URLParam(r, "userID")
+	id := cast.ToUint(userID)
+	aLotOfInfo, err := FetchInfoByUID(DB, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	var res Result
+	res.Info = aLotOfInfo
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))
 }

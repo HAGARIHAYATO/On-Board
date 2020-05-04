@@ -164,6 +164,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 *,
 body {
   box-sizing: border-box;
@@ -241,7 +242,7 @@ body {
   word-break: break-all !important;
   & a {
     box-shadow: none;
-    color: #192b3d;
+    color: $bg-main;
     &:hover {
       font-weight: bold;
     }
@@ -254,7 +255,7 @@ body {
   outline: 0;
   border-radius: 5px;
   padding: 40% 0;
-  background-color: #192b3d;
+  background-color: $bg-main;
   color: white;
   font-size: 8px;
   & span {
@@ -305,7 +306,7 @@ body {
     line-height: 18px;
     cursor: pointer;
     &:hover {
-      color: #fdeaa0;
+      color: $bg-yellow;
     }
     &:active {
       color: silver;
@@ -322,7 +323,7 @@ body {
     font-size: 18px;
     height: 50px;
     border-radius: 3px;
-    background-color: #192b3d;
+    background-color: $bg-main;
     color: white;
   }
 }

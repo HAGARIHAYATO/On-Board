@@ -141,6 +141,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 *,
 body {
   box-sizing: border-box;
@@ -200,7 +201,7 @@ input[type="submit"] {
   font-size: 18px;
   height: 50px;
   border-radius: 3px;
-  background-color: #192b3d;
+  background-color: $bg-main;
   color: white;
 }
 .set__file {
@@ -229,7 +230,7 @@ input[type="submit"] {
     line-height: 18px;
     cursor: pointer;
     &:hover {
-      color: #fdeaa0;
+      color: $bg-yellow;
     }
     &:active {
       color: silver;

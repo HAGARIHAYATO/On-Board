@@ -32,4 +32,13 @@ type User struct {
 	Password     string
 	URL          string
 	GitHubToken  string
+	IsAdmin      bool
+}
+
+// Info is Model
+type Info struct {
+	gorm.Model
+	UserID  uint
+	Message string
+	Title   string
 }

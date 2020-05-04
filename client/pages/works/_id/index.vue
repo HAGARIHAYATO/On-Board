@@ -156,20 +156,21 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 *,
 body {
   box-sizing: border-box;
 }
 h2 {
   margin: 0 10px 10px 10px;
-  color: #192b3d;
+  color: $bg-main;
   font-size: 18px;
 }
 .show__wrapper {
   padding: 100px 0 50px 0;
   width: 100%;
   min-height: 81vh;
-  background-color: lighten(rgb(221, 209, 209), 5%);
+  background-color: $bg-color;
 }
 .show__container{
   margin: 30px;
@@ -222,7 +223,7 @@ h2 {
   height: 40px;
   word-break: break-all !important;
   text-decoration: none !important;
-  color: #192b3d;
+  color: $bg-main;
   & p {
     margin: 0 10px;
     line-height: 40px;

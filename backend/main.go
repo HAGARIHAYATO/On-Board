@@ -27,13 +27,16 @@ func main() {
 			r.Get("/", GetUsers)
 			r.Route("/{userID}", func(r chi.Router) {
 				r.Get("/", GetUserByID)
+				r.Get("/information", GetInformation)
 				r.Put("/", UpdateUser)
 			})
 		})
 		r.Post("/login", RequestSession)
 		r.Post("/signup", CreateUser)
+		r.Post("/information", PostInformation)
 		r.Get("/credential", GetPrivateInfo)
 		r.Delete("/delete_account", DeleteUser)
+		r.Post("/execute_account", ExecutedUser)
 	})
 	http.ListenAndServe(":8080", r)
 }
