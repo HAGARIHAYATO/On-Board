@@ -15,8 +15,14 @@
         </div>
       </div>
     </div>
-    <div class="layer">
-      <div class="mail__box"></div>
+    <div class="layer" v-if="appearMailBox" @click="resetMail">
+      <div class="mail__box">
+        <div class="mail__bar">
+          <p class="title"><span v-if="selectedMail.UserID > 0">●</span>{{ selectedMail.Title }}</p>
+          <p class="date">{{ selectedMail.CreatedAt }}</p>
+          <p class="message">{{ selectedMail.Message }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,7 +35,8 @@ export default {
       lists: [],
       APIURL: "",
       mails: [],
-      selectedMail: {}
+      selectedMail: {},
+      appearMailBox: false
     }
   },
   head () {
@@ -43,7 +50,6 @@ export default {
   mounted() {
     this.APIURL = this.GetURL();
     const uid = this.isLoginUser()
-    console.log(uid)
     this.$axios
       .get(this.APIURL + "/users/" + uid + "/information")
       .then(response => {
@@ -53,11 +59,19 @@ export default {
       .catch(response => console.error(response));
   },
   methods: {
+    resetMail: function() {
+      this.selectedMail = {}
+      this.appearMailBox = false
+    },
     getMail: function(mail) {
       this.selectedMail = mail
+      this.appearMailBox = true
     },
     isLoginUser: function() {
-      return !this.$auth.user.loggedIn ? this.$auth.user.ID : "0"
+      if (this.$auth.user && this.$auth.user.loggedIn) {
+        return this.$auth.user.ID
+      }
+      return 0
     },
     searchMail: function(e) {
       this.lists = this.mails.filter(
@@ -78,6 +92,37 @@ export default {
 @import "assets/scss/app";
 * {
   box-sizing: border-box;
+}
+.layer{
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.mail__bar{
+  width: 460px;
+  margin: 20px 30px 20px 12px;
+  word-break: break-all;
+  & p {
+    margin-bottom: 20px;
+  }
+}
+.mail__box {
+  overflow-y: scroll;
+  z-index: 4;
+  background-color: white;
+  border: solid 3px grey;
+  border-radius: 25px;
+  height: 400px;
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .info__container{
   padding: 110px 0 40px 0;
