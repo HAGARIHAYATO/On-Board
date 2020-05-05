@@ -68,7 +68,7 @@ export default {
       this.appearMailBox = true
     },
     isLoginUser: function() {
-      if (this.$auth.user && this.$auth.user.loggedIn) {
+      if (this.$auth.user || this.$auth.user.loggedIn) {
         return this.$auth.user.ID
       }
       return 0
