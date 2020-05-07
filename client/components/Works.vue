@@ -112,7 +112,7 @@ export default {
   width: 100%;
   color: lightgrey;
   text-align: center;
-  line-height: 40vh;
+  line-height: 435px;
   font-size: 40px;
 }
 </style>

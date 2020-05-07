@@ -11,6 +11,7 @@ type Work struct {
 	ImageURL    string
 	Description string
 	URL         string
+	CacooURL    string
 	UserID      uint
 }
 
