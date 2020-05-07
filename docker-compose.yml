@@ -36,7 +36,7 @@ services:
       - ./db/:/private/
     restart: always
     ports:
-      - "5432:5432"
+      - "4306:5432"
     environment:
       - POSTGRES_USER=pg
       - POSTGRES_PASSWORD=pg

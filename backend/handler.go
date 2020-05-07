@@ -27,10 +27,13 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 		ImageURL     string
 		Description  string
 		URL          string
+		CacooURL     string
+		IsPublished  bool
 		UserID       uint
 		UserName     string
 		UserImageURL string
 		WorkItems    []*WorkItem
+		Skills       []*Skill
 	}
 	var rw ResultWork
 	id := cast.ToUint(workID)
@@ -49,6 +52,11 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
+	skills, err := FetchSkillsByWorkID(DB, work.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
 	rw.ID = work.ID
 	rw.Name = work.Name
 	rw.Description = work.Description
@@ -58,6 +66,9 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	rw.UserName = user.Name
 	rw.UserImageURL = user.ImageURL
 	rw.WorkItems = items
+	rw.Skills = skills
+	rw.CacooURL = work.CacooURL
+	rw.IsPublished = cast.ToBool(work.IsPublished)
 	w.Write(ParseJSON(rw))
 }
 
@@ -312,6 +323,8 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Name = r.FormValue("name")
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
+	work.CacooURL = r.FormValue("cacoo_url")
+	work.IsPublished = cast.ToBool(r.FormValue("is_published"))
 	work.UserID = cast.ToUint(r.FormValue("user_id"))
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
@@ -340,6 +353,8 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 		}
 	}
+	array := r.FormValue("array")
+	CreateSkills(array, work.ID)
 	var res Result
 	res.ID = work.ID
 	w.Write(ParseJSON(res))
@@ -433,7 +448,9 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	}
 	preURL := work.ImageURL
 	work.Name = r.FormValue("name")
+	work.CacooURL = r.FormValue("cacoo_url")
 	work.Description = r.FormValue("description")
+	work.IsPublished = cast.ToBool(r.FormValue("is_published"))
 	work.URL = r.FormValue("url")
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
@@ -461,6 +478,9 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	RemoveSkills(work.ID)
+	array := r.FormValue("array")
+	CreateSkills(array, work.ID)
 	res.ID = work.ID
 	w.WriteHeader(http.StatusOK)
 	w.Write(ParseJSON(res))
@@ -528,6 +548,7 @@ func DeleteWorks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
+	RemoveSkills(work.ID)
 	err = DB.Unscoped().Delete(&work).Error
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -561,6 +582,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 	works, _ := FetchWorks(DB, user.ID)
 	for _, work := range works {
+		RemoveSkills(work.ID)
 		err = DB.Delete(&work).Error
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -604,6 +626,7 @@ func ExecutedUser(w http.ResponseWriter, r *http.Request) {
 	}
 	works, _ := FetchWorks(DB, user.ID)
 	for _, work := range works {
+		RemoveSkills(work.ID)
 		DB.Unscoped().Where("work_id=?", work.ID).Delete(WorkItem{})
 		err = DB.Unscoped().Delete(&work).Error
 		if err != nil {
