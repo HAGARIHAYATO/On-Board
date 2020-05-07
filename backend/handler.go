@@ -28,6 +28,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 		Description  string
 		URL          string
 		CacooURL     string
+		IsPublished  bool
 		UserID       uint
 		UserName     string
 		UserImageURL string
@@ -60,6 +61,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	rw.UserImageURL = user.ImageURL
 	rw.WorkItems = items
 	rw.CacooURL = work.CacooURL
+	rw.IsPublished = cast.ToBool(work.IsPublished)
 	w.Write(ParseJSON(rw))
 }
 
@@ -315,6 +317,7 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Description = r.FormValue("description")
 	work.URL = r.FormValue("url")
 	work.CacooURL = r.FormValue("cacoo_url")
+	work.IsPublished = cast.ToBool(r.FormValue("is_published"))
 	work.UserID = cast.ToUint(r.FormValue("user_id"))
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
@@ -438,6 +441,7 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Name = r.FormValue("name")
 	work.CacooURL = r.FormValue("cacoo_url")
 	work.Description = r.FormValue("description")
+	work.IsPublished = cast.ToBool(r.FormValue("is_published"))
 	work.URL = r.FormValue("url")
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {

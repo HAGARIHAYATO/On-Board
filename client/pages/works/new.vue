@@ -44,6 +44,10 @@
         <a href="https://cacoo.com">クリックしてCacooサイトへ遷移</a>した後、シートを作成して上画像の通りURLを取得
       </p>
       <input type="text" class="info__name__cacoo" v-model="cacooURL" />
+      <select v-model="is_published">
+        <option :value="true">公開済み</option>
+        <option :value="false">作成中</option>
+      </select>
     </div>
     <div class="new__btn">
       <input type="submit" value="保存" />
@@ -71,6 +75,7 @@ export default {
       workDesc: "",
       APIURL: "",
       cacooURL: "",
+      is_published: true,
       isLoading: false
     };
   },
@@ -107,6 +112,7 @@ export default {
           data.append("url", this.workURL);
           data.append("file", this.data.name);
           data.append("cacoo_url", this.cacooURL);
+          data.append("is_published", this.is_published);
           const headers = { "content-type": "multipart/form-data" };
           await this.$axios
             .post(this.APIURL + "/works", data, {

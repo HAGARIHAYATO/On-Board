@@ -12,6 +12,8 @@
         <div class="show__info">
           <h3 class="info__title"><span class="grey_span">TITLE : </span>{{ work.Name }}</h3>
           <p class="info__title__sub">{{ work.URL }}</p>
+          <p v-if="work.IsPublished" class="is__published">公開済み</p>
+          <p v-else class="is__published">作成中</p>
           <div class="show__user">
             <nuxt-link :to="'/users/' + work.UserID" class="info__name">
               <img :src="returnURL(work.UserImageURL)" class="user__icon">
@@ -431,5 +433,13 @@ h2 {
   color: grey;
   font-weight: bold;
   font-size: 30px;
+}
+.is__published{
+  display: inline-block;
+  padding:  3px 15px;
+  background-color: $bg-main;
+  color: $bg-yellow;
+  border-radius: 20px;
+  margin: 10px 0 20px 0;
 }
 </style>

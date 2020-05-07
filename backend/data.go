@@ -12,6 +12,7 @@ type Work struct {
 	Description string
 	URL         string
 	CacooURL    string
+	IsPublished bool `gorm:"default:true"`
 	UserID      uint
 }
 
