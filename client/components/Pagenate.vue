@@ -27,8 +27,6 @@ export default {
 </script>
 <style lang="scss" scopoed>
 @import "assets/scss/app";
-.pagenation{
-}
 .pagenate__main {
   display: flex;
   justify-content: center;

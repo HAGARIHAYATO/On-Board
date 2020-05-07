@@ -38,6 +38,25 @@
         rows="10"
         v-model="workDesc"
       ></textarea>
+      <p class="info__name__sub">Cacoo画像URL</p>
+      <img class="info__image" src="/cacoo__teach.png" alt="cacoo使い方">
+      <p class="info__teach">
+        <a href="https://cacoo.com">クリックしてCacooサイトへ遷移</a>した後、シートを作成して上画像の通りURLを取得
+      </p>
+      <input type="text" class="info__name__cacoo" v-model="cacooURL" />
+      <p class="info__name__sub">公開状況</p>
+      <select v-model="is_published">
+        <option :value="true">公開済み</option>
+        <option :value="false">作成中</option>
+      </select>
+      <p class="info__name__sub">使用スキル</p>
+      <div class="skill__box">
+        <p class="skill__inputs" v-for="(s, i) in this.skillArray" :key="i">
+          {{s}}
+          <span class="skill__delete" @click="deleteSkill(i)">×</span>
+        </p>
+      </div>
+      <input type="text" class="info__name__cacoo" @change="trimSkills"/>
     </div>
     <div class="new__btn">
       <input type="submit" value="保存" />
@@ -64,6 +83,9 @@ export default {
       workURL: "",
       workDesc: "",
       APIURL: "",
+      cacooURL: "",
+      skillArray: [],
+      is_published: true,
       isLoading: false
     };
   },
@@ -71,6 +93,13 @@ export default {
     this.APIURL = this.GetURL();
   },
   methods: {
+    deleteSkill: function(index) {
+      this.skillArray.splice(index, 1);
+    },
+    trimSkills: function(e) {
+      this.skillArray.push(e.target.value)
+      e.target.value = ""
+    },
     valCheck: function() {
       this.errors = []
       if (this.workName === "") {
@@ -99,6 +128,9 @@ export default {
           data.append("description", this.workDesc);
           data.append("url", this.workURL);
           data.append("file", this.data.name);
+          data.append("cacoo_url", this.cacooURL);
+          data.append("is_published", this.is_published);
+          data.append("array", this.skillArray)
           const headers = { "content-type": "multipart/form-data" };
           await this.$axios
             .post(this.APIURL + "/works", data, {
@@ -153,7 +185,7 @@ body {
 }
 .new__user__bar {
   width: 600px;
-  text-align: center;
+  text-align: left;
   margin: 0 auto;
 }
 .new__description {
@@ -205,6 +237,7 @@ body {
   margin-left: 10px;
   font-size: 8px;
   font-weight: bold;
+  text-align: left !important; 
 }
 .info__name {
   width: 95%;
@@ -223,6 +256,23 @@ body {
       font-weight: bold;
     }
   }
+}
+.info__name__cacoo{
+  width: 100%;
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 0 5px grey;
+  padding: 0 20px;
+  margin: 10px 0 20px 0;
+  height: 60px;
+  line-height: 60px;
+  word-break: break-all !important;
+}
+.info__image{
+  width: 60%;
+}
+.info__teach{
+  font-size: 12px;
 }
 .new__image {
   display: block;
@@ -311,5 +361,23 @@ body {
       box-shadow: 0 0 0 grey;
     }
   }
+}
+.skill__inputs{
+  display: inline-block;
+  padding: 6px 6px 6px 15px;
+  background-color: $bg-main;
+  color: $bg-yellow;
+  height: 36px;
+  line-height: 24px;
+  border-radius: 20px;
+  margin: 5px;
+}
+.skill__delete{
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  height: 24px;
+  width: 24px;
+  display: inline-block;
 }
 </style>

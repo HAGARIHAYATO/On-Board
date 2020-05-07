@@ -2,16 +2,18 @@
   <div class="show__wrapper">
     <Loading v-if="isLoading" />
     <div class="show__container">
-      <h2>Info</h2>
+      <div class="show__main">
+        <a :href="work.URL" class="show__container__image">
+          <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
+        </a>
+      </div>
+      <h2>Information - 作品情報</h2>
       <div class="show__bar">
-        <div class="show__main">
-          <a :href="work.URL" class="show__container__image">
-            <img :src="returnURL(work.ImageURL)" :alt="work.Name" class="show__image" />
-          </a>
-        </div>
         <div class="show__info">
-          <h2 class="info__title">{{ work.Name }}</h2>
+          <h3 class="info__title"><span class="grey_span">TITLE : </span>{{ work.Name }}</h3>
           <p class="info__title__sub">{{ work.URL }}</p>
+          <p v-if="work.IsPublished" class="is__published">公開済み</p>
+          <p v-else class="is__published">作成中</p>
           <div class="show__user">
             <nuxt-link :to="'/users/' + work.UserID" class="info__name">
               <img :src="returnURL(work.UserImageURL)" class="user__icon">
@@ -20,8 +22,17 @@
           </div>
           <div class="show__description">{{ isNone(work.Description) }}</div>
         </div>
+        <div class="show__subInfo">
+          <p
+            class="skill__tag"
+            v-for="(skill, index) in work.Skills"
+            :key="index"
+          >
+            {{skill.Name}}
+          </p>
+        </div>
       </div>
-      <h2>Item</h2>
+      <h2>Item - 作品詳細</h2>
       <div class="select__item" v-if="isArrayExist(work.WorkItems)">
         <div class="select__item__image" v-if="selectItem">
           <img :src="returnURL(selectItem.ImageURL)" alt="作品画像" />
@@ -41,6 +52,20 @@
           <p v-if="isSelected(item.ID)">▼</p>
           <p v-else>-</p>
           <img :src="returnURL(item.ImageURL)" alt="作品画像" />
+        </div>
+      </div>
+      <h2>Composition - 構図</h2>
+      <div class="">
+        <img
+          v-if="isExist(work.CacooURL)"
+          class="cacoo__frame"
+          :src="isExist(work.CacooURL)"
+        />
+        <div
+         v-else
+         class="cacoo__frame"
+        >
+         <p class="nothing__alert">構図はありません。</p>
         </div>
       </div>
       <p class="operation" v-if="isMine">
@@ -73,7 +98,16 @@ export default {
       work: {},
       isLoading: false,
       APIURL: "",
-      isOpenDeleteModal: false
+      isOpenDeleteModal: false,
+      /////////////////////////
+      Skills: [
+        "Docker",
+        "AWS",
+        "Kubernetes",
+        "Azure",
+        "Next.js",
+        "Rust"
+      ],
     };
   },
   head () {
@@ -94,6 +128,9 @@ export default {
     }
   },
   methods: {
+    isExist: function(str) {
+      return str ? str : false
+    },
     isNone: function(str) {
       return str == "" ? "本文はありません。" : str
     },
@@ -162,9 +199,10 @@ body {
   box-sizing: border-box;
 }
 h2 {
-  margin: 0 10px 10px 10px;
+  margin: 50px;
   color: $bg-main;
   font-size: 18px;
+  border-bottom: solid 2px $bg-main;
 }
 .show__wrapper {
   padding: 100px 0 50px 0;
@@ -174,10 +212,10 @@ h2 {
 }
 .show__container{
   margin: 30px;
+  box-shadow: 0 2px 5px grey;
   background-color: white;
   border-radius: 10px;
-  border: solid .5px lightgrey;
-  padding: 2%;
+  padding: 4% 2%;
 }
 .show__bar {
   display: flex;
@@ -206,6 +244,10 @@ h2 {
   margin: 0 auto;
   max-width: 600px;
   height: 300px;
+  box-shadow: 0 0 5px grey;
+  &:hover{
+    box-shadow: 0 0 0 grey;
+  }
 }
 .show__user {
   text-align: left;
@@ -358,6 +400,46 @@ h2 {
   color: grey;
 }
 .show__main, .show__info{
-  margin: 25px;
+  margin: 0 25px;
+}
+.grey_span{
+  color: grey;
+  font-size: 16px;
+}
+.show__subInfo{
+  border-radius: 5px;
+  width: 300px;
+  margin: 0 20px 0 20px;
+  padding: 10px;
+}
+.skill__tag{
+  display: inline-block;
+  background-color: $tag-color;
+  border-radius: 20px;
+  color: white;
+  padding: 4px 15px;
+  font-weight: bold;
+  box-shadow: 0 0 5px grey;
+  margin: 4px;
+}
+.cacoo__frame{
+  display: block;
+  width: 70%;
+  margin: 50px auto;
+}
+.nothing__alert{
+  text-align: center;
+  line-height: 528px;
+  color: grey;
+  font-weight: bold;
+  font-size: 30px;
+}
+.is__published{
+  display: inline-block;
+  padding:  3px 15px;
+  background-color: $bg-main;
+  color: $bg-yellow;
+  border-radius: 20px;
+  margin: 10px 0 20px 0;
 }
 </style>
