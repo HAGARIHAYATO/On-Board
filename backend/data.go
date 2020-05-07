@@ -12,8 +12,15 @@ type Work struct {
 	Description string
 	URL         string
 	CacooURL    string
-	IsPublished bool `gorm:"default:true"`
+	IsPublished bool
 	UserID      uint
+}
+
+// Skill is Model
+type Skill struct {
+	gorm.Model
+	Name   string
+	WorkID uint
 }
 
 // WorkItem is Model

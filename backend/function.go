@@ -118,3 +118,26 @@ func DeleteDependent(uid uint) {
 	}
 	//Userのbucketも削除する
 }
+
+// CreateSkills is function
+func CreateSkills(arraySTR string, wid uint) error {
+	var err error
+	strs := strings.Split(arraySTR, ",")
+	for _, str := range strs {
+		var skill Skill
+		skill.Name = str
+		skill.WorkID = wid
+		err = DB.Create(&skill).Error
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	return err
+}
+
+// RemoveSkills is function
+func RemoveSkills(wid uint) error {
+	DB.Unscoped().Where("work_id=?", wid).Delete(Skill{})
+	var err error
+	return err
+}

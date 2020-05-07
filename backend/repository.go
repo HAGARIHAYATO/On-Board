@@ -17,7 +17,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	DB.AutoMigrate(&User{}, &Work{}, &WorkItem{}, &Info{})
+	DB.AutoMigrate(&User{}, &Work{}, &WorkItem{}, &Info{}, &Skill{})
 	fmt.Println("-------------------------------------\n",
 		"-------------------------------------\n",
 		"-----------Migration--Done-----------\n",
@@ -83,4 +83,11 @@ func FetchInfoByUID(DB *gorm.DB, uid uint) ([]*Info, error) {
 	var aLotOfInfo []*Info
 	err = DB.Find(&aLotOfInfo, "user_id=? OR user_id=?", uid, 0).Error
 	return aLotOfInfo, err
+}
+
+// FetchSkillsByWorkID is
+func FetchSkillsByWorkID(DB *gorm.DB, wid uint) ([]*Skill, error) {
+	var skills []*Skill
+	err = DB.Find(&skills, "work_id=?", wid).Error
+	return skills, err
 }

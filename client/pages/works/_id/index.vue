@@ -25,10 +25,10 @@
         <div class="show__subInfo">
           <p
             class="skill__tag"
-            v-for="(skill, index) in Skills"
+            v-for="(skill, index) in work.Skills"
             :key="index"
           >
-            {{skill}}
+            {{skill.Name}}
           </p>
         </div>
       </div>
