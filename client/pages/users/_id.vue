@@ -1,6 +1,22 @@
 <template>
   <div class="container" v-if="reload">
     <Loading v-if="isLoading" />
+    <div
+      class="container__side"
+      :class="slider()"
+    >
+      <p
+        class="drawBtn"
+        @click="drawSlider()"
+      >＜</p>
+      <search-form
+        @search="search($event)"
+        @cancel="cancel()"
+        :isSearch="isSearch"
+        searchType="works"
+      />
+      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
+    </div>
     <div class="container__main">
       <div class="user__works">
         <h2>User - ユーザー情報</h2>
@@ -18,7 +34,6 @@
         <div class="user__intro">{{ user.Introduction }}</div>
         <h2>Works - 作品一覧</h2>
         <works :works="returnWorks" :isSearch="false" :isUserShow="true"/>
-        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.works && this.works.length > 8" />
       </div>
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
     </div>
@@ -70,6 +85,19 @@ export default {
     }
   },
   methods: {
+    slider: function() {
+      const off = "slider__off"
+      const on = "slider__on"
+      if (this.slide) {
+        return on
+      } else {
+        return off
+      }
+    },
+    drawSlider: function() {
+      this.slide = !this.slide
+      console.log(this.slide)
+    },
     gitHubInit: async function() {
       if (this.ghToken) {
         const headers = { 
@@ -111,6 +139,25 @@ export default {
         }
       }
       this.page = 1;
+    },
+    cancel: function() {
+      this.isSearch = false;
+      this.reload = false;
+      this.init();
+      this.reload = true;
+    },
+    search: function(e) {
+      if (this.works[0] && e.check) {
+        this.worksList = this.works.filter(
+          work =>
+            work.Name.indexOf(e.input) != -1
+        );
+      } else if (this.works[0] && !e.check) {
+        this.worksList = this.works.filter(
+          work => work.Name.indexOf(e.input) != -1
+        );
+      }
+      this.isSearch = true;
     },
     goPrev: function() {
       if (this.page > 1) {
@@ -158,7 +205,9 @@ export default {
       ghToken: "",
       author: 0,
       ghUser: {},
-      hubs: []
+      hubs: [],
+      isSearch: false,
+      slide: false
     };
   }
 };
@@ -168,6 +217,52 @@ export default {
 .container {
   width: 100%;
   min-height: 81vh;
+}
+.container__side {
+  padding-top: 70px;
+  min-height: 100%;
+  width: 400px;
+  background-color: $bg-yellow;
+  border-left: solid 2px white;
+}
+.slider__off{
+  & p {
+    transition: all .5s;
+  }
+  transition: all .5s;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  right: -350px;
+}
+.slider__on{
+  & p {
+    transition: all .5s;
+    transform: rotate(-540deg);
+    color: $bg-main;
+    border: solid 2px $bg-main;
+  }
+  border-left: solid 2px $bg-main;
+  transition: all .5s;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+.drawBtn{
+  position: absolute;
+  top: 100px;
+  left: -25px;
+  border-radius: 50%;
+  background-color: $bg-yellow;
+  color: white;
+  height: 50px;
+  width: 50px;
+  line-height: 46px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  border: solid 2px white;
 }
 .container__main {
   padding: 90px 0;
