@@ -6,17 +6,33 @@
     <h1 class="searchAlert" v-if="!isSearch && works.length == 0">
       投稿はありません
     </h1>
-    <div v-for="(work, index) in works" :key="index" class="works__card">
-      <nuxt-link :to="'/works/' + work.ID">
-        <img :src="returnURL(work.ImageURL)" :alt="work.Name" />
-      </nuxt-link>
-      <img class="user__image" v-if="!isUserShow" :src="returnURL(work.UserImageURL)" :alt="work.UserName" />
-      <p class="speech__bubble">
-        <nuxt-link :to="'/works/' + work.ID">
-          {{ hideLongTitle(work.Name) }}
-        </nuxt-link>
-      </p>
-    </div>
+    <nuxt-link
+      :to="'/works/' + work.ID"
+      v-for="(work, index) in works"
+      :key="index"
+      class="works__card"
+    >
+      <div>
+        <p class="work__image"><img :src="returnURL(work.ImageURL)" :alt="work.Name" /></p>
+        <div class="work__top">
+          <p class="work__title">
+            {{work.Name}}
+          </p>
+          <div class="user__box" v-if="!isUserShow">
+            <img class="user__image" :src="returnURL(work.UserImageURL)" :alt="work.UserName" />
+            <p class="user__name">{{work.UserName}}</p>
+          </div>
+        </div>
+        <div class="work__bottom">
+          <p
+            v-for="(s, i) in work.Skills"
+            :key="i"
+            class="skill__tag"
+          >{{s.Name}}</p>
+          <div class="work__bottom__layer"></div>
+        </div>
+      </div>
+    </nuxt-link>
   </div>
 </template>
 <script>
@@ -52,60 +68,38 @@ export default {
   text-decoration: none;
   box-sizing: border-box;
 }
-.speech__bubble{
-  position: absolute;
-  min-width: 80px;
-  text-align: center;
-  left: 55%;
-  bottom: -5px;
-  display: none;
-  border: solid 3px $bg-main;
-  border-radius: 20px;
-  padding: 0 3%;
-  background-color: lightgreen;
-  & a {
-    color: white !important;
-  }
-}
-.user__image{
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  display: block;
-  width: 50px !important;
-  height: 50px !important;
-  border: solid 3px $bg-main;
-  border-radius: 20px;
-}
 .works__wrapper {
   margin: 0 auto 20px auto;
   max-width: 870px;
   min-height: 435px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
-
 .works__card {
-  & img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-  }
-  position: relative;
-  margin: 1%;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: solid 3px $bg-main;
-  background-color: white;
-  box-shadow: 0 0 5px $bg-main;
-  transition: all 0.1s;
-  &:hover {
-    transition: all 0.5s;
-    box-shadow: 0 0 0 black;
-    & .speech__bubble {
-      display: inline-block !important;
+  & .work__image{
+    & img {
+      height: 100px;
+      max-width: 200px;
+      border-radius: 5px;
+      display: block;
+      margin: 0 0 10px 0;
     }
+  }
+  border: solid 5px white;
+  overflow: hidden;
+  padding: 1%;
+  position: relative;
+  margin: 2%;
+  width: 400px;
+  height: 250px;
+  border-radius: 5px;
+  background-color: white;
+  box-shadow: 0 2px 4px $bg-main;
+  transition: all 0.3s;
+  &:hover {
+    transition: all 0.3s;
+    box-shadow: 0 0 1px $bg-main;
   }
 }
 .searchAlert {
@@ -114,5 +108,61 @@ export default {
   text-align: center;
   line-height: 435px;
   font-size: 40px;
+}
+.work__title{
+  font-weight: bold;
+  color: #777777 !important;
+  font-size: 20px;
+  height: 40px;
+  line-height: 40px;
+}
+.user__image{
+  display: block;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+}
+.user__name{
+  color: #777777 !important;
+  font-size: 20px;
+  height: 30px;
+  line-height: 30px;
+  margin: 0 10px;
+}
+.user__box{
+  display: inline-flex;
+  border-radius: 25px;
+  padding: 5px;
+  box-shadow: 0 0 1px $bg-main;
+  margin: 0 20px;
+}
+.work__top{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 0 10px;
+}
+.work__bottom{
+  margin: 10px;
+  position: relative;
+  height: 90px;
+}
+.work__bottom__layer{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.99;
+  background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+.skill__tag{
+  display: inline-block;
+  background-color: $tag-color;
+  border-radius: 20px;
+  color: white;
+  padding: 4px 20px;
+  font-weight: bold;
+  box-shadow: 0 0 5px grey;
+  margin: 5px;
 }
 </style>

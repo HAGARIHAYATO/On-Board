@@ -1,7 +1,14 @@
 <template>
   <div class="container" v-if="reload">
     <Loading v-if="isLoading" />
-    <div class="container__side">
+    <div
+      class="container__side"
+      :class="slider()"
+    >
+      <p
+        class="drawBtn"
+        @click="drawSlider()"
+      >＜</p>
       <search-form
         @search="search($event)"
         @cancel="cancel()"
@@ -43,7 +50,8 @@ export default {
       users: [],
       maxDataCount: 6,
       isLoading: false,
-      APIURL: ""
+      APIURL: "",
+      slide: false
     };
   },
   head () {
@@ -74,6 +82,19 @@ export default {
     }
   },
   methods: {
+    slider: function() {
+      const off = "slider__off"
+      const on = "slider__on"
+      if (this.slide) {
+        return on
+      } else {
+        return off
+      }
+    },
+    drawSlider: function() {
+      this.slide = !this.slide
+      console.log(this.slide)
+    },
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
@@ -143,6 +164,7 @@ export default {
 @import "assets/scss/app";
 * {
   text-decoration: none;
+  box-sizing: border-box;
 }
 .container {
   display: flex;
@@ -208,5 +230,45 @@ export default {
   text-align: center;
   line-height: 51vh;
   font-size: 40px;
+}
+.drawBtn{
+  position: absolute;
+  top: 100px;
+  left: -25px;
+  border-radius: 50%;
+  background-color: $bg-yellow;
+  color: white;
+  height: 50px;
+  width: 50px;
+  line-height: 46px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  border: solid 2px white;
+}
+.slider__off{
+  & p {
+    transition: all .5s;
+  }
+  border-left: solid 2px white;
+  transition: all .5s;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  right: -350px;
+}
+.slider__on{
+  & p {
+    transition: all .5s;
+    transform: rotate(-540deg);
+    color: $bg-main;
+    border: solid 2px $bg-main;
+  }
+  border-left: solid 2px $bg-main;
+  transition: all .5s;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  right: 0;
 }
 </style>
