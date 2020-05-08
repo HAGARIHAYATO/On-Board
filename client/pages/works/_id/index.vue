@@ -88,7 +88,7 @@
           <h3>{{RewriteTime(ghRepository.created_at)}} ~ {{RewriteTime(ghRepository.pushed_at)}}</h3>
           <p>（※リポジトリ作成 ~ 最終push）</p>
           <div>
-            <p class="gh-title__sub" @click="changeGraph(language, true)">＞ 言語使用状況</p>
+            <p class="gh-title__sub" @click="changeGraph(language, true)">＞ 言語使用状況 <img class="checkbox" src="/check.svg" v-if="isPie"></p>
             <p
               v-for="(d, n) in Object.keys(language)"
               :key="n"
@@ -98,7 +98,7 @@
             </p>
           </div>
           <div>
-            <p class="gh-title__sub" @click="changeGraph(score, false)">＞ スコア</p>
+            <p class="gh-title__sub" @click="changeGraph(score, false)">＞ スコア <img class="checkbox" src="/check.svg" v-if="!isPie"></p>
             <p
               v-for="(s, nu) in Object.keys(score)"
               :key="nu"
@@ -595,5 +595,8 @@ h2 {
 .gh-check{
   display: inline-block;
   margin: 5px;
+}
+.checkbox{
+  width: 16px;
 }
 </style>
