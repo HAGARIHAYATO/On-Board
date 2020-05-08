@@ -9,7 +9,7 @@
         <div class="info__bar">
           <div class="info" v-for="(mail, index) in lists" :key="index" @click="getMail(mail)">
             <p class="title"><span v-if="mail.UserID > 0">●</span>{{ mail.Title }}</p>
-            <p class="date">{{ mail.CreatedAt }}</p>
+            <p class="date">{{ RewriteTime(mail.CreatedAt) }}</p>
             <p class="message">{{ cutSTR(mail.Message) }}</p>
           </div>
         </div>
@@ -19,7 +19,7 @@
       <div class="mail__box">
         <div class="mail__bar">
           <p class="title"><span v-if="selectedMail.UserID > 0">●</span>{{ selectedMail.Title }}</p>
-          <p class="date">{{ selectedMail.CreatedAt }}</p>
+          <p class="date">{{ RewriteTime(selectedMail.CreatedAt) }}</p>
           <p class="message">{{ selectedMail.Message }}</p>
         </div>
       </div>

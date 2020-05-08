@@ -57,6 +57,13 @@
         </p>
       </div>
       <input type="text" class="info__name__cacoo" @change="trimSkills"/>
+      <p class="info__name__sub">GitHubレポジトリ連携</p>
+      <select v-model="selectedRepo">
+        <option value="">なし</option>
+        <option v-for="(repo, num) in repositories" :key="num" :value="repo.name">
+          {{repo.name}}
+        </option>
+      </select>
     </div>
     <div class="new__btn">
       <input type="submit" value="保存" />
@@ -86,19 +93,38 @@ export default {
       cacooURL: "",
       skillArray: [],
       is_published: true,
-      isLoading: false
+      isLoading: false,
+      repositories: [],
+      selectedRepo: ""
     };
   },
-  mounted() {
+  async mounted() {
     this.APIURL = this.GetURL();
+    const headers = { 
+      "content-type": "application/json",
+      "Authorization": "",
+    };
+    const endpoint = this.FetchGitInfo(0, this.$auth.user.GitHubToken)
+    this.$nextTick(async () => {
+      await this.showBubble();
+      await this.$axios.get(endpoint, {
+          headers
+        }).then(res => {
+          this.repositories = res.data
+        })
+        .catch(response => console.error(response));
+      await setTimeout(() => this.showBubble(), 1000);
+    });
   },
   methods: {
     deleteSkill: function(index) {
       this.skillArray.splice(index, 1);
     },
     trimSkills: function(e) {
-      this.skillArray.push(e.target.value)
-      e.target.value = ""
+      if (e.target.value !== "") {
+        this.skillArray.push(e.target.value)
+        e.target.value = ""
+      }
     },
     valCheck: function() {
       this.errors = []
@@ -130,7 +156,8 @@ export default {
           data.append("file", this.data.name);
           data.append("cacoo_url", this.cacooURL);
           data.append("is_published", this.is_published);
-          data.append("array", this.skillArray)
+          data.append("array", this.skillArray);
+          data.append("gh_repo", this.selectedRepo);
           const headers = { "content-type": "multipart/form-data" };
           await this.$axios
             .post(this.APIURL + "/works", data, {

@@ -10,10 +10,14 @@
       <h2>Information - 作品情報</h2>
       <div class="show__bar">
         <div class="show__info">
-          <h3 class="info__title"><span class="grey_span">TITLE : </span>{{ work.Name }}</h3>
+          <h3 class="info__title">{{ work.Name }}</h3>
           <p class="info__title__sub">{{ work.URL }}</p>
-          <p v-if="work.IsPublished" class="is__published">公開済み</p>
-          <p v-else class="is__published">作成中</p>
+          <div>
+            <p v-if="work.IsPublished" class="is__published">公開済み</p>
+            <p v-else class="is__published">作成中</p>
+            <p v-if="work.GHR" class="is__published">Github連携済み</p>
+            <p v-else class="is__published">Github連携なし</p>
+          </div>
           <div class="show__user">
             <nuxt-link :to="'/users/' + work.UserID" class="info__name">
               <img :src="returnURL(work.UserImageURL)" class="user__icon">
@@ -68,6 +72,48 @@
          <p class="nothing__alert">構図はありません。</p>
         </div>
       </div>
+      <h2>Github - Github連携情報</h2>
+      <div v-if="work.GHR" class="gh-box">
+        <div class="gh-info">
+          <h3><a :href="ghRepository.html_url">{{work.GHR}}</a></h3>
+          <p>（※Githubプロジェクト名）</p>
+          <p>
+            By
+            <img
+              :src="ghRepository.owner.avatar_url"
+              :alt="ghRepository.owner.login"
+            />
+            <a :href="ghRepository.owner.html_url">{{ghRepository.owner.login}}</a>
+          </p>
+          <h3>{{RewriteTime(ghRepository.created_at)}} ~ {{RewriteTime(ghRepository.pushed_at)}}</h3>
+          <p>（※リポジトリ作成 ~ 最終push）</p>
+          <div>
+            <p class="gh-title__sub" @click="changeGraph(language, true)">＞ 言語使用状況</p>
+            <p
+              v-for="(d, n) in Object.keys(language)"
+              :key="n"
+              class="gh-check"
+            >
+              {{d}}
+            </p>
+          </div>
+          <div>
+            <p class="gh-title__sub" @click="changeGraph(score, false)">＞ スコア</p>
+            <p
+              v-for="(s, nu) in Object.keys(score)"
+              :key="nu"
+              class="gh-check"
+            >
+              {{s}}
+            </p>
+          </div>
+        </div>
+        <div class="gh-graph">
+          <Chart :dataset="dataset" v-if="isPie" />
+          <Bar-Chart :dataset="dataset" v-else />
+        </div>
+      </div>
+      <p v-else class="nothing__alert">情報はありません。</p>
       <p class="operation" v-if="isMine">
         <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link>|
         <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
@@ -86,10 +132,14 @@
 <script>
 import Loading from "~/components/Loading.vue";
 import DeleteModal from "~/components/DeleteModal.vue";
+import Chart from "~/components/Chart.vue";
+import BarChart from "~/components/BarChart.vue";
 export default {
   components: {
     Loading,
-    DeleteModal
+    DeleteModal,
+    Chart,
+    BarChart
   },
   data() {
     return {
@@ -99,15 +149,23 @@ export default {
       isLoading: false,
       APIURL: "",
       isOpenDeleteModal: false,
-      /////////////////////////
-      Skills: [
-        "Docker",
-        "AWS",
-        "Kubernetes",
-        "Azure",
-        "Next.js",
-        "Rust"
-      ],
+      isPie: true,
+      ghRepository: {
+        owner: {
+          login: "",
+          avatar_url: "",
+          html_url: ""
+        },
+        html_url: ""
+      },
+      language: {},
+      score:{
+        stars: 0,
+        subscribers: 0,
+        watchers: 0,
+        forks: 0
+      },
+      dataset: {}
     };
   },
   head () {
@@ -128,6 +186,16 @@ export default {
     }
   },
   methods: {
+    changeGraph: function(obj, bool) {
+      if (obj) {
+        this.dataset = obj;
+        if (bool) {
+          this.isPie = true
+        } else {
+          this.isPie = false
+        }
+      }
+    },
     isExist: function(str) {
       return str ? str : false
     },
@@ -174,6 +242,36 @@ export default {
       if (typeof item != "object") return;
       this.selectId = item.ID;
       this.selectItem = item;
+    },
+    FetchGitRepository: async function(userName, repoName) {
+      if (!userName || !repoName) return
+      let obj = {}
+      const headers = { 
+        "content-type": "application/json",
+        "Authorization": "",
+      };
+      const url = "https://api.github.com/repos/"
+      await this.$axios
+        .get(url + userName + "/" + repoName, {
+          headers
+        })
+        .then(res => {
+          this.ghRepository = res.data
+          this.score.stars = this.ghRepository.stargazers_count
+          this.score.watchers = this.ghRepository.watchers_count
+          this.score.subscribers = this.ghRepository.subscribers_count
+          this.score.forks = this.ghRepository.forks_count
+        })
+        .catch(response => console.error(response));
+      await this.$axios
+        .get(url + userName + "/" + repoName + "/languages", {
+          headers
+        })
+        .then(res => {
+          this.language = res.data
+          this.dataset = this.language
+        })
+        .catch(response => console.error(response));
     }
   },
   async mounted() {
@@ -187,6 +285,7 @@ export default {
           this.selectItem = response.data.WorkItems[0]
         })
         .catch(response => console.error(response));
+      await this.FetchGitRepository(this.work.UserGithubToken, this.work.GHR)
       await setTimeout(() => this.showBubble(), 1000);
     });
   }
@@ -441,5 +540,60 @@ h2 {
   color: $bg-yellow;
   border-radius: 20px;
   margin: 10px 0 20px 0;
+}
+.gh-box{
+  display: flex;
+  justify-content: center;
+  margin: 0 0 50px 0;
+}
+.gh-info{
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px grey;
+  margin: 20px;
+  transition: all .2s;
+  padding: 20px;
+  font-size: 12px;
+  color: #777777;
+  & h3 {
+    margin: 10px 0 0 0;
+  }
+  & a {
+    text-decoration: none !important;
+    color: $tag-color !important;
+  }
+  & img {
+    width: 15px;
+    height: 15px;
+  }
+  &:hover{
+    box-shadow: 0 0 1px grey;
+  }
+}
+.gh-graph{
+  padding: 0 0 10px 0;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px grey;
+  margin: 20px;
+  transition: all .2s;
+  &:hover{
+    box-shadow: 0 0 1px grey;
+  }
+}
+.gh-title__sub{
+  color: $tag-color;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 20px 0 5px 0;
+  transition: all .2s;
+  cursor: pointer;
+  &:hover{
+    margin: 20px 0 5px 5px;
+  }
+}
+.gh-check{
+  display: inline-block;
+  margin: 5px;
 }
 </style>

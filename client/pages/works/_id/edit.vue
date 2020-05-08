@@ -57,6 +57,13 @@
         </p>
       </div>
       <input type="text" class="info__name__cacoo" @change="trimSkills"/>
+      <p class="info__name__sub">GitHubレポジトリ連携</p>
+      <select v-model="selectedRepo">
+        <option value="">なし</option>
+        <option v-for="(repo, num) in repositories" :key="num" :value="repo.name">
+          {{repo.name}}
+        </option>
+      </select>
     </div>
     <div class="edit__btn">
       <input type="submit" value="保存" />
@@ -94,7 +101,9 @@ export default {
       skillArray: [],
       work: {},
       APIURL: "",
-      isLoading: false
+      isLoading: false,
+      selectedRepo: "",
+      repositories: [],
     };
   },
   async mounted() {
@@ -111,6 +120,7 @@ export default {
           this.workDesc = response.data.Description;
           this.cacooURL = response.data.CacooURL;
           this.is_published = response.data.IsPublished;
+          this.selectedRepo = response.data.GHR;
           for (const skill of response.data.Skills) {
             this.skillArray.push(skill.Name)
           }
@@ -118,18 +128,34 @@ export default {
             this.data.image = response.data.ImageURL;
             this.data.name = response.data.Name;
           }
+          this.getGithub()
         })
         .catch(response => console.error(response));
       await setTimeout(() => this.showBubble(), 1000);
     });
   },
   methods: {
+    getGithub: async function() {
+      const headers = { 
+        "content-type": "application/json",
+        "Authorization": "",
+      };
+      const endpoint = this.FetchGitInfo(0, this.$auth.user.GitHubToken)
+      await this.$axios.get(endpoint, {
+          headers
+        }).then(res => {
+          this.repositories = res.data
+        })
+        .catch(response => console.error(response));
+    },
     deleteSkill: function(index) {
       this.skillArray.splice(index, 1);
     },
     trimSkills: function(e) {
-      this.skillArray.push(e.target.value)
-      e.target.value = ""
+      if (e.target.value !== "") {
+        this.skillArray.push(e.target.value)
+        e.target.value = ""
+      }
     },
     showBubble: function() {
       this.isLoading = !this.isLoading;
@@ -160,7 +186,8 @@ export default {
           data.append("file", this.data.name);
           data.append("cacoo_url", this.cacooURL);
           data.append("is_published", this.is_published);
-          data.append("array", this.skillArray)
+          data.append("array", this.skillArray);
+          data.append("gh_repo", this.selectedRepo);
           const headers = { "content-type": "multipart/form-data" };
           await this.$axios
             .put(this.APIURL + "/works/" + this.work.ID, data, {
