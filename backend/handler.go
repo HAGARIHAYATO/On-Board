@@ -84,6 +84,7 @@ func GetWorks(w http.ResponseWriter, r *http.Request) {
 		ID           uint
 		Name         string
 		ImageURL     string
+		Skills       []*Skill
 		UserID       uint
 		UserName     string
 		UserImageURL string
@@ -102,6 +103,12 @@ func GetWorks(w http.ResponseWriter, r *http.Request) {
 		rw.Name = work.Name
 		rw.ImageURL = work.ImageURL
 		rw.UserID = work.UserID
+		skills, err := FetchSkillsByWorkID(DB, work.ID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		rw.Skills = skills
 		user, err := FetchUserByID(DB, work.UserID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound)
@@ -157,6 +164,7 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 		ID           uint
 		Name         string
 		ImageURL     string
+		Skills       []*Skill
 		UserID       uint
 		UserName     string
 		UserImageURL string
@@ -180,6 +188,12 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, work := range works {
 		var rw ResultWork
+		skills, err := FetchSkillsByWorkID(DB, work.ID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+		rw.Skills = skills
 		rw.ID = work.ID
 		rw.Name = work.Name
 		rw.ImageURL = work.ImageURL

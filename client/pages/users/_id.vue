@@ -3,7 +3,7 @@
     <Loading v-if="isLoading" />
     <div class="container__main">
       <div class="user__works">
-        <h2>User</h2>
+        <h2>User - ユーザー情報</h2>
         <div class="user">
           <div class="user__side">
             <div class="image-wrapper">
@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="user__intro">{{ user.Introduction }}</div>
-        <h2>Works</h2>
+        <h2>Works - 作品一覧</h2>
         <works :works="returnWorks" :isSearch="false" :isUserShow="true"/>
         <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="this.works && this.works.length > 8" />
       </div>
@@ -175,9 +175,6 @@ export default {
   width: 100%;
   background-color: $bg-color;
 }
-.user{
-  display: flex;
-}
 .user__works{
   position: relative;
   margin: 30px;
@@ -186,9 +183,10 @@ export default {
   border: solid .5px lightgrey;
   padding: 2% 2% 3% 2%;
   & h2 {
-    margin: 0 10px 10px 10px;
+    margin: 50px;
     color: $bg-main;
     font-size: 18px;
+    border-bottom: solid 2px $bg-main;
   }
 }
 .user__name {
@@ -211,6 +209,10 @@ export default {
   color:grey;
   width: 100%;
   max-height: 360px;
+}
+.user{
+  padding: 0 100px;
+  display: flex;
 }
 .image-wrapper {
   margin: 0 10px 0 30px;

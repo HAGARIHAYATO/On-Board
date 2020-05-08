@@ -545,6 +545,7 @@ h2 {
   display: flex;
   justify-content: center;
   margin: 0 0 50px 0;
+  flex-wrap: wrap;
 }
 .gh-info{
   width: 400px;
