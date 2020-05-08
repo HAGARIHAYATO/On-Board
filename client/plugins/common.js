@@ -25,6 +25,15 @@ Vue.mixin({
         break;
       }
       return endpoint
+    },
+    RewriteTime: function(time) {
+      if (time) {
+        let fixedTime = ""
+        fixedTime = time.split("T")
+        fixedTime = fixedTime[0].split("-")
+        fixedTime = fixedTime[0] + "年" + fixedTime[1] + "月" + fixedTime[2] + "日"
+        return fixedTime
+      }
     }
   }
 });

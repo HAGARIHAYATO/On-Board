@@ -22,18 +22,20 @@ import (
 func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	workID := chi.URLParam(r, "workID")
 	type ResultWork struct {
-		ID           uint
-		Name         string
-		ImageURL     string
-		Description  string
-		URL          string
-		CacooURL     string
-		IsPublished  bool
-		UserID       uint
-		UserName     string
-		UserImageURL string
-		WorkItems    []*WorkItem
-		Skills       []*Skill
+		ID              uint
+		Name            string
+		ImageURL        string
+		Description     string
+		URL             string
+		CacooURL        string
+		IsPublished     bool
+		UserID          uint
+		UserName        string
+		UserImageURL    string
+		UserGithubToken string
+		GHR             string
+		WorkItems       []*WorkItem
+		Skills          []*Skill
 	}
 	var rw ResultWork
 	id := cast.ToUint(workID)
@@ -68,6 +70,8 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	rw.WorkItems = items
 	rw.Skills = skills
 	rw.CacooURL = work.CacooURL
+	rw.GHR = work.GHR
+	rw.UserGithubToken = user.GitHubToken
 	rw.IsPublished = cast.ToBool(work.IsPublished)
 	w.Write(ParseJSON(rw))
 }
@@ -326,6 +330,7 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	work.CacooURL = r.FormValue("cacoo_url")
 	work.IsPublished = cast.ToBool(r.FormValue("is_published"))
 	work.UserID = cast.ToUint(r.FormValue("user_id"))
+	work.GHR = r.FormValue("gh_repo")
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
 		filename, err := CreateFile(file, fileHeader.Filename, work.UserID)
@@ -452,6 +457,7 @@ func UpdateWorks(w http.ResponseWriter, r *http.Request) {
 	work.Description = r.FormValue("description")
 	work.IsPublished = cast.ToBool(r.FormValue("is_published"))
 	work.URL = r.FormValue("url")
+	work.GHR = r.FormValue("gh_repo")
 	file, fileHeader, _ := r.FormFile("file")
 	if file != nil {
 		filename, err := CreateFile(file, fileHeader.Filename, work.UserID)

@@ -13,6 +13,7 @@ type Work struct {
 	URL         string
 	CacooURL    string
 	IsPublished bool
+	GHR         string
 	UserID      uint
 }
 
