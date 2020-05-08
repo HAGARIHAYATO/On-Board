@@ -19,14 +19,16 @@
     </div>
     <div class="container__main">
       <h1 class="searchAlert" v-if="isSearch && returnUsers.length == 0">検索結果はありません</h1>
-      <div v-for="(user, index) in returnUsers" :key="index" class="user__bar__wrapper">
-        <nuxt-link :to="'/users/' + user.ID">
-          <div class="user__bar">
-            <img :src="returnURL(user.ImageURL)" :alt="user.Name" />
-            <p>{{ user.Name }}</p>
-            <p>{{ user.WorksCount }}件投稿</p>
-          </div>
-        </nuxt-link>
+      <div class="user__container">
+        <div v-for="(user, index) in returnUsers" :key="index" class="user__bar__wrapper">
+          <nuxt-link :to="'/users/' + user.ID">
+            <div class="user__bar">
+              <img :src="returnURL(user.ImageURL)" :alt="user.Name" />
+              <p>{{ user.Name }}</p>
+              <p class="counts">{{ user.WorksCount }}件投稿</p>
+            </div>
+          </nuxt-link>
+        </div>
       </div>
     </div>
   </div>
@@ -171,6 +173,10 @@ export default {
   width: 100%;
   min-height: 81vh;
 }
+.counts{
+  font-size: 10px;
+  color: #777777;
+}
 .container__side {
   min-height: 100%;
   padding-top: 70px;
@@ -178,31 +184,33 @@ export default {
   background-color: $bg-yellow;
 }
 .container__main {
-  padding: 140px 0 70px 0;
+  padding: 100px 0 70px 0;
   min-height: 100%;
   width: 100%;
   background-color: $bg-color;
 }
 .user__bar__wrapper {
-  &:first-child {
-    border-top: solid 3px $bg-main;
-  }
-  padding-top: 10px;
+  padding: 10px 5px;
   background-color: white;
-  margin-left: 20px;
-  border-bottom: solid 3px $bg-main;
-  margin: auto 0;
+  margin: 20px;
+  box-shadow: 0 2px 3px $bg-main;
+  width: inherit;
+  border-radius: 40px;
   &:hover {
+    box-shadow: 0 0 1px $bg-main;
     & div {
-      border-left: solid 5px rgb(9, 185, 9);
       transition: all 0.3s;
     }
   }
 }
+.user__container{
+  margin: 0 auto;
+  width: 500px;
+  min-height: 580px;
+}
 .user__bar {
-  margin-bottom: 10px;
   height: 60px;
-  width: 70%;
+  width: 90%;
   font-weight: bold;
   color: $bg-main !important;
   display: flex;
