@@ -177,6 +177,7 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 		Introduction string
 		Email        string
 		GitHubToken  string
+		QiitaName    string
 		Works        []*ResultWork
 	}
 	var res Result
@@ -209,6 +210,7 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 	res.URL = user.URL
 	res.Email = user.Email
 	res.GitHubToken = user.GitHubToken
+	res.QiitaName = user.QiitaName
 	w.Write(ParseJSON(res))
 }
 
@@ -222,6 +224,7 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 		Introduction string
 		URL          string
 		GitHubToken  string
+		QiitaName    string
 		IsAdmin      bool
 	}
 	var rw ResultUser
@@ -241,6 +244,7 @@ func GetPrivateInfo(w http.ResponseWriter, r *http.Request) {
 	rw.Introduction = user.Introduction
 	rw.URL = user.URL
 	rw.GitHubToken = user.GitHubToken
+	rw.QiitaName = user.QiitaName
 	rw.IsAdmin = false
 	if user.IsAdmin == true {
 		rw.IsAdmin = true
@@ -399,6 +403,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			user.Name = r.FormValue("name")
 			user.Email = r.FormValue("email")
 			user.GitHubToken = r.FormValue("github")
+			user.QiitaName = r.FormValue("qiita")
 			user.URL = r.FormValue("url")
 			user.Introduction = r.FormValue("introduction")
 			preURL := user.ImageURL

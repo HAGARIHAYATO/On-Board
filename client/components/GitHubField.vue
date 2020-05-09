@@ -3,19 +3,25 @@
     <h2 class="field__title" v-if="ghUser.type === 'User'">GitHub Account</h2>
     <h2 class="field__title" v-else>GitHub Team</h2>
     <p class="gh__user"><img :src="ghUser.avatar_url"><a :href="ghUser.html_url">{{ghUser.login}}</a></p>
-    <h2 class="field__title">GitHub Projects</h2>
+    <h2 class="field__title">Github Analysis</h2>
+    <div class="chart__box">
+      <Chart :dataset="dataset" text="言語別使用率" />
+    </div>
+    <h2 class="field__title">GitHub Projects <span class="hubs__count">{{ghUser.public_repos}}件</span></h2>
     <div class="field">
       <div v-for="(item, index) in hubs" :key="index" class="field__item">
-        <GitHubItem :platform="0" :title="item.name" :url="item.html_url"/>
+        <GitHubItem :platform="0" :title="item.name" :url="item.html_url" />
       </div>
     </div>
   </div>
 </template>
 <script>
 import GitHubItem from "~/components/GitHubItem.vue";
+import Chart from "~/components/Chart.vue";
 export default {
   components: {
-    GitHubItem
+    GitHubItem,
+    Chart
   },
   props: {
     hubs: {
@@ -27,8 +33,27 @@ export default {
   },
   data() {
     return {
+      dataset: {}
     }
-  }
+  },
+  mounted() {
+    this.chartInit()
+  },
+  methods: {
+    chartInit: function() {
+      let obj = {}
+      if (this.hubs) {
+        for (const hub of this.hubs) {
+          if (obj[hub.language]) {
+            obj[hub.language] ++
+          } else {
+            obj[hub.language] = 1
+          }
+        }
+        this.dataset = obj
+      }
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -39,6 +64,7 @@ export default {
   border-radius: 10px;
   border: solid .5px lightgrey;
   margin: 30px;
+  box-shadow: 0 2px 5px grey;
 }
 .field{
   display: flex;
@@ -61,10 +87,26 @@ export default {
     width: 30px;
   }
   & a {
+    color: #777777 !important;
     margin: 0 10px;
     font-size: 30px;
     font-weight: bold;
     text-decoration: none !important;
+  }
+}
+.hubs__count{
+  color: #777;
+  font-size: 12px;
+  margin-left: 10px;
+}
+.chart__box{
+  max-width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 20px 20px 20px;
+  & canvas {
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

@@ -109,7 +109,7 @@
           </div>
         </div>
         <div class="gh-graph">
-          <Chart :dataset="dataset" v-if="isPie" />
+          <Chart :dataset="dataset" text="プロジェクト内言語別使用率" v-if="isPie" />
           <Bar-Chart :dataset="dataset" v-else />
         </div>
       </div>
@@ -343,9 +343,9 @@ h2 {
   margin: 0 auto;
   max-width: 600px;
   height: 300px;
-  box-shadow: 0 0 5px grey;
+  box-shadow: 0 0 3px grey;
   &:hover{
-    box-shadow: 0 0 0 grey;
+    box-shadow: 0 0 1px grey;
   }
 }
 .show__user {
@@ -408,7 +408,7 @@ h2 {
       color: black;
     }
     & img {
-      box-shadow: 0 0 7px grey;
+      box-shadow: 0 0 2px grey;
     }
   }
   &:active {

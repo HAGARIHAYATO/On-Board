@@ -50,6 +50,10 @@
             <label for="github">GitHubユーザー名</label>
             <input name="github" type="text" autocomplete="on" v-model="user.github" />
           </p>
+          <p>
+            <label for="github">Qiitaユーザー名</label>
+            <input name="github" type="text" autocomplete="on" v-model="user.qiita" />
+          </p>
         </div>
         <div v-else class="secret__form">
           <p>
@@ -113,6 +117,7 @@ export default {
         newPass: "",
         newPassConfirm: "",
         github: "",
+        qiita: ""
       },
       APIURL: "",
       isOpenDeleteModal: false,
@@ -125,14 +130,20 @@ export default {
       try {
         this.APIURL = this.GetURL();
         if (this.$auth.user) {
-          this.data.image = this.$auth.user.ImageURL;
-          this.user.id = this.$auth.user.ID;
-          this.user.url = this.$auth.user.URL;
-          this.user.name = this.$auth.user.Name;
-          this.user.introduction = this.$auth.user.Introduction;
-          this.user.email = this.$auth.user.Email;
-          this.user.github = this.$auth.user.GitHubToken;
-        }
+          await this.$axios
+            .get(this.APIURL + "/users/" + this.$auth.user.ID)
+            .then(r => {
+              this.data.image = r.data.ImageURL;
+              this.user.id = r.data.ID;
+              this.user.url = r.data.URL;
+              this.user.name = r.data.Name;
+              this.user.introduction = r.data.Introduction;
+              this.user.email = r.data.Email;
+              this.user.github = r.data.GitHubToken;
+              this.user.qiita = r.data.QiitaName;
+            })
+            .catch(response => console.error(response));
+            }
       } catch (error) {
         // handling
       }
@@ -204,6 +215,7 @@ export default {
             data.append("name", this.user.name);
             data.append("email", this.user.email);
             data.append("github", this.user.github);
+            data.append("qiita", this.user.qiita);
             data.append("url", this.user.url);
             data.append("introduction", this.user.introduction);
             data.append("file", this.data.name);
