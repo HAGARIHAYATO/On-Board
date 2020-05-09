@@ -335,9 +335,8 @@ export default {
   font-size: 10px;
 }
 .user__intro {
-  margin: 0 20px;
+  margin: 0 0 0 100px;
   font-size: 10px;
-  padding: 10px;
   color:grey;
   width: 100%;
   max-height: 360px;
