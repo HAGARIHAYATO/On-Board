@@ -3,9 +3,9 @@
     <h2 class="field__title">Qiita Account</h2>
     <p class="qiita__user"><img :src="qiitaUser.profile_image_url"><a :href="'https://qiita.com/' + qiitaUser.id">{{qiitaUser.name}}</a></p>
     <h2 class="field__title">Qiita Analysis</h2>
-      <div class="chart__box">
-        <Chart :dataset="dataset" text="タグ使用率" />
-      </div>
+    <div class="chart__box">
+      <Chart :dataset="dataset" text="タグ使用率" />
+    </div>
     <h2 class="field__title">Qiita Articles <span class="articles__count">{{qiitaUser.items_count}}件</span></h2>
     <div class="field">
       <div v-for="(article, index) in articles" :key="index" class="field__item">
