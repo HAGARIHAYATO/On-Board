@@ -31,27 +31,37 @@
             <a class="user__url" :href="user.URL">{{ user.URL }}</a>
           </div>
         </div>
+        <div class="user">
+          <p class="is__published" v-if="hubs.length > 0">Github連携済み</p>
+          <p class="is__published" v-else>Github連携なし</p>
+          <p class="is__published" v-if="articles.length > 0">Qiita連携済み</p>
+          <p class="is__published" v-else>Qiita連携なし</p>
+        </div>
         <div class="user__intro">{{ user.Introduction }}</div>
         <h2>Works - 作品一覧</h2>
         <works :works="returnWorks" :isSearch="false" :isUserShow="true"/>
       </div>
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
+      <Qiita-Field :articles="articles" :qiitaUser="qiitaUser" v-if="articles.length > 0"/>
     </div>
   </div>
 </template>
 <script>
+import axios from "axios"
 import Works from "~/components/Works.vue";
 import SearchForm from "~/components/SearchForm.vue";
 import Pagenate from "~/components/Pagenate.vue";
 import Loading from "~/components/Loading.vue";
 import GitHubField from "~/components/GitHubField.vue";
+import QiitaField from "~/components/QiitaField.vue";
 export default {
   components: {
     Works,
     SearchForm,
     Pagenate,
     Loading,
-    GitHubField
+    GitHubField,
+    QiitaField
   },
   head () {
     return {
@@ -71,8 +81,10 @@ export default {
           this.user = response.data;
           this.works = response.data.Works;
           this.ghToken = response.data.GitHubToken
+          this.qiita = response.data.QiitaName
         }).then(() => {
           this.gitHubInit()
+          this.qiitaInit()
         })
         .catch(response => console.error(response));
       await this.init();
@@ -118,6 +130,23 @@ export default {
           headers
         }).then(res => {
           this.hubs = res.data
+        })
+      }
+    },
+    qiitaInit: async function() {
+      // authorizationを外すために通常のnuxtにbindされていないaxiosを使用
+      if (this.qiita) {
+        const headers = { 
+          "content-type": "application/json",
+        };
+        const url = "https://qiita.com/api/v2/users/" + this.qiita + "/items" + "?page=1&per_page=20"
+        await axios.get(url, {
+          headers
+        }).then(res => {
+          if(res.data && res.data.length > 0) {
+            this.articles = res.data
+            this.qiitaUser = res.data[0].user
+          }
         })
       }
     },
@@ -207,7 +236,10 @@ export default {
       ghUser: {},
       hubs: [],
       isSearch: false,
-      slide: false
+      slide: false,
+      qiita: "",
+      articles: [],
+      qiitaUser: {}
     };
   }
 };
@@ -224,6 +256,7 @@ export default {
   width: 400px;
   background-color: $bg-yellow;
   border-left: solid 2px white;
+  box-shadow: 0 0 5px $bg-main;
 }
 .slider__off{
   & p {
@@ -233,14 +266,13 @@ export default {
   z-index: 1;
   position: fixed;
   top: 0;
-  right: -350px;
+  right: -370px;
 }
 .slider__on{
   & p {
     transition: all .5s;
     transform: rotate(-540deg);
     color: $bg-main;
-    border: solid 2px $bg-main;
   }
   border-left: solid 2px $bg-main;
   transition: all .5s;
@@ -262,7 +294,11 @@ export default {
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  border: solid 2px white;
+  border-top: solid 2px $bg-main;
+  border-bottom: solid 2px white;
+  border-left: solid 2px white;
+  border-right: solid 2px $bg-main;
+  box-shadow: 0 0 5px $bg-main;
 }
 .container__main {
   padding: 90px 0;
@@ -277,6 +313,7 @@ export default {
   border-radius: 10px;
   border: solid .5px lightgrey;
   padding: 2% 2% 3% 2%;
+  box-shadow: 0 2px 5px grey;
   & h2 {
     margin: 50px;
     color: $bg-main;
@@ -298,9 +335,8 @@ export default {
   font-size: 10px;
 }
 .user__intro {
-  margin: 0 20px;
+  margin: 0 0 0 100px;
   font-size: 10px;
-  padding: 10px;
   color:grey;
   width: 100%;
   max-height: 360px;
@@ -310,12 +346,20 @@ export default {
   display: flex;
 }
 .image-wrapper {
-  margin: 0 10px 0 30px;
+  margin: 0 10px 0 0;
   width: 60px;
   height: 60px;
   & img {
     width: 60px;
     height: 60px;
   }
+}
+.is__published{
+  display: inline-block;
+  padding:  3px 15px;
+  background-color: $bg-main;
+  color: $bg-yellow;
+  border-radius: 20px;
+  margin: 20px 5px;
 }
 </style>

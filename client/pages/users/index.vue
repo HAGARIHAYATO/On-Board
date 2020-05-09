@@ -182,6 +182,7 @@ export default {
   padding-top: 70px;
   width: 400px;
   background-color: $bg-yellow;
+  box-shadow: 0 0 5px $bg-main;
 }
 .container__main {
   padding: 100px 0 70px 0;
@@ -252,7 +253,11 @@ export default {
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  border: solid 2px white;
+  border-top: solid 2px $bg-main;
+  border-bottom: solid 2px white;
+  border-left: solid 2px white;
+  border-right: solid 2px $bg-main;
+  box-shadow: 0 0 5px $bg-main;
 }
 .slider__off{
   & p {
@@ -270,7 +275,7 @@ export default {
     transition: all .5s;
     transform: rotate(-540deg);
     color: $bg-main;
-    border: solid 2px $bg-main;
+    // border: solid 2px $bg-main;
   }
   border-left: solid 2px $bg-main;
   transition: all .5s;

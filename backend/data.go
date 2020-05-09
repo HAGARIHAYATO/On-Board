@@ -42,6 +42,7 @@ type User struct {
 	Password     string
 	URL          string
 	GitHubToken  string
+	QiitaName    string
 	IsAdmin      bool
 }
 

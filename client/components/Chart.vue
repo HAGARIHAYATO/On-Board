@@ -6,6 +6,10 @@ export default {
     dataset: {
       type : Object,
       requier: true
+    },
+    text: {
+      type : String,
+      requier: true
     }
   },
   extends: Pie,
@@ -31,7 +35,7 @@ export default {
       options: {
         title: {
           display: true,
-          text: 'プロジェクト内言語別使用率'
+          text: this.text
         },
       }
     }
