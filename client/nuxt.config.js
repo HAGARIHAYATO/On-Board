@@ -87,12 +87,17 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [['@nuxtjs/google-adsense', { 
-    id: 'ca-pub-4712100556499049',
-    pageLevelAds: true,
-    analyticsUacct: targetID,
-    analyticsDomainName: domain 
-  }]],
+  buildModules: [
+    ['@nuxtjs/google-adsense', { 
+      id: 'ca-pub-4712100556499049',
+      pageLevelAds: true,
+      analyticsUacct: targetID,
+      analyticsDomainName: domain 
+    }],
+    ['@nuxtjs/google-analytics', {
+      id: targetID
+    }]
+  ],
   /*
    ** Nuxt.js modules
    */
