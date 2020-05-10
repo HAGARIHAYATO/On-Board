@@ -14,7 +14,8 @@ RUN apk update && \
     npm i @nuxtjs/proxy -D && \
     npm install --save vue-loading-template && \
     npm install --save-dev @nuxtjs/google-adsense && \
-    npm install vue-chartjs chart.js --save
+    npm install vue-chartjs chart.js --save && \
+    npm install --save-dev @nuxtjs/google-analytics
 
 ENV HOST 0.0.0.0
 EXPOSE 3030
