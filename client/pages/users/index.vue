@@ -166,7 +166,6 @@ export default {
 @import "assets/scss/app";
 * {
   text-decoration: none;
-  box-sizing: border-box;
 }
 .container {
   display: flex;
