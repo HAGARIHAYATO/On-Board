@@ -34,12 +34,12 @@ export default {
    */
   // nuxtAuth
   env: {
-    API_URL: "http://backend:8080",
-    API_URL_BROWSER: "http://localhost:8080"
+    API_URL: "https://api.on-board-project.com",
+    API_URL_BROWSER: "https://api.on-board-project.com"
   },
   axios: {
-    baseURL: process.env.API_URL,
-    browserBaseURL: process.env.API_URL_BROWSER
+    baseURL: process.env.API_URL | "https://api.on-board-project.com",
+    browserBaseURL: process.env.API_URL_BROWSER | "https://api.on-board-project.com"
   },
   auth: {
     redirect: {
@@ -52,12 +52,12 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: "/api/v1/login",
+            url: "https://api.on-board-project.com/api/v1/login",
             method: "post",
             propertyName: "Token"
           },
           user: {
-            url: "/api/v1/credential",
+            url: "https://api.on-board-project.com/api/v1/credential",
             method: "get",
             propertyName: false
           },
@@ -70,15 +70,15 @@ export default {
     "/api":
     process.env.NODE_ENV === 'development'
     ? {
-      target: "http://backend:8080",
+      target: "https://api.on-board-project.com",
       pathRewrite: {
-        "^/api": "/api"
+        "^/api": "/"
       }
     }
     : {
-      target: "https://backend:8080",
+      target: "https://api.on-board-project.com",
       pathRewrite: {
-        "^/api": "/api"
+        "^/api": "/"
       }
     }
   },

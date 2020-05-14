@@ -7,6 +7,7 @@ RUN apk update && \
     apk add  curl && \
     apk add --update nodejs npm && \
     apk add -f nodejs && \
+    npm install -g npm && \
     npm install --save nuxt@2.12.2 && \
     npm install @nuxtjs/axios && \
     npm install --save-dev node-sass sass-loader && \
@@ -15,7 +16,9 @@ RUN apk update && \
     npm install --save vue-loading-template && \
     npm install --save-dev @nuxtjs/google-adsense && \
     npm install vue-chartjs chart.js --save && \
-    npm install --save-dev @nuxtjs/google-analytics
+    npm install --save-dev @nuxtjs/google-analytics && \
+    npm install --save-dev gulp gulp-awspublish gulp-cloudfront-invalidate-aws-publish concurrent-transform && \
+    npm install -g gulp
 
 ENV HOST 0.0.0.0
 EXPOSE 3030

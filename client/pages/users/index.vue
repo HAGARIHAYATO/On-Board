@@ -95,7 +95,6 @@ export default {
     },
     drawSlider: function() {
       this.slide = !this.slide
-      console.log(this.slide)
     },
     showBubble: function() {
       this.isLoading = !this.isLoading;
@@ -166,7 +165,6 @@ export default {
 @import "assets/scss/app";
 * {
   text-decoration: none;
-  box-sizing: border-box;
 }
 .container {
   display: flex;
