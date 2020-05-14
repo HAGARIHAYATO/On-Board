@@ -44,7 +44,7 @@ func init() {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-	SVC = s3.New(Sess)
+	// SVC = s3.New(Sess)
 	fmt.Println("----------access---successfully------")
 }
 
