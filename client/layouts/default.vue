@@ -302,12 +302,18 @@ footer {
     }
     & a {
       display: block;
+      font-size: 18px;
       line-height: 20px;
       margin-top: 10px;
     }
   }
   .header__logo {
     margin-left: 10px;
+  }
+  .header__navigater {
+    & a {
+      font-size: 18px;
+    }
   }
   @keyframes easeAppear {
     0% {

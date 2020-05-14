@@ -642,5 +642,8 @@ h2 {
     width: 100%;
     margin: 20px 0;
   }
+  .nothing__alert{
+    font-size: 16px;
+  }
 }
 </style>

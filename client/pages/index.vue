@@ -70,4 +70,9 @@ export default {
     background-color: $bg-main;
   }
 }
+@media screen and (max-width: $PhoneSize) {
+  .container__title {
+    font-size: 20px;
+  }
+}
 </style>
