@@ -247,7 +247,7 @@ export default {
   color: white;
   height: 50px;
   width: 50px;
-  line-height: 46px;
+  line-height: 50px;
   text-align: center;
   font-size: 20px;
   font-weight: bold;
