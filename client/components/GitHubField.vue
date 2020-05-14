@@ -5,7 +5,7 @@
     <p class="gh__user"><img :src="ghUser.avatar_url"><a :href="ghUser.html_url">{{ghUser.login}}</a></p>
     <h2 class="field__title">Github Analysis</h2>
     <div class="chart__box">
-      <Chart :dataset="dataset" text="言語別使用率" />
+      <Chart :dataset="dataset" text="言語別使用率" :height="calcSize()" :width="calcSize()" />
     </div>
     <h2 class="field__title">GitHub Projects <span class="hubs__count">{{ghUser.public_repos}}件</span></h2>
     <div class="field">
@@ -100,13 +100,36 @@ export default {
   margin-left: 10px;
 }
 .chart__box{
-  max-width: 300px;
   display: flex;
   flex-wrap: wrap;
   padding: 0 20px 20px 20px;
   & canvas {
     width: 100%;
     height: 100%;
+  }
+}
+@media screen and (max-width: $PhoneSize) {
+  .field__container{
+    width: 98%;
+    margin: 30px auto;
+  }
+  .gh__user{
+    margin:  5px 10px;
+    & img {
+      height: 20px;
+      width: 20px;
+    }
+    & a {
+      font-size: 14px;
+      word-break: break-all;
+    }
+  }
+  .chart__box{
+    width: 100%;
+    padding: 0;
+    & canvas {
+      width: 98% !important;
+    }
   }
 }
 </style>

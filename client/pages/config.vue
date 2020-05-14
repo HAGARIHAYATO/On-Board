@@ -501,4 +501,17 @@ textarea,
   line-height: 30px;
   font-weight: bold;
 }
+@media screen and (max-width: $PhoneSize) {
+  .form-wrapper {
+    width: 98%;
+    border: none;
+  }
+  .form__transform {
+    width: 30px;
+    padding-right: 5px;
+     & p {
+       width: 25px;
+     }
+  }
+}
 </style>

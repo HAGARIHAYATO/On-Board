@@ -202,6 +202,7 @@ export default {
   background-color: $bg-color;
 }
 .drawBtn{
+  cursor: pointer;
   position: absolute;
   top: 100px;
   left: -25px;
@@ -219,5 +220,34 @@ export default {
   border-left: solid 2px white;
   border-right: solid 2px $bg-main;
   box-shadow: 0 0 5px $bg-main;
+}
+@media screen and (max-width: $PhoneSize) {
+  .slider__off{
+    & p {
+      transition: all .5s;
+      left: -50px;
+    }
+    transition: all .5s;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    right: -90%;
+  }
+  .slider__on{
+    & p {
+      transition: all .5s;
+      transform: rotate(-540deg);
+      color: $bg-main;
+    }
+    border-left: solid 2px $bg-main;
+    transition: all .5s;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    right: 0;
+  }
+  .container__side {
+    width: 90%;
+  }
 }
 </style>

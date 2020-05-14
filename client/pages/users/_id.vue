@@ -248,6 +248,7 @@ export default {
 .container {
   width: 100%;
   min-height: 81vh;
+  overflow: hidden;
 }
 .container__side {
   padding-top: 70px;
@@ -265,13 +266,14 @@ export default {
   z-index: 1;
   position: fixed;
   top: 0;
-  right: -370px;
+  right: -400px;
 }
 .slider__on{
   & p {
     transition: all .5s;
     transform: rotate(-540deg);
     color: $bg-main;
+    left: -25px;
   }
   border-left: solid 2px $bg-main;
   transition: all .5s;
@@ -281,9 +283,10 @@ export default {
   right: 0;
 }
 .drawBtn{
+  cursor: pointer;
   position: absolute;
   top: 100px;
-  left: -25px;
+  left: -50px;
   border-radius: 50%;
   background-color: $bg-yellow;
   color: white;
@@ -334,6 +337,7 @@ export default {
   font-size: 10px;
 }
 .user__intro {
+  word-break: break-all;
   margin: 0 0 0 100px;
   font-size: 10px;
   color:grey;
@@ -360,5 +364,53 @@ export default {
   color: $bg-yellow;
   border-radius: 20px;
   margin: 20px 5px;
+}
+@media screen and (max-width: $PhoneSize) {
+  h2 {
+    margin: 40px 5px !important;
+  }
+  .user__works {
+    width: 98%;
+    margin: 30px auto;
+  }
+  .user__intro {
+    margin: 0;
+  }
+  .user__url{
+    font-size: 6px;
+  }
+  .user__name {
+    font-size: 14px;
+  }
+  .user {
+    padding: 0;
+  }
+  .slider__off{
+    & p {
+      transition: all .5s;
+      left: -50px;
+    }
+    transition: all .5s;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    right: -90%;
+  }
+  .slider__on{
+    & p {
+      transition: all .5s;
+      transform: rotate(-540deg);
+      color: $bg-main;
+    }
+    border-left: solid 2px $bg-main;
+    transition: all .5s;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    right: 0;
+  }
+  .container__side {
+    width: 90%;
+  }
 }
 </style>

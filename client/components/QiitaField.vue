@@ -4,7 +4,7 @@
     <p class="qiita__user"><img :src="qiitaUser.profile_image_url"><a :href="'https://qiita.com/' + qiitaUser.id">{{qiitaUser.name}}</a></p>
     <h2 class="field__title">Qiita Analysis</h2>
     <div class="chart__box">
-      <Chart :dataset="dataset" text="タグ使用率" />
+      <Chart :dataset="dataset" text="タグ使用率"  :height="calcSize()" :width="calcSize()"/>
     </div>
     <h2 class="field__title">Qiita Articles <span class="articles__count">{{qiitaUser.items_count}}件</span></h2>
     <div class="field">
@@ -125,13 +125,47 @@ export default {
   }
 }
 .chart__box{
-  max-width: 300px;
   display: flex;
   flex-wrap: wrap;
   padding: 0 20px 20px 20px;
   & canvas {
     width: 100%;
     height: 100%;
+  }
+}
+@media screen and (max-width: $PhoneSize) {
+  .field__container{
+    width: 98%;
+    margin: 30px auto;
+  }
+  .qiita__user{
+    margin:  5px 10px;
+    & img {
+      height: 20px;
+      width: 20px;
+    }
+    & a {
+      font-size: 14px;
+      word-break: break-all;
+    }
+  }
+  .chart__box{
+    width: 100%;
+    padding: 0;
+    & canvas {
+      width: 98% !important;
+    }
+  }
+  .field__tags {
+    display: none;
+  }
+  .articles__count{
+    color: #777;
+    font-size: 10px;
+    & img {
+      width: 10px;
+      height: 10px;
+    }
   }
 }
 </style>

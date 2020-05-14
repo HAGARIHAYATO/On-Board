@@ -109,8 +109,8 @@
           </div>
         </div>
         <div class="gh-graph">
-          <Chart :dataset="dataset" text="プロジェクト内言語別使用率" v-if="isPie" />
-          <Bar-Chart :dataset="dataset" v-else />
+          <Chart :dataset="dataset" text="プロジェクト内言語別使用率" v-if="isPie" :height="calcSize()" :width="calcSize()" />
+          <Bar-Chart :dataset="dataset" v-else :height="calcSize()" :width="calcSize()" />
         </div>
       </div>
       <p v-else class="nothing__alert">情報はありません。</p>
@@ -308,6 +308,7 @@ h2 {
   border-bottom: solid 2px $bg-main;
 }
 .show__wrapper {
+  overflow: hidden;
   padding: 100px 0 50px 0;
   width: 100%;
   min-height: 81vh;
@@ -603,5 +604,43 @@ h2 {
 }
 .checkbox{
   width: 16px;
+}
+@media screen and (max-width: $PhoneSize) {
+  h2 {
+    margin: 40px 5px !important;
+  }
+  .show__image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 30px; 
+  }
+  .select__item__image {
+    height: auto;
+    & img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 30px; 
+    }
+  }
+  .show__container{
+    width: 98%;
+    margin: 30px auto;
+  }
+  .show__container__main {
+    overflow-x: scroll;
+  }
+  .item__wrapper {
+    &:nth-child(1) {
+      margin-left: 300px;
+    }
+  }
+  .gh-graph{
+    width: 100%;
+    margin: 20px 0;
+  }
+  .gh-info{
+    width: 100%;
+    margin: 20px 0;
+  }
 }
 </style>

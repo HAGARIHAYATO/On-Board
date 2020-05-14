@@ -2,6 +2,13 @@ import Vue from "vue";
 
 Vue.mixin({
   methods: {
+    calcSize: function() {
+      if (window.innerWidth > 400) {
+        return "400px"
+      } else {
+        return window.innerWidth * 0.9 + "px"
+      }
+    },
     GetURL: function() {
       // const local = "/api/v1";
       const local = "https://api.on-board-project.com/api/v1";

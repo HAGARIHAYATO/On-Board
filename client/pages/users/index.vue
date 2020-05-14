@@ -183,6 +183,7 @@ export default {
   box-shadow: 0 0 5px $bg-main;
 }
 .container__main {
+  overflow: hidden;
   padding: 100px 0 70px 0;
   min-height: 100%;
   width: 100%;
@@ -239,6 +240,7 @@ export default {
   font-size: 40px;
 }
 .drawBtn{
+  cursor: pointer;
   position: absolute;
   top: 100px;
   left: -25px;
@@ -281,5 +283,40 @@ export default {
   position: fixed;
   top: 0;
   right: 0;
+}
+@media screen and (max-width: $PhoneSize) {
+  .user__container {
+    width: 98%;
+  }
+  .user__bar__wrapper {
+    margin: 20px auto;
+  }
+  .slider__off{
+    & p {
+      transition: all .5s;
+      left: -50px;
+    }
+    transition: all .5s;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    right: -90%;
+  }
+  .slider__on{
+    & p {
+      transition: all .5s;
+      transform: rotate(-540deg);
+      color: $bg-main;
+    }
+    border-left: solid 2px $bg-main;
+    transition: all .5s;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    right: 0;
+  }
+  .container__side {
+    width: 90%;
+  }
 }
 </style>

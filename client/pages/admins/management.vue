@@ -236,17 +236,22 @@ input[type="text"] {
 .manage__account{
   margin: 40px 0;
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-start;
 }
 .select__account{
-  margin: 0 50px;
-  width: 550px;
-  height: 350px;
+  margin: 1%;
+  width: 48%;
+  min-height: 350px;
   border: solid 3px $bg-main;
   padding: 20px;
   background-color: white;
   & p {
     margin: 5px 0;
+    width: 100%;
+    & input {
+      width: 100%;
+    }
   }
 }
 .admin__container{
@@ -255,7 +260,8 @@ input[type="text"] {
   background-color: lightgray;
 }
 .admin__layout{
-  width: 600px;
+  margin: 1%;
+  width: 48%;
   height: 100%;
   border: solid 3px $bg-main;
   background-color: white;
@@ -314,5 +320,25 @@ input[type="text"] {
 .info-message{
   color: green !important;
   font-size: 14px;
+}
+textarea {
+    width: 100%;
+  }
+@media screen and (max-width: $PhoneSize) {
+  .admin__container {
+    padding: 150px 10px;
+  }
+  textarea {
+    width: 100%;
+  }
+  .admin__layout{
+    width: 100%;
+  }
+  .select__account{
+    width: 100%;
+  }
+  .admin__rows {
+    height: 400px;
+  }
 }
 </style>

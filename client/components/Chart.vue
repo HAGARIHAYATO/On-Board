@@ -7,6 +7,14 @@ export default {
       type : Object,
       requier: true
     },
+    width: {
+      type: Number,
+      requier: true
+    },
+    height: {
+      type: Number,
+      requier: true
+    },
     text: {
       type : String,
       requier: true

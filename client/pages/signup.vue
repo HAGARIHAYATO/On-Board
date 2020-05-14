@@ -157,7 +157,7 @@ export default {
   }
 }
 .signup__form {
-  padding: 15px;
+  padding: 20px 40px 40px 40px;
   font-weight: bold;
   & p {
     width: 340px;
@@ -174,9 +174,29 @@ export default {
       padding: 0 20px;
       font-size: 18px;
       height: 30px;
-      width: 300px;
+      width: 100%;
       font-weight: bold;
     }
+  }
+}
+@media screen and (max-width: $PhoneSize) {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'] {
+    width: 100% !important;
+  }
+  .signup-form-wrapper {
+    width: 98%;
+    border: none;
+  }
+  .signup__form {
+    padding: 40px;
+    & p {
+      width: 100%;
+    }
+  }
+  .signup-container {
+    overflow: hidden;
   }
 }
 </style>

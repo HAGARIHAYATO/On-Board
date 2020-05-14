@@ -228,13 +228,14 @@ body {
   box-shadow: 0 0 2px grey;
 }
 .new__container__image {
-  margin: 0 auto;
+  margin: 20px 0;
   min-width: 200px;
   height: 200px;
 }
 .new__url {
   display: flex;
   max-width: 600px;
+  flex-wrap: wrap;
   & a {
     display: inline-block;
     background-color: white;
@@ -257,22 +258,20 @@ body {
 }
 .new__url__info {
   text-align: left;
-  width: 400px;
-  padding: 2% 0 2% 2%;
+  width: 100%;
 }
 .info__name__sub {
-  margin-left: 10px;
   font-size: 8px;
   font-weight: bold;
   text-align: left !important; 
 }
 .info__name {
-  width: 95%;
+  width: 100%;
   background-color: white;
   border-radius: 2px;
   box-shadow: 0 0 5px grey;
   padding: 0 20px;
-  margin: 10px 0 10px 10px;
+  margin: 10px 0;
   height: 60px;
   line-height: 60px;
   word-break: break-all !important;
@@ -406,5 +405,16 @@ body {
   height: 24px;
   width: 24px;
   display: inline-block;
+}
+@media screen and (max-width: $PhoneSize) {
+  .new__user__bar {
+    width: 98%;
+  }
+  .new__url {
+    width: 100%;
+  }
+  .new__description {
+    width: 100%;
+  }
 }
 </style>

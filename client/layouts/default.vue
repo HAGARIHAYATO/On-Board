@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layout">
     <Loading v-if="isLoading" />
     <div class="confirmModal" v-if="confirmModal">
       <div class="confirm">
@@ -245,6 +245,8 @@ html {
 footer {
   background-color: $bg-main;
   min-height: 150px;
+  width: 100%;
+  margin-bottom: 0;
 }
 .footer__logo {
   background-image: url("/logo.jpeg");
@@ -253,6 +255,9 @@ footer {
   margin-left: 60px;
   width: 200px;
   height: 150px;
+}
+.cover__main {
+  min-height: 82vh !important;
 }
 @keyframes colorChange {
   0% {
@@ -276,6 +281,41 @@ footer {
   }
   100% {
     transform: scaleY(1);
+  }
+}
+@media screen and (max-width: $PhoneSize) {
+  .infoModal__item {
+    height: 200px;
+    width: 100%;
+    padding: 0 0;
+    z-index: 1;
+    & a,
+    span {
+      color: lighten($color: lightgrey, $amount: 10%);
+      font-weight: bold;
+      transition: all 0.3s;
+      margin-left: 20px;
+      &:hover {
+        color: $bg-yellow;
+        transition: all 0.4s;
+      }
+    }
+    & a {
+      display: block;
+      line-height: 20px;
+      margin-top: 10px;
+    }
+  }
+  .header__logo {
+    margin-left: 10px;
+  }
+  @keyframes easeAppear {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: 200px;
+    }
   }
 }
 </style>

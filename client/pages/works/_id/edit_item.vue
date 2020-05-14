@@ -267,4 +267,13 @@ input[type="submit"] {
     }
   }
 }
+@media screen and (max-width: $PhoneSize) {
+  .image__container {
+    margin: 10px auto;
+    width: 90%;
+  }
+  .item {
+    padding: 20px;
+  }
+}
 </style>

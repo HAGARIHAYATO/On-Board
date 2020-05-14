@@ -119,9 +119,23 @@ export default {
       padding: 0 20px;
       font-size: 18px;
       height: 30px;
-      width: 300px;
+      width: 100%;
       font-weight: bold;
     }
+  }
+}
+@media screen and (max-width: $PhoneSize) {
+  .login-form-wrapper {
+    width: 98%;
+    border: none;
+  }
+  .login__form {
+    & p {
+      width: 100%;
+    }
+  }
+  .login-container {
+    overflow: hidden;
   }
 }
 </style>

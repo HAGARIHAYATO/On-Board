@@ -2,9 +2,19 @@ $bg-color: lighten(rgb(221, 209, 209), 5%);
 $bg-yellow: #fdeaa0;
 $bg-main: #192b3d;
 $tag-color: #2588FD;
+$PhoneSize: 400px;
 
 *,
 body {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Source Sans Pro", 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, sans-serif;
+}
+
+@media screen and (max-width: $PhoneSize) {
+  * {   
+    font-size: 6px;
+  }
 }
 

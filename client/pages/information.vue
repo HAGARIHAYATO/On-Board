@@ -181,4 +181,20 @@ export default {
 .message{
   padding-left: 10px;
 }
+@media screen and (max-width: $PhoneSize) {
+  .info__layout {
+    width: 98%;
+  }
+  .mail__box {
+    width: 98%;
+    padding: 10px;
+  }
+  .mail__bar {
+    width: 100%;
+    margin: 0;
+    & .message{
+      padding-left: 0;
+    }
+  }
+}
 </style>
