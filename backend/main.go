@@ -37,6 +37,8 @@ func main() {
 		r.Get("/credential", GetPrivateInfo)
 		r.Delete("/delete_account", DeleteUser)
 		r.Post("/execute_account", ExecutedUser)
+		r.Get("/works_ids", GetWorksIDs)
+		r.Get("/users_ids", GetUsersIDs)
 	})
 	http.ListenAndServe(":8080", r)
 }

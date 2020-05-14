@@ -95,7 +95,6 @@ export default {
     },
     drawSlider: function() {
       this.slide = !this.slide
-      console.log(this.slide)
     },
     showBubble: function() {
       this.isLoading = !this.isLoading;

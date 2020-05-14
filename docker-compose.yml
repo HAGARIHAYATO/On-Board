@@ -26,7 +26,7 @@ services:
       - /app/node_modules
     depends_on:
       - backend
-    command: npm run dev
+    # command: npm run dev
     ports:
       - "3000:3000"
   db:

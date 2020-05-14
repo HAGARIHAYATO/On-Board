@@ -121,6 +121,43 @@ func GetWorks(w http.ResponseWriter, r *http.Request) {
 	w.Write(ParseJSON(res))
 }
 
+// GetWorksIDs is
+func GetWorksIDs(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		IDs []uint
+	}
+	works, err := FetchWorks(DB, 0)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var array []uint
+	for _, work := range works {
+		array = append(array, work.ID)
+	}
+	var res Result
+	res.IDs = array
+	w.Write(ParseJSON(res))
+}
+
+// GetUsersIDs is
+func GetUsersIDs(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		IDs []uint
+	}
+	users, err := FetchUsers(DB)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	var array []uint
+	for _, user := range users {
+		array = append(array, user.ID)
+	}
+	var res Result
+	res.IDs = array
+	w.Write(ParseJSON(res))
+}
+
 // GetUsers []@users@ id, name, url, image_url, works_count
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 	type ResultUser struct {

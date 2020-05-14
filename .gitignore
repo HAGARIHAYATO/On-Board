@@ -6,7 +6,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/backend/app
+app
+# Don't commit build files
+node_modules
+dist
+.nuxt
+.awspublish
+deploy.sh
 
 *-lock.json
 /backend/images/*

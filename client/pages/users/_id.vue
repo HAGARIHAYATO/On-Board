@@ -108,7 +108,6 @@ export default {
     },
     drawSlider: function() {
       this.slide = !this.slide
-      console.log(this.slide)
     },
     gitHubInit: async function() {
       if (this.ghToken) {
