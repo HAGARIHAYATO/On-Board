@@ -1,10 +1,30 @@
 const domain = "https://on-board-project.com/"
 const targetID = "UA-165370681-1"
+import axios from 'axios';
 export default {
   mode: "universal",
   /*
    ** Headers of the page
    */
+  generate: {
+    fallback: true,
+    async routes () {
+      const generates = []
+      await axios.get("https://api.on-board-project.com/api/v1/works_ids")
+        .then((res) => {
+          res.data.IDs.map((work) => {
+            generates.push('works/'+work)
+          })
+        })
+      await axios.get("https://api.on-board-project.com/api/v1/users_ids")
+        .then((res) => {
+          res.data.IDs.map((user) => {
+            generates.push('users/'+user)
+          })
+        })
+      return generates
+    }
+  },
   head: {
     title: "OnBoard",
     meta: [

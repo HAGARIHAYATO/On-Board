@@ -284,7 +284,11 @@ export default {
           this.work = response.data;
           this.selectItem = response.data.WorkItems[0]
         })
-        .catch(response => console.error(response));
+        .catch(response => {
+          if (response.response.status === 404) {
+            this.$router.push("/error.html")
+          }
+        });
       await this.FetchGitRepository(this.work.UserGithubToken, this.work.GHR)
       await setTimeout(() => this.showBubble(), 1000);
     });
