@@ -20,7 +20,7 @@
     <div class="container contain__end">
       <div class="block__content">
         <h2 class="content__title">日別作品投稿推移</h2>
-        <p class="content__paragraph">直近10日間の投稿数を抽出しています</p>
+        <p class="content__paragraph">過去5日間の投稿数を抽出しています</p>
       </div>
       <div class="block__content shadow__none">
         <Line-Chart :dataset="dateset" text="" :height="calcSize()" :width="calcSize()"/>
