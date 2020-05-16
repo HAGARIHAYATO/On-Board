@@ -168,6 +168,10 @@ func CreateDateObject(array []time.Time) map[string]int {
 			m["yesterday"]++
 		case 3:
 			m["dby"]++
+		case 4:
+			m["tda"]++
+		case 5:
+			m["fda"]++
 		default:
 			continue
 		}
@@ -180,14 +184,20 @@ func PrepareDay(str time.Time) int {
 	today := time.Now()
 	yesterday := today.Add(-time.Duration(24) * time.Hour)
 	dayBeforeYesterday := yesterday.Add(-time.Duration(24) * time.Hour)
+	treeDaysAgo := dayBeforeYesterday.Add(-time.Duration(24) * time.Hour)
+	fourDaysAgo := treeDaysAgo.Add(-time.Duration(24) * time.Hour)
 
 	td := today.Sub(str)
 	yd := yesterday.Sub(str)
 	dby := dayBeforeYesterday.Sub(str)
+	tda := treeDaysAgo.Sub(str)
+	fda := fourDaysAgo.Sub(str)
 
 	tdd := int(td.Hours()) / 24
 	ydd := int(yd.Hours()) / 24
 	dbyd := int(dby.Hours()) / 24
+	tdad := int(tda.Hours()) / 24
+	fdad := int(fda.Hours()) / 24
 
 	if tdd == 0 {
 		return 1
@@ -195,6 +205,10 @@ func PrepareDay(str time.Time) int {
 		return 2
 	} else if dbyd == 0 {
 		return 3
+	} else if tdad == 0 {
+		return 4
+	} else if fdad == 0 {
+		return 5
 	}
 	return 0
 }

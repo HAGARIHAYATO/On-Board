@@ -22,6 +22,8 @@ func GetWorksPerDay(w http.ResponseWriter, r *http.Request) {
 		Today     int
 		Yesterday int
 		DBY       int
+		TDA       int
+		FDA       int
 	}
 	works, err := FetchWorks(DB, 0)
 	if err != nil {
@@ -37,6 +39,8 @@ func GetWorksPerDay(w http.ResponseWriter, r *http.Request) {
 	res.Today = m["today"]
 	res.Yesterday = m["yesterday"]
 	res.DBY = m["dby"]
+	res.TDA = m["tda"]
+	res.FDA = m["fda"]
 	w.Write(ParseJSON(res))
 }
 
