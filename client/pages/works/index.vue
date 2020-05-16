@@ -67,7 +67,7 @@ export default {
           })
           .catch(response => console.error(response)),
           await this.init();
-        await setTimeout(() => this.showBubble(), 1000);
+        await setTimeout(() => this.showBubble(), 500);
       });
     } catch (error) {}
   },

@@ -2,7 +2,7 @@ $bg-color: lighten(rgb(221, 209, 209), 5%);
 $bg-yellow: #fdeaa0;
 $bg-main: #192b3d;
 $tag-color: #2588FD;
-$PhoneSize: 500px;
+$PhoneSize: 767px;
 
 *,
 body {
@@ -10,6 +10,15 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-family: "Source Sans Pro", 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, sans-serif;
+}
+
+#print {
+  margin: 0;
+  font-family: "IPAexGothic", sans-serif;
+  height: 100%;
+}
+.sheet.padding-10mm {
+  padding: 10mm;
 }
 
 @media screen and (max-width: $PhoneSize) {

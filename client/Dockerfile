@@ -18,7 +18,8 @@ RUN apk update && \
     npm install vue-chartjs chart.js --save && \
     npm install --save-dev @nuxtjs/google-analytics && \
     npm install --save-dev gulp gulp-awspublish gulp-cloudfront-invalidate-aws-publish concurrent-transform && \
-    npm install -g gulp
+    npm install -g gulp && \
+    npm install --save pdfmake html2canvas
 
 ENV HOST 0.0.0.0
 EXPOSE 3030

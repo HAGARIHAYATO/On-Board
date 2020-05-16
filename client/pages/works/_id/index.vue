@@ -114,6 +114,7 @@
         </div>
       </div>
       <p v-else class="nothing__alert">情報はありません。</p>
+      <p class="pdfOpen" @click="OpenPDF">PDFを取得 <img src="/download.svg"></p>
       <p class="operation" v-if="isMine">
         <nuxt-link :to="'/works/' + work.ID + '/edit'">作品編集</nuxt-link>|
         <nuxt-link :to="'/works/' + work.ID + '/edit_item'">アイテム編集</nuxt-link>
@@ -165,7 +166,7 @@ export default {
         watchers: 0,
         forks: 0
       },
-      dataset: {}
+      dataset: {},
     };
   },
   head () {
@@ -186,6 +187,9 @@ export default {
     }
   },
   methods: {
+    OpenPDF: function() {
+      this.$router.push("/works/" + this.work.ID + "/download")
+    },
     changeGraph: function(obj, bool) {
       if (obj) {
         this.dataset = obj;
@@ -218,7 +222,7 @@ export default {
             this.$router.push("/works");
           })
           .catch(response => console.error(response));
-        await setTimeout(() => this.showBubble(), 1000);
+        await setTimeout(() => this.showBubble(), 10);
       });
       this.isOpenDeleteModal = false;
     },
@@ -605,6 +609,29 @@ h2 {
 .checkbox{
   width: 16px;
 }
+.pdfOpen{
+  text-align: center;
+  cursor: pointer;
+  margin: 10px auto;
+  height: 40px;
+  line-height: 40px;
+  width: 180px;
+  display: block;
+  background-color: white;
+  color: grey;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 1px 2px grey;
+  & img {
+    display: inline-block;
+    line-height: 40px;
+    height: 16px;
+    transform: translate(15%, 15%);
+  }
+  &:hover {
+    box-shadow: 0 0 1px grey;
+  }
+}
 @media screen and (max-width: $PhoneSize) {
   h2 {
     margin: 40px 5px !important;
@@ -644,6 +671,9 @@ h2 {
   }
   .nothing__alert{
     font-size: 16px;
+  }
+  .pdfOpen{
+    display: none;
   }
 }
 </style>

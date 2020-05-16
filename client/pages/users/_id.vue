@@ -37,6 +37,10 @@
           <p class="is__published" v-if="articles.length > 0">Qiita連携済み</p>
           <p class="is__published" v-else>Qiita連携なし</p>
         </div>
+        <div class="csv">
+          <p class="user__csv" @click="downloadCSV">スキルCSV取得 <img src="/download.svg"></p>
+          <p class="user__csv" @click="downloadCSVWorks">作品CSV取得 <img src="/download.svg"></p>
+        </div>
         <div class="user__intro">{{ user.Introduction }}</div>
         <h2>Works - 作品一覧</h2>
         <works :works="returnWorks" :isSearch="false" :isUserShow="true"/>
@@ -82,13 +86,14 @@ export default {
           this.works = response.data.Works;
           this.ghToken = response.data.GitHubToken
           this.qiita = response.data.QiitaName
+          this.skillData = this.getSkills(response.data.Works)
         }).then(() => {
           this.gitHubInit()
           this.qiitaInit()
         })
         .catch(response => console.error(response));
       await this.init();
-      await setTimeout(() => this.showBubble(), 1000);
+      await setTimeout(() => this.showBubble(), 500);
     });
   },
   computed: {
@@ -97,6 +102,55 @@ export default {
     }
   },
   methods: {
+    getSkills: function(array) {
+      let skillList = []
+      for(const el of array) {
+        if (el["Skills"]) {
+          for (const skill of el["Skills"]) {
+            const lowerSkill = skill.Name.toLowerCase()
+            skillList.push(lowerSkill)
+          }
+        }
+      }
+      let counts = {};
+      for(let i=0;i< skillList.length;i++) {
+        let key = skillList[i];
+        counts[key] = (counts[key])? counts[key] + 1 : 1 ;
+      }
+      let skills = Object.keys(counts)
+      skillList = []
+      for (const index in skills) {
+        let obj = {}
+        obj["name"] = skills[index]
+        obj["count"] = counts[skills[index]]
+        skillList.push(obj)
+      }
+      return skillList
+    },
+    downloadCSV () {  
+      var csv = '\ufeff' + 'スキル名,スキル使用数\n'
+      this.skillData.forEach((el, index) => {
+        var line = el['name'] + ',' + el['count'] + '\n'
+        csv += line
+      })
+      let blob = new Blob([csv], { type: 'text/csv' })
+      let link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = `${this.user.Name}_skills.csv`
+      link.click()
+    },
+    downloadCSVWorks () {
+      var csv = '\ufeff' + 'ID,作品名,画像,作者名,作者画像\n'
+      this.works.forEach(el => {
+        var line = el['ID'] + ',' + el['Name'] + ',' + el['ImageURL'] + ',' + el['UserName'] + ',' + el['UserImageURL'] + '\n'
+        csv += line
+      })
+      let blob = new Blob([csv], { type: 'text/csv' })
+      let link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = `${this.user.Name}_works.csv`
+      link.click()
+    },
     slider: function() {
       const off = "slider__off"
       const on = "slider__on"
@@ -238,7 +292,8 @@ export default {
       slide: false,
       qiita: "",
       articles: [],
-      qiitaUser: {}
+      qiitaUser: {},
+      skillData: []
     };
   }
 };
@@ -348,6 +403,10 @@ export default {
   padding: 0 100px;
   display: flex;
 }
+.csv{
+  display: flex;
+  padding: 0 90px;
+}
 .image-wrapper {
   margin: 0 10px 0 0;
   width: 60px;
@@ -364,6 +423,26 @@ export default {
   color: $bg-yellow;
   border-radius: 20px;
   margin: 20px 5px;
+}
+.user__csv{
+  font-weight: bold;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px black;
+  margin: 0 10px 18px 10px;
+  padding: 0 20px;
+  cursor: pointer;
+  color: grey;
+  height: 30px;
+  line-height: 30px;
+  & img {
+    display: inline-block;
+    line-height: 30px;
+    height: 16px;
+    transform: translate(15%, 15%);
+  }
+  &:active{
+    box-shadow: 0 0 1px black;
+  }
 }
 @media screen and (max-width: $PhoneSize) {
   h2 {
@@ -411,6 +490,9 @@ export default {
   }
   .container__side {
     width: 90%;
+  }
+  .user__csv{
+    display: none;
   }
 }
 </style>
