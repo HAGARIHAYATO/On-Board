@@ -76,13 +76,15 @@ export default {
     },
     getPostByDay: async function() {
       this.APIURL = this.GetURL();
-      // await this.$axios
-      //   .get(this.APIURL + "/works_per_day")
-      //   .then(response => {
-      //     this.dateset = response.data.Days
-      //   })
-      //   .catch(response => {
-      //   });
+      await this.$axios
+        .get(this.APIURL + "/works_per_day")
+        .then(response => {
+          // const days = response.data.Days
+          // const day = days.split("-")
+
+        })
+        .catch(response => {
+        });
     },
     calcSize: function() {
       // if (window.innerWidth > 400) {

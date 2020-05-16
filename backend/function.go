@@ -159,35 +159,42 @@ func RemoveDuplicationName(array []string) map[string]int {
 
 // CreateDateObject is
 func CreateDateObject(array []time.Time) map[string]int {
-	var dates []string
-	for _, el := range array {
-		if ok := PrepareDay(el); ok {
-			slice := strings.Split(el.String(), " ")
-			str := slice[0]
-			dates = append(dates, str)
-		}
-	}
 	m := make(map[string]int)
-	for _, element := range dates {
-		m[element]++
+	for _, el := range array {
+		switch num := PrepareDay(el); num {
+		case 1:
+			m["today"]++
+		case 2:
+			m["yesterday"]++
+		case 3:
+			m["dby"]++
+		default:
+			continue
+		}
 	}
 	return m
 }
 
 // PrepareDay is
-func PrepareDay(str time.Time) bool {
-	// layout := "2006/01/02"
-	// slice := strings.Split(str, " ")
-	// daypart := strings.Split(slice[0], "-")
-	// day := daypart[0] + "/" + daypart[1] + "/" + daypart[2]
-	// t, _ := time.Parse(layout, day)
+func PrepareDay(str time.Time) int {
 	today := time.Now()
-	fmt.Println("------day--------today------", str, today)
-	duration := today.Sub(str)
-	hours0 := int(duration.Hours())
-	days := hours0 / 24
-	if days < 10 {
-		return true
+	yesterday := today.Add(-time.Duration(24) * time.Hour)
+	dayBeforeYesterday := yesterday.Add(-time.Duration(24) * time.Hour)
+
+	td := today.Sub(str)
+	yd := yesterday.Sub(str)
+	dby := dayBeforeYesterday.Sub(str)
+
+	tdd := int(td.Hours()) / 24
+	ydd := int(yd.Hours()) / 24
+	dbyd := int(dby.Hours()) / 24
+
+	if tdd == 0 {
+		return 1
+	} else if ydd == 0 {
+		return 2
+	} else if dbyd == 0 {
+		return 3
 	}
-	return false
+	return 0
 }

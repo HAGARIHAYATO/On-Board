@@ -19,7 +19,9 @@ import (
 // GetWorksPerDay is
 func GetWorksPerDay(w http.ResponseWriter, r *http.Request) {
 	type Result struct {
-		Days map[string]int
+		Today     int
+		Yesterday int
+		DBY       int
 	}
 	works, err := FetchWorks(DB, 0)
 	if err != nil {
@@ -32,8 +34,9 @@ func GetWorksPerDay(w http.ResponseWriter, r *http.Request) {
 	}
 	m := CreateDateObject(list)
 	var res Result
-	res.Days = m
-	fmt.Println(res.Days)
+	res.Today = m["today"]
+	res.Yesterday = m["yesterday"]
+	res.DBY = m["dby"]
 	w.Write(ParseJSON(res))
 }
 
