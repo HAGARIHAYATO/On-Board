@@ -12,6 +12,15 @@ body {
   font-family: "Source Sans Pro", 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, sans-serif;
 }
 
+#print {
+  margin: 0;
+  font-family: "IPAexGothic", sans-serif;
+  height: 100%;
+}
+.sheet.padding-10mm {
+  padding: 10mm;
+}
+
 @media screen and (max-width: $PhoneSize) {
   * {   
     font-size: 6px;
