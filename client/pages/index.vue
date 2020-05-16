@@ -50,16 +50,11 @@ export default {
       APIURL: "",
       dataset: {},
       dateset: {
-        "9日前": 2,
-        "8日前": 2,
-        "7日前": 3,
-        "6日前": 2,
-        "5日前": 2,
-        "4日前": 6,
-        "3日前": 2,
-        "2日前": 2,
+        "4日前": 0,
+        "3日前": 0,
+        "2日前": 0,
         "昨日": 0,
-        "今日": 9,
+        "今日": 0,
       }
     }
   },
@@ -79,9 +74,11 @@ export default {
       await this.$axios
         .get(this.APIURL + "/works_per_day")
         .then(response => {
-          // const days = response.data.Days
-          // const day = days.split("-")
-
+          this.dateset["今日"] = response.data.Today
+          this.dateset["昨日"] = response.data.Yesterday
+          this.dateset["2日前"] = response.data.DBY
+          this.dateset["3日前"] = response.data.TDA
+          this.dateset["4日前"] = response.data.FDA
         })
         .catch(response => {
         });
@@ -109,6 +106,7 @@ export default {
   min-height: 88vh;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
   text-align: center;
   width: 100%;
@@ -173,6 +171,9 @@ export default {
 @media screen and (max-width: $PhoneSize) {
   .container__title {
     font-size: 20px;
+  }
+  .block__content {
+    width: 90%;
   }
 }
 </style>
