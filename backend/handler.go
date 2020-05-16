@@ -15,6 +15,26 @@ import (
 
 // Gets
 
+// GetSkills is
+func GetSkills(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Skills map[string]int
+	}
+	skills, err := FetchSkills(DB)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	var list []string
+	for _, el := range skills {
+		list = append(list, el.Name)
+	}
+	m := RemoveDuplicationName(list)
+	var res Result
+	res.Skills = m
+	w.Write(ParseJSON(res))
+}
+
 // GetWorkByID 1@works@ url, name, description, image_url, \
 // user{id, name, image_url}, \
 // []work_items[{id, image_url, body}]

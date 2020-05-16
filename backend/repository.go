@@ -91,3 +91,10 @@ func FetchSkillsByWorkID(DB *gorm.DB, wid uint) ([]*Skill, error) {
 	err = DB.Find(&skills, "work_id=?", wid).Error
 	return skills, err
 }
+
+// FetchSkills is
+func FetchSkills(DB *gorm.DB) ([]*Skill, error) {
+	var skills []*Skill
+	err = DB.Find(&skills).Error
+	return skills, err
+}
