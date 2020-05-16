@@ -39,6 +39,7 @@ func main() {
 		r.Post("/execute_account", ExecutedUser)
 		r.Get("/works_ids", GetWorksIDs)
 		r.Get("/users_ids", GetUsersIDs)
+		r.Get("/skills", GetSkills)
 	})
 	http.ListenAndServe(":8080", r)
 }
