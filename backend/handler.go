@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/go-chi/chi"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -14,6 +15,27 @@ import (
 )
 
 // Gets
+
+// GetWorksPerDay is
+func GetWorksPerDay(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Days map[string]int
+	}
+	works, err := FetchWorks(DB, 0)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	var list []time.Time
+	for _, el := range works {
+		list = append(list, el.CreatedAt)
+	}
+	m := CreateDateObject(list)
+	var res Result
+	res.Days = m
+	fmt.Println(res.Days)
+	w.Write(ParseJSON(res))
+}
 
 // GetSkills is
 func GetSkills(w http.ResponseWriter, r *http.Request) {

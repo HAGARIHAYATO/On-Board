@@ -1,17 +1,42 @@
 <template>
-  <div class="container">
-    <div>
-      <h1 class="container__title">未知の作品と出会おう</h1>
-      <button class="container__button">
-        <nuxt-link to="/works">作品を探す</nuxt-link>
-      </button>
+  <div>
+    <div class="container">
+      <div>
+        <h1 class="container__title">未知の作品と出会おう</h1>
+        <button class="container__button">
+          <nuxt-link to="/works">作品を探す</nuxt-link>
+        </button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="block__content shadow__none">
+        <Doughnut-Chart :dataset="dataset" text="" :height="calcSize()" :width="calcSize()" />
+      </div>
+      <div class="block__content">
+        <h2 class="content__title">作品使用スキル内訳</h2>
+        <p class="content__paragraph">現在投稿されているすべての投稿から使用されているスキルセットを抽出しています</p>
+      </div>
+    </div>
+    <div class="container contain__end">
+      <div class="block__content">
+        <h2 class="content__title">日別作品投稿推移</h2>
+        <p class="content__paragraph">直近10日間の投稿数を抽出しています</p>
+      </div>
+      <div class="block__content shadow__none">
+        <Line-Chart :dataset="dateset" text="" :height="calcSize()" :width="calcSize()"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import DoughnutChart from "~/components/DoughnutChart.vue"
+import LineChart from "~/components/LineChart.vue"
 export default {
-  components: {},
+  components: {
+    DoughnutChart,
+    LineChart
+  },
   head () {
     return {
       title: "OnBoard",
@@ -20,6 +45,58 @@ export default {
       ]
     }
   },
+  data() {
+    return {
+      APIURL: "",
+      dataset: {},
+      dateset: {
+        "9日前": 2,
+        "8日前": 2,
+        "7日前": 3,
+        "6日前": 2,
+        "5日前": 2,
+        "4日前": 6,
+        "3日前": 2,
+        "2日前": 2,
+        "昨日": 0,
+        "今日": 9,
+      }
+    }
+  },
+  methods: {
+    getSkills: async function() {
+      this.APIURL = this.GetURL();
+      await this.$axios
+        .get(this.APIURL + "/skills")
+        .then(response => {
+          this.dataset = response.data.Skills
+        })
+        .catch(response => {
+        });
+    },
+    getPostByDay: async function() {
+      this.APIURL = this.GetURL();
+      // await this.$axios
+      //   .get(this.APIURL + "/works_per_day")
+      //   .then(response => {
+      //     this.dateset = response.data.Days
+      //   })
+      //   .catch(response => {
+      //   });
+    },
+    calcSize: function() {
+      // if (window.innerWidth > 400) {
+      //   return 400
+      // } else {
+      //   return window.innerWidth * 0.9
+      // }
+      return 400
+    }
+  },
+  async mounted() {
+    await this.getSkills()
+    await this.getPostByDay()
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -27,7 +104,7 @@ export default {
 .container {
   padding-top: 70px;
   margin: 0 auto;
-  min-height: 81vh;
+  min-height: 88vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,6 +138,27 @@ export default {
     animation-delay: 0s;
     animation-direction: normal;
   }
+}
+.block__content{
+  border-radius: 5px;
+  box-shadow: 0 1px 2px black;
+  width: 40%;
+  min-height: 100px;
+  margin: 20px;
+}
+.shadow__none{
+  box-shadow: 0 0 0 black;
+}
+.content__title{
+  color: grey;
+  margin-top: 20px;
+}
+.content__paragraph{
+  color: $bg-main;
+  font-size: 12px;
+}
+.contain__end{
+  margin-bottom: 100px; 
 }
 @keyframes bg-change {
   0% {

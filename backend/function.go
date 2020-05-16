@@ -156,3 +156,38 @@ func RemoveDuplicationName(array []string) map[string]int {
 	}
 	return m
 }
+
+// CreateDateObject is
+func CreateDateObject(array []time.Time) map[string]int {
+	var dates []string
+	for _, el := range array {
+		if ok := PrepareDay(el); ok {
+			slice := strings.Split(el.String(), " ")
+			str := slice[0]
+			dates = append(dates, str)
+		}
+	}
+	m := make(map[string]int)
+	for _, element := range dates {
+		m[element]++
+	}
+	return m
+}
+
+// PrepareDay is
+func PrepareDay(str time.Time) bool {
+	// layout := "2006/01/02"
+	// slice := strings.Split(str, " ")
+	// daypart := strings.Split(slice[0], "-")
+	// day := daypart[0] + "/" + daypart[1] + "/" + daypart[2]
+	// t, _ := time.Parse(layout, day)
+	today := time.Now()
+	fmt.Println("------day--------today------", str, today)
+	duration := today.Sub(str)
+	hours0 := int(duration.Hours())
+	days := hours0 / 24
+	if days < 10 {
+		return true
+	}
+	return false
+}

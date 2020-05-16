@@ -103,7 +103,7 @@ export default {
     }
   },
   // nuxtAuth
-  plugins: [{ src: "@/plugins/common", ssr: false }],
+  plugins: [{ src: "~/plugins/common", ssr: false }],
   /*
    ** Nuxt.js dev-modules
    */

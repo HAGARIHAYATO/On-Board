@@ -40,6 +40,7 @@ func main() {
 		r.Get("/works_ids", GetWorksIDs)
 		r.Get("/users_ids", GetUsersIDs)
 		r.Get("/skills", GetSkills)
+		r.Get("/works_per_day", GetWorksPerDay)
 	})
 	http.ListenAndServe(":8080", r)
 }
