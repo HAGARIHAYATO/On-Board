@@ -4,9 +4,9 @@ Vue.mixin({
   methods: {
     calcSize: function() {
       if (window.innerWidth > 400) {
-        return "400px"
+        return 400
       } else {
-        return window.innerWidth * 0.9 + "px"
+        return window.innerWidth * 0.9
       }
     },
     GetURL: function() {
