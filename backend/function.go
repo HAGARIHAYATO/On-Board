@@ -143,3 +143,16 @@ func RemoveSkills(wid uint) error {
 	var err error
 	return err
 }
+
+// RemoveDuplicationName is
+func RemoveDuplicationName(array []string) map[string]int {
+	var names []string
+	for _, el := range array {
+		names = append(names, strings.ToLower(el))
+	}
+	m := make(map[string]int)
+	for _, element := range names {
+		m[element]++
+	}
+	return m
+}
