@@ -26,14 +26,14 @@ export default {
     // }
   },
   head: {
-    title: "OnBoard",
+    title: "OnBoard | みんなの作品・ポートフォリオ置場",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "description",
-        name: "description",
-        content: process.env.npm_package_description || ""
+        name: "OnBoard | みんなの作品・ポートフォリオ置場",
+        content: "ポートフォリオを投稿して評価を受けたりスキルや作品のCSV資料を取得したりしよう。"
       }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/logo.jpeg" }]

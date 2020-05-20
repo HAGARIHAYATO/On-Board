@@ -16,6 +16,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "assets/scss/app";
 * {
   box-sizing: border-box;
 }
@@ -28,7 +29,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #fde9a0;
+  background-color: $bg-main;
 }
 .loading-container {
   position: absolute;
@@ -37,7 +38,7 @@ export default {
   transform: translate(-50%, -50%);
 }
 .loading {
-  background-image: url("/logo_b.jpeg");
+  background-image: url("/logo.jpeg");
   background-position: center;
   background-size: contain;
   width: 200px;
@@ -55,7 +56,7 @@ export default {
   height: 10px;
   border-radius: 50%;
   margin: auto 0;
-  background-color: #0d4680;
+  background-color: $bg-yellow;
   animation-name: loading;
   animation-duration: 1s;
   animation-iteration-count: infinite;

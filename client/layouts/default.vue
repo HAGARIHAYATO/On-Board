@@ -113,7 +113,6 @@ html {
   margin-left: 60px;
   width: 100px;
   height: 70px;
-  box-shadow: 0 32px 30px -30px black;
   border-radius: 0 0 6px 6px;
   z-index: 1;
   &:hover {
@@ -137,8 +136,6 @@ html {
   background-color: $bg-main;
   display: flex;
   justify-content: flex-end;
-  z-index: 1;
-  box-shadow: 0 32px 30px -30px black;
   z-index: 1;
 }
 .infoModal__item {
@@ -186,7 +183,6 @@ html {
   height: 70px;
   border: solid 3px $bg-main;
   border-top: none;
-  box-shadow: 0 32px 30px -30px black;
   border-radius: 0 0 6px 6px;
   background-color: white;
   z-index: 1;
