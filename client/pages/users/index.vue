@@ -15,7 +15,6 @@
         :isSearch="isSearch"
         searchType="users"
       />
-      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
     <div class="container__main">
       <h1 class="searchAlert" v-if="isSearch && returnUsers.length == 0">検索結果はありません</h1>
@@ -30,6 +29,7 @@
           </nuxt-link>
         </div>
       </div>
+      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
   </div>
 </template>
@@ -192,7 +192,7 @@ export default {
 .user__bar__wrapper {
   padding: 10px 5px;
   background-color: white;
-  margin: 20px;
+  margin: 20px 0;
   box-shadow: 0 1px 2px grey;
   width: inherit;
   border-radius: 40px;

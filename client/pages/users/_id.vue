@@ -15,7 +15,6 @@
         :isSearch="isSearch"
         searchType="works"
       />
-      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
     <div class="container__main">
       <div class="user__works">
@@ -44,6 +43,7 @@
         <div class="user__intro">{{ user.Introduction }}</div>
         <h2>Works - 作品一覧</h2>
         <works :works="returnWorks" :isSearch="false" :isUserShow="true"/>
+        <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
       </div>
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
       <Qiita-Field :articles="articles" :qiitaUser="qiitaUser" v-if="articles.length > 0"/>

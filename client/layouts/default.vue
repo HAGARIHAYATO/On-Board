@@ -9,31 +9,33 @@
     </div>
     <div class="header">
       <div class="infoModal">
-        <div class="infoModal__item" v-if="openModal">
-          <template v-if="!isLogin">
-            <nuxt-link to="/">トップ</nuxt-link>
-            <nuxt-link to="/information">お知らせ</nuxt-link>
-            <nuxt-link to="/signup">無料登録</nuxt-link>
-            <nuxt-link to="/login">ログイン</nuxt-link>
-          </template>
-          <template v-else>
-            <nuxt-link :to="'/users/'+$auth.user.ID">マイページ</nuxt-link>
-            <nuxt-link to="/information">お知らせ</nuxt-link>
-            <nuxt-link to="/works/new">新規投稿</nuxt-link>
-            <nuxt-link to="/config">設定</nuxt-link>
-            <nuxt-link to="/admins/management" v-if="checkAdmin">管理画面</nuxt-link>
-            <a @click="showConfirm()">ログアウト</a>
-          </template>
-        </div>
-      </div>
-      <div class="header__wrapper">
-        <div class="header__logo" @click="drawModal"></div>
-        <div class="header__navigater">
-          <div class="header__navigater__tab">
-            <nuxt-link to="/works">作品</nuxt-link>
+        <div class="infoModal__item" v-if="true">
+          <div class="infoModal__nav">
+            <div class="header__logo" @click="drawModal"></div>
+            <div class="header__navigater">
+              <div class="header__navigater__tab">
+                <nuxt-link to="/works">作品</nuxt-link>
+              </div>
+              <div class="header__navigater__tab">
+                <nuxt-link to="/users">ユーザー</nuxt-link>
+              </div>
+            </div>
           </div>
-          <div class="header__navigater__tab">
-            <nuxt-link to="/users">ユーザー</nuxt-link>
+          <div class="infoModal__nav">
+            <template v-if="!isLogin">
+              <nuxt-link to="/">トップ</nuxt-link>
+              <nuxt-link to="/information">お知らせ</nuxt-link>
+              <nuxt-link to="/signup">無料登録</nuxt-link>
+              <nuxt-link to="/login">ログイン</nuxt-link>
+            </template>
+            <template v-else>
+              <nuxt-link :to="'/users/'+$auth.user.ID">マイページ</nuxt-link>
+              <nuxt-link to="/information">お知らせ</nuxt-link>
+              <nuxt-link to="/works/new">新規投稿</nuxt-link>
+              <nuxt-link to="/config">設定</nuxt-link>
+              <nuxt-link to="/admins/management" v-if="checkAdmin">管理画面</nuxt-link>
+              <a @click="showConfirm()">ログアウト</a>
+            </template>
           </div>
         </div>
       </div>
@@ -110,9 +112,9 @@ html {
   background-image: url("/logo.jpeg");
   background-position: center;
   background-size: cover;
-  margin-left: 60px;
+  margin: 0 10px;
   width: 100px;
-  height: 70px;
+  height: 50px;
   border-radius: 0 0 6px 6px;
   z-index: 1;
   &:hover {
@@ -134,21 +136,22 @@ html {
 .infoModal {
   width: 100%;
   background-color: $bg-main;
-  display: flex;
-  justify-content: flex-end;
   z-index: 1;
 }
 .infoModal__item {
-  height: 100px;
-  padding: 0 10%;
+  justify-content: space-between;
+  display: flex;
+  height: 50px;
+  padding: 0 5px;
   z-index: 1;
   & a,
   span {
-    color: lighten($color: lightgrey, $amount: 10%);
+    color: #FFFFFF;
     font-weight: bold;
+    font-size: 14px;
     transition: all 0.3s;
-    line-height: 100px;
-    margin-left: 20px;
+    line-height: 50px;
+    margin: 0 10px;
     &:hover {
       color: $bg-yellow;
       transition: all 0.4s;
@@ -156,48 +159,13 @@ html {
   }
   & a {
     display: inline-block;
-    animation-name: ankerAppear;
-    animation-duration: 0.5s;
   }
-  animation-name: easeAppear;
-  animation-fill-mode: forwards;
-  animation-duration: 0.2s;
-  animation-timing-function: linear;
-  animation-delay: 0s;
-  animation-direction: normal;
+}
+.infoModal__nav{
+  display: flex;
 }
 .header__navigater {
   display: flex;
-  & a {
-    display: inline-block;
-    color: $bg-main;
-    font-weight: bold;
-    transition: all 0.4s;
-    line-height: 70px;
-    z-index: 1;
-  }
-}
-.header__navigater__tab {
-  text-align: center;
-  min-width: 100px;
-  height: 70px;
-  border: solid 3px $bg-main;
-  border-top: none;
-  border-radius: 0 0 6px 6px;
-  background-color: white;
-  z-index: 1;
-  margin-left: 5px;
-  &:hover {
-    & a {
-      color: $bg-yellow;
-    }
-    animation-name: colorChange;
-    animation-fill-mode: forwards;
-    animation-duration: 0.3s;
-    animation-timing-function: linear;
-    animation-delay: 0s;
-    animation-direction: normal;
-  }
 }
 .confirmModal {
   z-index: 3;

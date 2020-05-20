@@ -15,10 +15,10 @@
         :isSearch="isSearch"
         searchType="works"
       />
-      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
     <div class="container__main">
       <works :works="returnWorks" :isSearch="isSearch" />
+      <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
   </div>
 </template>
@@ -196,7 +196,7 @@ export default {
   right: 0;
 }
 .container__main {
-  padding-top: 100px;
+  padding: 100px 0;
   min-height: 100%;
   width: 100%;
   background-color: $bg-color;

@@ -1,9 +1,9 @@
 <template>
   <div class="pagenation">
-    <p class="pagenation__main__number">{{page}}</p>
     <div class="pagenate__main">
-      <p class="pagenation__item" @click="goPrev()">prev</p>
-      <p class="pagenation__item" @click="goNext()">next</p>
+      <p class="pagenation__item left" @click="goPrev()">&#8810;</p>
+      <p class="pagenation__main__number">{{page}}</p>
+      <p class="pagenation__item right" @click="goNext()">&#8811;</p>
     </div>
   </div>
 </template>
@@ -32,17 +32,14 @@ export default {
   justify-content: center;
 }
 .pagenation__item {
-  margin: 0 20px !important;
   text-align: center !important;
-  height: 30px;
-  line-height: 30px;
   font-size: 22px;
   font-weight: bold;
   color: $bg-main;
+  width: 40px;
   cursor: pointer;
   transition: all 0.3s;
-  border-radius: 20px;
-  padding: 4px 2%;
+  border: solid 1px grey;
   &:hover {
     color: silver;
   }
@@ -52,16 +49,18 @@ export default {
   }
 }
 .pagenation__main__number {
-  margin: 0 auto;
   text-align: center;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  font-size: 30px;
+  font-size: 20px;
+  width: 30px;
   font-weight: bold;
-  border-radius: 50%;
   color: $bg-main;
   background-color: white;
-  box-shadow: 0 0 2px black;
+  border: solid 1px grey;
+}
+.left {
+  border-radius: 10px 0 0 10px;
+}
+.right {
+  border-radius: 0 10px 10px 0;
 }
 </style>
