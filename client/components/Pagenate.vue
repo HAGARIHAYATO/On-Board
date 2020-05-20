@@ -30,6 +30,7 @@ export default {
 .pagenate__main {
   display: flex;
   justify-content: center;
+  margin: 50px;
 }
 .pagenation__item {
   text-align: center !important;
@@ -62,5 +63,21 @@ export default {
 }
 .right {
   border-radius: 0 10px 10px 0;
+}
+@media screen and (max-width: $PhoneSize) {
+  .pagenation__item {
+    width: 25px;
+    font-size: 12px;
+  }
+  .pagenation__main__number {
+    width: 15px;
+    font-size: 12px;
+  }
+  .left {
+  border-radius: 5px 0 0 5px;
+  }
+  .right {
+    border-radius: 0 5px 5px 0;
+  }
 }
 </style>

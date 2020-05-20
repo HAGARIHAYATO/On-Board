@@ -196,7 +196,7 @@ export default {
   right: 0;
 }
 .container__main {
-  padding: 100px 0;
+  padding-top: 100px;
   min-height: 100%;
   width: 100%;
   background-color: $bg-color;

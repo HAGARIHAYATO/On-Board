@@ -10,7 +10,7 @@
     <div class="header">
       <div class="infoModal">
         <div class="infoModal__item" v-if="true">
-          <div class="infoModal__nav">
+          <div class="infoModal__nav static-bar">
             <div class="header__logo" @click="drawModal"></div>
             <div class="header__navigater">
               <div class="header__navigater__tab">
@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-          <div class="infoModal__nav">
+          <div class="infoModal__nav" :class="drawed">
             <template v-if="!isLogin">
               <nuxt-link to="/">トップ</nuxt-link>
               <nuxt-link to="/information">お知らせ</nuxt-link>
@@ -66,6 +66,9 @@ export default {
     },
     checkAdmin: function() {
       return this.$store.$auth.user.IsAdmin ? true : false;
+    },
+    drawed: function() {
+      return this.openModal ? "drawed" : "betodraw"
     }
   },
   methods: {
@@ -249,27 +252,10 @@ footer {
 }
 @media screen and (max-width: $PhoneSize) {
   .infoModal__item {
-    height: 200px;
     width: 100%;
     padding: 0 0;
     z-index: 1;
-    & a,
-    span {
-      color: lighten($color: lightgrey, $amount: 10%);
-      font-weight: bold;
-      transition: all 0.3s;
-      margin-left: 20px;
-      &:hover {
-        color: $bg-yellow;
-        transition: all 0.4s;
-      }
-    }
-    & a {
-      display: block;
-      font-size: 18px;
-      line-height: 20px;
-      margin-top: 10px;
-    }
+    display: block;
   }
   .header__logo {
     margin-left: 10px;
@@ -279,12 +265,44 @@ footer {
       font-size: 18px;
     }
   }
-  @keyframes easeAppear {
+  .infoModal__nav {
+    display: block;
+    width: 100%;
+    background-color: $bg-main;
+    & a {
+      display: block;
+    }
+    transition: all .3s;
+  }
+  .static-bar {
+    display: flex;
+  }
+  .drawed {
+    animation-name: draw;
+    animation-duration: .1s;
+  }
+  .betodraw {
+    height: 0;
+    & a {
+      display: none;
+      animation-name: draw;
+      animation-duration: .1s;
+    }
+  }
+  @keyframes draw {
     0% {
       height: 0;
     }
     100% {
-      height: 200px;
+      height: auto;
+    }
+  }
+  @keyframes close {
+    0% {
+      height: auto;
+    }
+    100% {
+      height: 0;
     }
   }
 }
