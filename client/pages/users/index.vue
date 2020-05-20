@@ -180,7 +180,7 @@ export default {
   padding-top: 70px;
   width: 400px;
   background-color: $bg-yellow;
-  box-shadow: 0 0 5px $bg-main;
+  box-shadow: 0 0 3px black;
 }
 .container__main {
   overflow: hidden;
@@ -193,11 +193,11 @@ export default {
   padding: 10px 5px;
   background-color: white;
   margin: 20px;
-  box-shadow: 0 2px 3px $bg-main;
+  box-shadow: 0 1px 2px grey;
   width: inherit;
   border-radius: 40px;
   &:hover {
-    box-shadow: 0 0 1px $bg-main;
+    box-shadow: 0 0 1px grey;
     & div {
       transition: all 0.3s;
     }
@@ -249,15 +249,15 @@ export default {
   color: white;
   height: 50px;
   width: 50px;
-  line-height: 50px;
+  line-height: 40px;
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  border-top: solid 2px $bg-main;
-  border-bottom: solid 2px white;
-  border-left: solid 2px white;
-  border-right: solid 2px $bg-main;
-  box-shadow: 0 0 5px $bg-main;
+  border-top: solid 5px $bg-main;
+  border-bottom: solid 5px white;
+  border-left: solid 5px white;
+  border-right: solid 5px $bg-main;
+  box-shadow: 0 0 3px black;
 }
 .slider__off{
   & p {

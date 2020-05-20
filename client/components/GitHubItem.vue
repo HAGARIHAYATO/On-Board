@@ -51,15 +51,15 @@ export default {
   height: 40px;
   min-width: 150px !important;
   background-color: lighten(lightgrey, 10%);
-  box-shadow: 0 0 3px black;
+  box-shadow: 0 1px 2px grey;
   line-height: 40px;
   display: inline-flex;
   &:hover{
-    box-shadow: 0 0 5px black;
+    box-shadow: 0 0 1px grey;
   }
   &:active{
     border: solid 2px lightgreen;
-    box-shadow: 0 0 0 black;
+    box-shadow: 0 0 0 grey;
     & div {
       margin: 1px;
     }
@@ -74,7 +74,7 @@ export default {
   height: 34px;
   background-color: white;
   padding: 2px;
-  box-shadow: 0 0 2px black;
+  border: solid .1px grey;
   margin: 3px;
   & img {
     height: 30px;

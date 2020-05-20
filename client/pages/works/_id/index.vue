@@ -320,7 +320,7 @@ h2 {
 }
 .show__container{
   margin: 30px;
-  box-shadow: 0 2px 5px grey;
+  // box-shadow: 0 2px 5px grey;
   background-color: white;
   border-radius: 10px;
   padding: 4% 2%;
@@ -341,7 +341,7 @@ h2 {
   color: grey;
   word-break: break-all;
   background-color: white;
-  box-shadow: 0 0 2px grey;
+  box-shadow: 0 0 1px grey;
 }
 .show__container__image {
   min-width: 200px;
@@ -352,7 +352,7 @@ h2 {
   margin: 0 auto;
   max-width: 600px;
   height: 300px;
-  box-shadow: 0 0 3px grey;
+  box-shadow: 0 1px 2px grey;
   &:hover{
     box-shadow: 0 0 1px grey;
   }
@@ -367,7 +367,7 @@ h2 {
   min-width: 40%;
   background-color: white;
   border-radius: 25px !important;
-  box-shadow: 0 0 1px grey;
+  box-shadow: 0 1px 2px grey;
   padding: 0 4px;
   margin: 0 auto;
   height: 40px;
@@ -379,7 +379,7 @@ h2 {
     line-height: 40px;
   }
   &:hover {
-    box-shadow: 0 0 5px grey;
+    box-shadow: 0 0 1px grey;
   }
 }
 .user__icon{
@@ -410,14 +410,14 @@ h2 {
   }
   & img {
     cursor: pointer;
-    box-shadow: 0 0 4px grey;
+    box-shadow: 0 1px 2px grey;
   }
   &:hover {
     & p {
       color: black;
     }
     & img {
-      box-shadow: 0 0 2px grey;
+      box-shadow: 0 0 1px grey;
     }
   }
   &:active {
@@ -464,13 +464,11 @@ h2 {
 }
 .selected-item {
   & img {
-    box-shadow: 0 0 2px grey;
     transform: scale(0.99);
     border: solid 2px black;
   }
   &:hover {
     & img {
-      box-shadow: 0 0 2px grey;
       transform: scale(0.97);
     }
   }
@@ -492,8 +490,9 @@ h2 {
   color: white;
   border-radius: 5px;
   font-weight: bold;
+  box-shadow: 0 1px 2px grey;
   &:hover {
-    box-shadow: 0 0 5px grey;
+    box-shadow: 0 0 1px grey;
   }
 }
 .info__title {
@@ -527,7 +526,7 @@ h2 {
   color: white;
   padding: 4px 15px;
   font-weight: bold;
-  box-shadow: 0 0 5px grey;
+  box-shadow: 0 1px 2px grey;
   margin: 4px;
 }
 .cacoo__frame{
@@ -559,7 +558,7 @@ h2 {
 .gh-info{
   width: 400px;
   border-radius: 10px;
-  box-shadow: 0 1px 5px grey;
+  box-shadow: 0 1px 2px grey;
   margin: 20px;
   transition: all .2s;
   padding: 20px;
@@ -584,7 +583,7 @@ h2 {
   padding: 0 0 10px 0;
   width: 400px;
   border-radius: 10px;
-  box-shadow: 0 1px 5px grey;
+  box-shadow: 0 1px 2px grey;
   margin: 20px;
   transition: all .2s;
   &:hover{

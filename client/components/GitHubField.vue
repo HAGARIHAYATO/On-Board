@@ -64,7 +64,7 @@ export default {
   border-radius: 10px;
   border: solid .5px lightgrey;
   margin: 30px;
-  box-shadow: 0 2px 5px grey;
+  // box-shadow: 0 2px 5px grey;
 }
 .field{
   display: flex;

@@ -311,7 +311,7 @@ export default {
   width: 400px;
   background-color: $bg-yellow;
   border-left: solid 2px white;
-  box-shadow: 0 0 5px $bg-main;
+  box-shadow: 0 0 3px black;
 }
 .slider__off{
   & p {
@@ -347,15 +347,15 @@ export default {
   color: white;
   height: 50px;
   width: 50px;
-  line-height: 50px;
+  line-height: 40px;
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  border-top: solid 2px $bg-main;
-  border-bottom: solid 2px white;
-  border-left: solid 2px white;
-  border-right: solid 2px $bg-main;
-  box-shadow: 0 0 5px $bg-main;
+  border-top: solid 5px $bg-main;
+  border-bottom: solid 5px white;
+  border-left: solid 5px white;
+  border-right: solid 5px $bg-main;
+  box-shadow: 0 0 3px black;
 }
 .container__main {
   padding: 90px 0;
@@ -370,7 +370,7 @@ export default {
   border-radius: 10px;
   border: solid .5px lightgrey;
   padding: 2% 2% 3% 2%;
-  box-shadow: 0 2px 5px grey;
+  // box-shadow: 0 1px 2px grey;
   & h2 {
     margin: 50px;
     color: $bg-main;
@@ -427,7 +427,7 @@ export default {
 .user__csv{
   font-weight: bold;
   border-radius: 5px;
-  box-shadow: 0 1px 3px black;
+  box-shadow: 0 1px 2px grey;
   margin: 0 10px 18px 10px;
   padding: 0 20px;
   cursor: pointer;
@@ -442,6 +442,9 @@ export default {
   }
   &:active{
     box-shadow: 0 0 1px black;
+  }
+  &:hover {
+    box-shadow: 0 0 1px grey;
   }
 }
 @media screen and (max-width: $PhoneSize) {

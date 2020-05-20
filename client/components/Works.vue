@@ -86,7 +86,7 @@ export default {
       margin: 0 0 10px 0;
     }
   }
-  border: solid 5px white;
+  border: solid 3px white;
   overflow: hidden;
   padding: 1%;
   position: relative;
@@ -95,11 +95,11 @@ export default {
   height: 250px;
   border-radius: 5px;
   background-color: white;
-  box-shadow: 0 2px 4px $bg-main;
+  box-shadow: 0 1px 2px grey;
   transition: all 0.3s;
   &:hover {
     transition: all 0.3s;
-    box-shadow: 0 0 1px $bg-main;
+    box-shadow: 0 0 1px grey;
   }
 }
 .searchAlert {
@@ -115,6 +115,7 @@ export default {
   font-size: 20px;
   height: 40px;
   line-height: 40px;
+  margin-right: 10px;
 }
 .user__image{
   display: block;
@@ -133,8 +134,7 @@ export default {
   display: inline-flex;
   border-radius: 25px;
   padding: 5px;
-  box-shadow: 0 0 1px $bg-main;
-  margin: 0 20px;
+  box-shadow: 0 0 1px grey;
 }
 .work__top{
   display: flex;
@@ -161,7 +161,7 @@ export default {
   color: white;
   padding: 4px 20px;
   font-weight: bold;
-  box-shadow: 0 0 5px grey;
+  box-shadow: 0 1px 2px grey;
   margin: 5px;
 }
 </style>
