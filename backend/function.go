@@ -243,5 +243,8 @@ func Avarage(array []int) int {
 	for _, a := range array {
 		i = i + a
 	}
-	return int(i / len(array))
+	if len(array) > 0 {
+		return int(i / len(array))
+	}
+	return 0
 }
