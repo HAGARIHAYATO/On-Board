@@ -12,12 +12,12 @@ var DB *gorm.DB
 var err error
 
 func init() {
-	// DB, err = gorm.Open("postgres", "host=db user=pg password=pg dbname=pg sslmode=disable")
-	DB, err = gorm.Open("postgres", "host=on-board.cgzfjoukl84a.ap-northeast-1.rds.amazonaws.com user=pg password=on-board dbname=pg sslmode=disable")
+	DB, err = gorm.Open("postgres", "host=db user=pg password=pg dbname=pg sslmode=disable")
+	// DB, err = gorm.Open("postgres", "host=on-board.cgzfjoukl84a.ap-northeast-1.rds.amazonaws.com user=pg password=on-board dbname=pg sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
-	DB.AutoMigrate(&User{}, &Work{}, &WorkItem{}, &Info{}, &Skill{})
+	DB.AutoMigrate(&User{}, &Work{}, &WorkItem{}, &Info{}, &Skill{}, &Assessment{})
 	fmt.Println("-------------------------------------\n",
 		"-------------------------------------\n",
 		"-----------Migration--Done-----------\n",
@@ -97,4 +97,18 @@ func FetchSkills(DB *gorm.DB) ([]*Skill, error) {
 	var skills []*Skill
 	err = DB.Find(&skills).Error
 	return skills, err
+}
+
+// FetchAssessmentsByWorkID is
+func FetchAssessmentsByWorkID(DB *gorm.DB, wid uint) ([]*Assessment, error) {
+	var assessments []*Assessment
+	err = DB.Find(&assessments, "work_id=?", wid).Error
+	return assessments, err
+}
+
+// FetchAnAssessment is
+func FetchAnAssessment(DB *gorm.DB, uid uint, wid uint) (*Assessment, error) {
+	var assessment Assessment
+	err = DB.First(&assessment, "user_id=? AND work_id=?", uid, wid).Error
+	return &assessment, err
 }

@@ -212,3 +212,36 @@ func PrepareDay(str time.Time) int {
 	}
 	return 0
 }
+
+// AverageAssessment is
+func AverageAssessment(assess []*Assessment) map[string]int {
+	var function []int
+	var uix []int
+	var bugSafe []int
+	var content []int
+	var mdn []int
+	for _, as := range assess {
+		function = append(function, as.Function)
+		uix = append(uix, as.UIX)
+		bugSafe = append(bugSafe, as.BugSafe)
+		content = append(content, as.Content)
+		mdn = append(mdn, as.MDN)
+	}
+	ass := map[string]int{
+		"Function": Avarage(function),
+		"UIX":      Avarage(uix),
+		"BugSafe":  Avarage(bugSafe),
+		"Content":  Avarage(content),
+		"MDN":      Avarage(mdn),
+	}
+	return ass
+}
+
+// Avarage is
+func Avarage(array []int) int {
+	var i int
+	for _, a := range array {
+		i = i + a
+	}
+	return int(i / len(array))
+}

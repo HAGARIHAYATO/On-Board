@@ -53,3 +53,15 @@ type Info struct {
 	Message string
 	Title   string
 }
+
+// Assessment is Model
+type Assessment struct {
+	gorm.Model
+	UserID   uint
+	WorkID   uint
+	Function int `gorm:"default:0"`
+	UIX      int `gorm:"default:0"`
+	BugSafe  int `gorm:"default:0"`
+	Content  int `gorm:"default:0"`
+	MDN      int `gorm:"default:0"`
+}

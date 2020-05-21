@@ -83,6 +83,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 		UserImageURL    string
 		UserGithubToken string
 		GHR             string
+		Assessment      map[string]int
 		WorkItems       []*WorkItem
 		Skills          []*Skill
 	}
@@ -103,11 +104,10 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	skills, err := FetchSkillsByWorkID(DB, work.ID)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
+	skills, _ := FetchSkillsByWorkID(DB, work.ID)
+	assessments, _ := FetchAssessmentsByWorkID(DB, work.ID)
+	assess := AverageAssessment(assessments)
+
 	rw.ID = work.ID
 	rw.Name = work.Name
 	rw.Description = work.Description
@@ -118,6 +118,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	rw.UserImageURL = user.ImageURL
 	rw.WorkItems = items
 	rw.Skills = skills
+	rw.Assessment = assess
 	rw.CacooURL = work.CacooURL
 	rw.GHR = work.GHR
 	rw.UserGithubToken = user.GitHubToken
@@ -152,11 +153,7 @@ func GetWorks(w http.ResponseWriter, r *http.Request) {
 		rw.Name = work.Name
 		rw.ImageURL = work.ImageURL
 		rw.UserID = work.UserID
-		skills, err := FetchSkillsByWorkID(DB, work.ID)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusNotFound)
-			return
-		}
+		skills, _ := FetchSkillsByWorkID(DB, work.ID)
 		rw.Skills = skills
 		user, err := FetchUserByID(DB, work.UserID)
 		if err != nil {
@@ -185,6 +182,25 @@ func GetWorksIDs(w http.ResponseWriter, r *http.Request) {
 	}
 	var res Result
 	res.IDs = array
+	w.Write(ParseJSON(res))
+}
+
+// GetAssessmentWithLoginUser is
+func GetAssessmentWithLoginUser(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Assessment *Assessment
+		Status     int
+	}
+	wid := cast.ToUint(chi.URLParam(r, "workID"))
+	uid := cast.ToUint(r.FormValue("user_id"))
+	assessment, err := FetchAnAssessment(DB, uid, wid)
+	var res Result
+	res.Assessment = assessment
+	if err != nil {
+		res.Status = http.StatusNotFound
+	} else {
+		res.Status = http.StatusOK
+	}
 	w.Write(ParseJSON(res))
 }
 
@@ -462,6 +478,42 @@ func CreateWorks(w http.ResponseWriter, r *http.Request) {
 	CreateSkills(array, work.ID)
 	var res Result
 	res.ID = work.ID
+	w.Write(ParseJSON(res))
+}
+
+// PostAssessment is
+func PostAssessment(w http.ResponseWriter, r *http.Request) {
+	type Result struct {
+		Status int
+	}
+	wid := cast.ToUint(chi.URLParam(r, "workID"))
+	uid := cast.ToUint(r.FormValue("user_id"))
+	var assessment Assessment
+	DB.Where(Assessment{UserID: uid, WorkID: wid}).Attrs(Assessment{
+		UserID:   uid,
+		WorkID:   wid,
+		Function: cast.ToInt(r.FormValue("function")),
+		UIX:      cast.ToInt(r.FormValue("uix")),
+		BugSafe:  cast.ToInt(r.FormValue("bug_safe")),
+		Content:  cast.ToInt(r.FormValue("content")),
+		MDN:      cast.ToInt(r.FormValue("mdn")),
+	}).FirstOrCreate(&assessment)
+	assessment.Function = cast.ToInt(r.FormValue("function"))
+	assessment.UIX = cast.ToInt(r.FormValue("uix"))
+	assessment.BugSafe = cast.ToInt(r.FormValue("bug_safe"))
+	assessment.Content = cast.ToInt(r.FormValue("content"))
+	assessment.MDN = cast.ToInt(r.FormValue("mdn"))
+	err = DB.Save(&assessment).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	var res Result
+	if err != nil {
+		res.Status = http.StatusBadRequest
+	} else {
+		res.Status = http.StatusOK
+	}
 	w.Write(ParseJSON(res))
 }
 

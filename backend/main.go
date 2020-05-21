@@ -17,7 +17,9 @@ func main() {
 			r.Get("/", GetWorks)
 			r.Post("/", CreateWorks)
 			r.Route("/{workID}", func(r chi.Router) {
+				r.Post("/assessment", PostAssessment)
 				r.Get("/", GetWorkByID)
+				r.Get("/login_user/assessment", GetAssessmentWithLoginUser)
 				r.Put("/", UpdateWorks)
 				r.Put("/edit_item", UpdateWorkItem)
 				r.Delete("/", DeleteWorks)
