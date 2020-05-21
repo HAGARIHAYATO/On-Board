@@ -71,21 +71,22 @@ func GetSkills(w http.ResponseWriter, r *http.Request) {
 func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	workID := chi.URLParam(r, "workID")
 	type ResultWork struct {
-		ID              uint
-		Name            string
-		ImageURL        string
-		Description     string
-		URL             string
-		CacooURL        string
-		IsPublished     bool
-		UserID          uint
-		UserName        string
-		UserImageURL    string
-		UserGithubToken string
-		GHR             string
-		Assessment      map[string]int
-		WorkItems       []*WorkItem
-		Skills          []*Skill
+		ID                  uint
+		Name                string
+		ImageURL            string
+		Description         string
+		URL                 string
+		CacooURL            string
+		IsPublished         bool
+		UserID              uint
+		UserName            string
+		UserImageURL        string
+		UserGithubToken     string
+		GHR                 string
+		Assessment          map[string]int
+		AssessmentUserCount int
+		WorkItems           []*WorkItem
+		Skills              []*Skill
 	}
 	var rw ResultWork
 	id := cast.ToUint(workID)
@@ -119,6 +120,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	rw.WorkItems = items
 	rw.Skills = skills
 	rw.Assessment = assess
+	rw.AssessmentUserCount = len(assessments)
 	rw.CacooURL = work.CacooURL
 	rw.GHR = work.GHR
 	rw.UserGithubToken = user.GitHubToken
