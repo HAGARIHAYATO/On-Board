@@ -218,6 +218,7 @@ export default {
   color: white;
   font-weight: bold;
   box-shadow: 0 2px 2px grey;
+  cursor: pointer;
   &:active {
     box-shadow: 0 0 0 grey;
   }
