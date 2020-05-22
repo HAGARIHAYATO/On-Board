@@ -2,6 +2,7 @@
   <form @submit.prevent="submit" class="edit__wrapper">
     <Loading v-if="isLoading" />
     <Validation :messages="errors"/>
+    <h2 class="page-title">作品情報変更</h2>
     <div class="edit__user__bar">
       <div class="edit__user__bar__top">
         <div class="edit__url">
@@ -429,6 +430,11 @@ body {
   height: 24px;
   width: 24px;
   display: inline-block;
+}
+.page-title {
+  text-align: center;
+  font-size: 18px;
+  color: grey;
 }
 @media screen and (max-width: $PhoneSize) {
   .edit__user__bar {

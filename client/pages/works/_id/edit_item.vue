@@ -1,6 +1,7 @@
 <template>
   <div class="item__wrapper">
     <Loading v-if="isLoading" />
+    <h2 class="page-title">作品添付写真変更</h2>
     <h1 class="work__name">{{ work.Name }}</h1>
     <form class="form" @submit.prevent="submit">
       <div class="image__container">
@@ -266,6 +267,11 @@ input[type="submit"] {
       box-shadow: 0 0 0 black !important;
     }
   }
+}
+.page-title {
+  text-align: center;
+  font-size: 18px;
+  color: grey;
 }
 @media screen and (max-width: $PhoneSize) {
   .image__container {

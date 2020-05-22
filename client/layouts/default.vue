@@ -76,7 +76,11 @@ export default {
       this.isLoading = !this.isLoading;
     },
     drawModal: function() {
-      this.openModal = !this.openModal;
+      if (window.parent.screen.width > 767) {
+        this.$router.push("/")
+      } else {
+        this.openModal = !this.openModal;
+      }
     },
     showConfirm: function() {
       this.confirmModal = true;

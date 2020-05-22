@@ -2,6 +2,7 @@
   <form @submit.prevent="submit" class="new__wrapper">
     <Loading v-if="isLoading" />
     <Validation :messages="errors"/>
+    <h2 class="page-title">新規作品投稿</h2>
     <div class="new__user__bar">
       <div class="new__user__bar__top">
         <div class="new__url">
@@ -405,6 +406,11 @@ body {
   height: 24px;
   width: 24px;
   display: inline-block;
+}
+.page-title {
+  text-align: center;
+  font-size: 18px;
+  color: grey;
 }
 @media screen and (max-width: $PhoneSize) {
   .new__user__bar {

@@ -11,7 +11,6 @@
         <p>
           機能の充実
           <select v-model="radarData['機能の充実度']">
-            <option value=null>-</option>
             <option value=0>0</option>
             <option value=1>1</option>
             <option value=2>2</option>
@@ -28,7 +27,6 @@
         <p>
           UI/UX
           <select v-model="radarData['UI/UX']">
-            <option value=null>-</option>
             <option value=0>0</option>
             <option value=1>1</option>
             <option value=2>2</option>
@@ -45,7 +43,6 @@
         <p>
           不都合な動作の少なさ
           <select v-model="radarData['不都合な動作の少なさ']">
-            <option value=null>-</option>
             <option value=0>0</option>
             <option value=1>1</option>
             <option value=2>2</option>
@@ -62,7 +59,6 @@
         <p>
           内容の斬新さ
           <select v-model="radarData['内容の斬新さ']">
-            <option value=null>-</option>
             <option value=0>0</option>
             <option value=1>1</option>
             <option value=2>2</option>
@@ -79,7 +75,6 @@
         <p>
           言語やFWのモダンさ
           <select v-model="radarData['言語やFWのモダンさ']">
-            <option value=null>-</option>
             <option value=0>0</option>
             <option value=1>1</option>
             <option value=2>2</option>

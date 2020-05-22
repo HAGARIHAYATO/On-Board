@@ -2,6 +2,7 @@
   <div class="config-container">
     <Loading v-if="isLoading" />
     <Validation :messages="errors"/>
+    <h2 class="page-title">ご登録情報変更</h2>
     <div class="form-wrapper">
       <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">
@@ -288,7 +289,7 @@ textarea,
 .form-wrapper {
   box-shadow: 0 0 5px grey;
   background-color: white;
-  border: solid 3px $bg-main;
+  border: solid 1px $bg-main;
   border-radius: 5px;
   min-height: 600px;
   padding-bottom: 50px; 
@@ -370,7 +371,7 @@ textarea,
     & input[type="text"],
     input[type="email"] {
       outline: 0;
-      border: solid 3px $bg-main;
+      border: solid 1px $bg-main;
       border-radius: 20px;
       padding: 0 20px;
       font-size: 18px;
@@ -383,7 +384,7 @@ textarea,
       height: 70px;
     }
     & .file {
-      border: solid 3px $bg-main;
+      border: solid 1px $bg-main;
       outline: 0;
       border-radius: 5px;
       padding: 10px;
@@ -421,7 +422,7 @@ textarea,
       outline: 0;
       width: 300px;
       min-height: 100px;
-      border: solid 3px $bg-main;
+      border: solid 1px $bg-main;
       border-radius: 5px;
       padding: 20px;
       font-weight: bold;
@@ -478,7 +479,7 @@ textarea,
     & input {
       margin: 0;
       outline: 0;
-      border: solid 3px $bg-main;
+      border: solid 1px $bg-main;
       border-radius: 20px;
       padding: 0 20px;
       font-size: 18px;
@@ -500,6 +501,11 @@ textarea,
   width: 300px !important;
   line-height: 30px;
   font-weight: bold;
+}
+.page-title {
+  text-align: center;
+  font-size: 18px;
+  color: grey;
 }
 @media screen and (max-width: $PhoneSize) {
   .form-wrapper {

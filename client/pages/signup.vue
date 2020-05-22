@@ -2,6 +2,7 @@
   <div class="signup-container">
     <Loading v-if="isLoading" />
     <Validation :messages="errors"/>
+    <h2 class="page-title">無料登録画面</h2>
     <div class="signup-form-wrapper">
       <form @submit.prevent="submit">
         <div class="signup__form">
@@ -37,6 +38,7 @@
         </p>
       </form>
     </div>
+    <p class="navigate__signup"><nuxt-link to="/login">ログインはこちらから</nuxt-link></p>
   </div>
 </template>
 <script>
@@ -122,7 +124,7 @@ export default {
 @import "assets/scss/app";
 .signup-form-wrapper {
   background-color: white;
-  border: solid 3px $bg-main;
+  border: solid 1px $bg-main;
   border-radius: 20px;
   height: 400px;
   width: 610px;
@@ -169,7 +171,7 @@ export default {
     & input {
       margin: 0;
       outline: 0;
-      border: solid 3px $bg-main;
+      border: solid 1px $bg-main;
       border-radius: 20px;
       padding: 0 20px;
       font-size: 18px;
@@ -178,6 +180,19 @@ export default {
       font-weight: bold;
     }
   }
+}
+.navigate__signup {
+  text-align: center;
+  & a {
+    font-size: 12px;
+    text-decoration: none;
+    color: blue;
+  }
+}
+.page-title {
+  text-align: center;
+  font-size: 18px;
+  color: grey;
 }
 @media screen and (max-width: $PhoneSize) {
   input[type='text'],
