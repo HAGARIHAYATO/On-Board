@@ -1,8 +1,8 @@
 <template>
   <form @submit.prevent="submit" class="new__wrapper">
     <Loading v-if="isLoading" />
-    <Validation :messages="errors"/>
     <h2 class="page-title">新規作品投稿</h2>
+    <Validation :messages="errors"/>
     <div class="new__user__bar">
       <div class="new__user__bar__top">
         <div class="new__url">

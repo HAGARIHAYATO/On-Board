@@ -1,8 +1,8 @@
 <template>
   <div class="config-container">
     <Loading v-if="isLoading" />
-    <Validation :messages="errors"/>
     <h2 class="page-title">ご登録情報変更</h2>
+    <Validation :messages="errors"/>
     <div class="form-wrapper">
       <form @submit.prevent="submit">
         <div v-if="generalWindow" class="general__form">

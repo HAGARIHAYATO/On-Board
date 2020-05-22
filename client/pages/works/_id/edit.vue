@@ -1,8 +1,8 @@
 <template>
   <form @submit.prevent="submit" class="edit__wrapper">
     <Loading v-if="isLoading" />
-    <Validation :messages="errors"/>
     <h2 class="page-title">作品情報変更</h2>
+    <Validation :messages="errors"/>
     <div class="edit__user__bar">
       <div class="edit__user__bar__top">
         <div class="edit__url">

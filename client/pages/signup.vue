@@ -1,8 +1,8 @@
 <template>
   <div class="signup-container">
     <Loading v-if="isLoading" />
-    <Validation :messages="errors"/>
     <h2 class="page-title">無料登録画面</h2>
+    <Validation :messages="errors"/>
     <div class="signup-form-wrapper">
       <form @submit.prevent="submit">
         <div class="signup__form">
@@ -91,13 +91,13 @@ export default {
       if (this.errors.length !== 0) {
         return
       }
-      try {
-        const data = new FormData();
-        data.append("name", this.name);
-        data.append("email", this.email);
-        data.append("password", this.password);
-        const headers = { "content-type": "application/x-www-form-urlencoded" };
-        this.$nextTick(async () => {
+      const data = new FormData();
+      data.append("name", this.name);
+      data.append("email", this.email);
+      data.append("password", this.password);
+      const headers = { "content-type": "application/x-www-form-urlencoded" };
+      this.$nextTick(async () => {
+        try {
           await this.showBubble();
           await this.$axios
             .post(this.APIURL + "/signup", data, {
@@ -111,11 +111,13 @@ export default {
                 this.$router.push("/users/" + res.data.ID);
               }
             });
-          await setTimeout(() => this.showBubble(), 1000);
-        });
-      } catch (error) {
-        // handling show message
-      }
+        } catch (error) {
+          this.errors = []
+          const invalid = "メールアドレスはすでに使われています。"
+          this.errors.push(invalid)
+        }
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     }
   }
 };
