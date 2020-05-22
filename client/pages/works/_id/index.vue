@@ -1,6 +1,13 @@
 <template>
   <div class="show__wrapper">
     <Loading v-if="isLoading" />
+    <Assess-Modal v-if="isOpenAssessModal" @close="viewAssess(true)" @loading="postLoading()" />
+    <div class="toPostModal" v-if="isClose">
+      <p class="closeBtn" @click="migrateModal()">×</p>
+      <button class="modalBtn" v-if="$store.$auth.loggedIn" @click="viewAssess(true)">評価する</button>
+      <button class="modalBtn" v-else @click="viewAssess(false)">ログインして評価する</button>
+    </div>
+    <p class="plusBtn" v-else @click="migrateModal()">＋</p>
     <div class="show__container">
       <div class="show__main">
         <a :href="work.URL" class="show__container__image">
@@ -57,6 +64,13 @@
           <p v-else>-</p>
           <img :src="returnURL(item.ImageURL)" alt="作品画像" />
         </div>
+      </div>
+      <h2>Assessment - 作品評価</h2>
+      <div v-if="isEvaluate">
+        <Radar-Chart :dataset="radarData" :height="200" :width="calcSize()"/>
+      </div>
+      <div v-else>
+        <p class="nothing__alert">評価はありません。</p>
       </div>
       <h2>Composition - 構図</h2>
       <div class="">
@@ -135,12 +149,16 @@ import Loading from "~/components/Loading.vue";
 import DeleteModal from "~/components/DeleteModal.vue";
 import Chart from "~/components/Chart.vue";
 import BarChart from "~/components/BarChart.vue";
+import RadarChart from "~/components/RadarChart.vue";
+import AssessModal from "~/components/AssessModal.vue";
 export default {
   components: {
     Loading,
     DeleteModal,
     Chart,
-    BarChart
+    BarChart,
+    RadarChart,
+    AssessModal
   },
   data() {
     return {
@@ -167,6 +185,16 @@ export default {
         forks: 0
       },
       dataset: {},
+      radarData: {
+        "機能の充実度": 0,
+        "UI/UX": 0,
+        "不都合な動作の少なさ": 0,
+        "内容の斬新さ": 0,
+        "言語やFWのモダンさ": 0
+      },
+      isEvaluate: 0,
+      isOpenAssessModal: false,
+      isClose: true
     };
   },
   head () {
@@ -187,6 +215,16 @@ export default {
     }
   },
   methods: {
+    migrateModal: function() {
+      this.isClose = !this.isClose
+    },
+    viewAssess: function(bool) {
+      if (bool) {
+        this.isOpenAssessModal = !this.isOpenAssessModal
+      } else {
+        this.$router.push("/login");
+      }
+    },
     OpenPDF: function() {
       this.$router.push("/works/" + this.work.ID + "/download")
     },
@@ -276,26 +314,42 @@ export default {
           this.dataset = this.language
         })
         .catch(response => console.error(response));
+    },
+    assessmentInit: function(assess) {
+      this.radarData["機能の充実度"] = assess.Function
+      this.radarData["不都合な動作の少なさ"] = assess.BugSafe
+      this.radarData["UI/UX"] = assess.UIX
+      this.radarData["内容の斬新さ"] = assess.Content
+      this.radarData["言語やFWのモダンさ"] = assess.MDN
+    },
+    postLoading: function() {
+      this.isOpenAssessModal = !this.isOpenAssessModal
+      this.initDisplay()
+    },
+    initDisplay: function() {
+      this.$nextTick(async () => {
+        this.APIURL = this.GetURL();
+        await this.showBubble();
+        await this.$axios
+          .get(this.APIURL + this.$route.path)
+          .then(response => {
+            this.work = response.data;
+            this.selectItem = response.data.WorkItems[0]
+            this.assessmentInit(response.data.Assessment)
+            this.isEvaluate = response.data.AssessmentUserCount
+          })
+          .catch(response => {
+            if (response.response.status === 404) {
+              this.$router.push("/error.html")
+            }
+          });
+        await this.FetchGitRepository(this.work.UserGithubToken, this.work.GHR)
+        await setTimeout(() => this.showBubble(), 1000);
+      });
     }
   },
   async mounted() {
-    this.$nextTick(async () => {
-      this.APIURL = this.GetURL();
-      await this.showBubble();
-      await this.$axios
-        .get(this.APIURL + this.$route.path)
-        .then(response => {
-          this.work = response.data;
-          this.selectItem = response.data.WorkItems[0]
-        })
-        .catch(response => {
-          if (response.response.status === 404) {
-            this.$router.push("/error.html")
-          }
-        });
-      await this.FetchGitRepository(this.work.UserGithubToken, this.work.GHR)
-      await setTimeout(() => this.showBubble(), 1000);
-    });
+    this.initDisplay()
   }
 };
 </script>
@@ -630,6 +684,60 @@ h2 {
   &:hover {
     box-shadow: 0 0 1px grey;
   }
+}
+.toPostModal {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  width: 200px;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px grey;
+  background-color: white;
+}
+.closeBtn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  border-radius: 50px;
+  color: white;
+  background-color: grey;
+  height: 28px;
+  width: 28px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+}
+.modalBtn {
+  background-color: green;
+  color: white;
+  width: 90%;
+  margin: 20px auto;
+  display: block;
+  height: 40px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+.plusBtn {
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  box-shadow: 0 1px 2px grey;
+  background-color: green;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  outline: none;
+  text-align: center;
 }
 @media screen and (max-width: $PhoneSize) {
   h2 {

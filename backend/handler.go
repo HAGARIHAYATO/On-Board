@@ -194,7 +194,7 @@ func GetAssessmentWithLoginUser(w http.ResponseWriter, r *http.Request) {
 		Status     int
 	}
 	wid := cast.ToUint(chi.URLParam(r, "workID"))
-	uid := cast.ToUint(r.FormValue("user_id"))
+	uid := cast.ToUint(r.URL.Query().Get("user_id"))
 	assessment, err := FetchAnAssessment(DB, uid, wid)
 	var res Result
 	res.Assessment = assessment
