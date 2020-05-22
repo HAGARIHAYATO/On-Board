@@ -59,7 +59,9 @@ export default {
           data: this.form
         });
       } catch (e) {
-        //
+        this.errors = []
+        const invalid = "メールアドレスかパスワードが間違っています。"
+        this.errors.push(invalid)
       }
     }
   }
