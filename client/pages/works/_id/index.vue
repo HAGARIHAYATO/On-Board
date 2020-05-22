@@ -782,5 +782,9 @@ h2 {
   .pdfOpen{
     display: none;
   }
+  .toPostModal,
+  .plusBtn {
+    display: none;
+  }
 }
 </style>

@@ -118,6 +118,7 @@ export default {
     RadarChart
   },
   async mounted() {
+    this.APIURL = this.GetURL();
     await this.$axios
       .get(this.APIURL + this.$route.path + "/login_user/assessment", {
         params: {
