@@ -43,6 +43,9 @@
     <nuxt class="cover__main" />
     <footer>
       <div class="footer__logo"></div>
+      <p class="footer__content">
+        <nuxt-link to="/contact">お問い合わせ</nuxt-link>
+      </p>
     </footer>
   </div>
 </template>
@@ -218,6 +221,8 @@ footer {
   min-height: 150px;
   width: 100%;
   margin-bottom: 0;
+  display: flex;
+  justify-content: space-between;
 }
 .footer__logo {
   background-image: url("/logo.jpeg");
@@ -229,6 +234,19 @@ footer {
 }
 .cover__main {
   min-height: 82vh !important;
+}
+.footer__content {
+  margin: 0 50px;
+  & a {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150px;
+    text-decoration: none;
+    color: white;
+    &:hover {
+      color: $bg-yellow;
+    }
+  }
 }
 @keyframes colorChange {
   0% {
