@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
 # Logs
+env.json
 .awspublish-on-board-build
 /backend/app
 /client/logs

@@ -30,6 +30,7 @@
 <script>
 import axios from "axios"
 import Validation from "~/components/Validation.vue";
+import * as env from "~/env.json"
 export default {
   components: {
     Validation
@@ -58,7 +59,8 @@ export default {
       }
     },
     async slack(payload) {
-      const res = await axios.post(process.env.SLACKWEBHOOK, JSON.stringify(payload))
+      const webhookUrl = env.SLACK_WEB_HOOK ? env.SLACK_WEB_HOOK : "" 
+      const res = await axios.post(webhookUrl, JSON.stringify(payload))
       return res.data
     },
     async submit() {
