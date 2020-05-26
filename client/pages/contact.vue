@@ -58,7 +58,7 @@ export default {
       }
     },
     async slack(payload) {
-      const res = await axios.post(SLACKWEBHOOK, JSON.stringify(payload))
+      const res = await axios.post(process.env.SLACKWEBHOOK, JSON.stringify(payload))
       return res.data
     },
     async submit() {
