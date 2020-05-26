@@ -95,7 +95,7 @@ export default {
   height: 250px;
   border-radius: 5px;
   background-color: white;
-  box-shadow: 0 1px 2px grey;
+  box-shadow: 0 2px 3px grey;
   transition: all 0.3s;
   &:hover {
     transition: all 0.3s;
