@@ -58,8 +58,7 @@ export default {
       }
     },
     async slack(payload) {
-      const webhookUrl = "https://hooks.slack.com/services/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"
-      const res = await axios.post(webhookUrl, JSON.stringify(payload))
+      const res = await axios.post(SLACKWEBHOOK, JSON.stringify(payload))
       return res.data
     },
     async submit() {
