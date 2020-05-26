@@ -58,7 +58,7 @@ export default {
       }
     },
     async slack(payload) {
-      const webhookUrl = "https://hooks.slack.com/services/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"
+      const webhookUrl = "https://hooks.slack.com/services/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"
       const res = await axios.post(webhookUrl, JSON.stringify(payload))
       return res.data
     },
@@ -171,6 +171,7 @@ export default {
   color: grey;
 }
 .success-card {
+  z-index: 2;
   background-color: lightgray;
   color: green;
   text-align: center;
@@ -202,6 +203,17 @@ export default {
   display: none;
 }
 @media screen and (max-width: $PhoneSize) {
-  
+  .contact__form__wrapper {
+    padding: 100px 0;
+    width: 90%;
+  }
+  .contact__form {
+    & p {
+      width: 95%;
+    }
+  }
+  .success-card {
+    width: 80%;
+  }
 }
 </style>
