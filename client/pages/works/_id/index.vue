@@ -60,9 +60,11 @@
           @click="showWorksItem(item)"
           :class="isSelected(item.ID)"
         >
-          <p v-if="isSelected(item.ID)">▼</p>
-          <p v-else>-</p>
-          <img :src="returnURL(item.ImageURL)" alt="作品画像" />
+          <template v-if="item.ImageURL != '' || item.Body != ''">
+            <p v-if="isSelected(item.ID)">▼</p>
+            <p v-else>-</p>
+            <img :src="returnURL(item.ImageURL)" alt="作品画像" />
+          </template>
         </div>
       </div>
       <h2>Assessment - 作品評価</h2>
