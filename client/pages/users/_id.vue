@@ -78,7 +78,6 @@ export default {
   async mounted() {
     this.APIURL = this.GetURL();
     this.$nextTick(async () => {
-      await this.showBubble();
       await this.$axios
         .get(this.APIURL + this.$route.path)
         .then(response => {
@@ -282,7 +281,7 @@ export default {
       maxCardCount: 8,
       user: {},
       works: [],
-      isLoading: false,
+      isLoading: true,
       APIURL: "",
       ghToken: "",
       author: 0,

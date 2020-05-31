@@ -198,7 +198,7 @@ export default {
   cursor: pointer;
   font-weight: bold;
   font-size: 20px;
-  line-height: 24px;
+  line-height: 28px;
   text-align: center;
 }
 .chart {

@@ -47,6 +47,7 @@
         <nuxt-link to="/contact">お問い合わせ</nuxt-link>
       </p>
     </footer>
+    <p class="jumpBtn" @click="scrollToTop">↑</p>
   </div>
 </template>
 <script>
@@ -75,6 +76,12 @@ export default {
     }
   },
   methods: {
+    scrollToTop: function(e) {
+      window.scroll({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
     showBubble: function() {
       this.isLoading = !this.isLoading;
     },
@@ -112,6 +119,7 @@ html {
 *,
 *:before,
 *:after {
+  scroll-behavior: smooth;
   z-index: 0;
   box-sizing: border-box;
   margin: 0;
@@ -247,6 +255,21 @@ footer {
       color: $bg-yellow;
     }
   }
+}
+.jumpBtn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
+  background-color: lightgray;
+  text-align: center;
+  line-height: 60px;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 1px 3px black;
+  z-index: 3;
 }
 @keyframes colorChange {
   0% {

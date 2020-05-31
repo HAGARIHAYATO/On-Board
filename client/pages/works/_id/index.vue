@@ -67,7 +67,9 @@
       </div>
       <h2>Assessment - 作品評価</h2>
       <div v-if="isEvaluate">
-        <Radar-Chart :dataset="radarData" :height="200" :width="calcSize()"/>
+        <Radar-Chart :dataset="radarData" :height="170" :width="calcSize()"/>
+        <h3>総合スコア   {{calcDataPoint}}点 / 50点</h3>
+        <Users-Ball v-if="work.AssessmentUsers && work.AssessmentUsers.length > 0" :users="work.AssessmentUsers" />
       </div>
       <div v-else>
         <p class="nothing__alert">評価はありません。</p>
@@ -151,6 +153,7 @@ import Chart from "~/components/Chart.vue";
 import BarChart from "~/components/BarChart.vue";
 import RadarChart from "~/components/RadarChart.vue";
 import AssessModal from "~/components/AssessModal.vue";
+import UsersBall from "~/components/UsersBall.vue";
 export default {
   components: {
     Loading,
@@ -158,14 +161,15 @@ export default {
     Chart,
     BarChart,
     RadarChart,
-    AssessModal
+    AssessModal,
+    UsersBall
   },
   data() {
     return {
       selectId: "",
       selectItem: {},
       work: {},
-      isLoading: false,
+      isLoading: true,
       APIURL: "",
       isOpenDeleteModal: false,
       isPie: true,
@@ -206,6 +210,11 @@ export default {
     }
   },
   computed: {
+    calcDataPoint: function() {
+      const points = Object.values(this.radarData)
+      const sum = points.reduce(function(a, x){return a + ((x || 0) - 0);}, 0);
+      return sum
+    },
     isMine: function() {
       if (!this.$auth.user || !this.work.UserID) return;
       if (this.work.UserID === this.$auth.user.ID) {
@@ -329,7 +338,7 @@ export default {
     initDisplay: function() {
       this.$nextTick(async () => {
         this.APIURL = this.GetURL();
-        await this.showBubble();
+        // await this.showBubble();
         await this.$axios
           .get(this.APIURL + this.$route.path)
           .then(response => {
@@ -364,6 +373,12 @@ h2 {
   color: $bg-main;
   font-size: 18px;
   border-bottom: solid 2px $bg-main;
+}
+h3 {
+  margin: 35px;
+  color: $bg-main;
+  font-size: 16px;
+  text-align: center;
 }
 .show__wrapper {
   overflow: hidden;
@@ -706,7 +721,7 @@ h2 {
   cursor: pointer;
   font-weight: bold;
   font-size: 20px;
-  line-height: 24px;
+  line-height: 28px;
   text-align: center;
 }
 .modalBtn {
