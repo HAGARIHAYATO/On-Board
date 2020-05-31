@@ -19,7 +19,8 @@ RUN apk update && \
     npm install --save-dev @nuxtjs/google-analytics && \
     npm install --save-dev gulp gulp-awspublish gulp-cloudfront-invalidate-aws-publish concurrent-transform && \
     npm install -g gulp && \
-    npm install --save pdfmake html2canvas
+    npm install --save pdfmake html2canvas && \
+    npm install --save @nuxtjs/sitemap
 
 ENV HOST 0.0.0.0
 EXPOSE 3030

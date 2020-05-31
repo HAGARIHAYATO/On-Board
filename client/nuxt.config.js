@@ -116,7 +116,8 @@ export default {
     }],
     ['@nuxtjs/google-analytics', {
       id: targetID
-    }]
+    }],
+    '@nuxtjs/sitemap'
   ],
   /*
    ** Nuxt.js modules
@@ -127,8 +128,32 @@ export default {
       pageLevelAds: true,
       analyticsUacct: targetID,
       analyticsDomainName: domain
-    }]
+    }],
+    '@nuxtjs/sitemap'
   ],
+  sitemap: {
+    path: '/sitemap.xml',
+    hostname: 'https://on-board-project.com',
+    exclude: [
+      '/admins/'
+    ],
+    async routes () {
+      const generates = []
+      await axios.get("https://api.on-board-project.com/api/v1/works_ids")
+        .then((res) => {
+          res.data.IDs.map((work) => {
+            generates.push('works/'+work)
+          })
+        })
+      await axios.get("https://api.on-board-project.com/api/v1/users_ids")
+        .then((res) => {
+          res.data.IDs.map((user) => {
+            generates.push('users/'+user)
+          })
+        })
+      return generates
+    }
+  },
   /*
    ** Build configuration
    */

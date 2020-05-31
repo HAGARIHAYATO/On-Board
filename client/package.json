@@ -15,6 +15,7 @@
     "@nuxtjs/auth": "^4.9.0",
     "@nuxtjs/axios": "^5.9.7",
     "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/sitemap": "^2.3.0",
     "body-scroll-lock": "^3.0.1",
     "chart.js": "^2.9.3",
     "cross-env": "^7.0.2",
