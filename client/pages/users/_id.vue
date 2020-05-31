@@ -5,15 +5,11 @@
       class="container__side"
       :class="slider()"
     >
-      <p
-        class="drawBtn"
-        @click="drawSlider()"
-      >＜</p>
       <search-form
         @search="search($event)"
         @cancel="cancel()"
         :isSearch="isSearch"
-        searchType="works"
+        searchType="works_but_nouser"
       />
     </div>
     <div class="container__main">
@@ -48,6 +44,7 @@
       <Git-Hub-Field :hubs="hubs" :ghUser="ghUser" v-if="hubs.length > 0"/>
       <Qiita-Field :articles="articles" :qiitaUser="qiitaUser" v-if="articles.length > 0"/>
     </div>
+    <p class="searchBtn" @click="drawSlider()"><img src="/search.svg" alt="search"></p>
   </div>
 </template>
 <script>
@@ -231,11 +228,11 @@ export default {
       if (this.works[0] && e.check) {
         this.worksList = this.works.filter(
           work =>
-            work.Name.indexOf(e.input) != -1
+            work.Name.toLowerCase().indexOf(e.input.toLowerCase()) != -1
         );
       } else if (this.works[0] && !e.check) {
         this.worksList = this.works.filter(
-          work => work.Name.indexOf(e.input) != -1
+          work => work.Name.toLowerCase().indexOf(e.input.toLowerCase()) != -1
         );
       }
       this.isSearch = true;
@@ -305,12 +302,11 @@ export default {
   overflow: hidden;
 }
 .container__side {
-  padding-top: 70px;
-  min-height: 100%;
-  width: 400px;
-  background-color: $bg-yellow;
-  border-left: solid 2px white;
-  box-shadow: 0 0 3px black;
+  margin-top: 70px;
+  padding: 10px 20px;
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 0 0 1px black;
 }
 .slider__off{
   & p {
@@ -329,32 +325,31 @@ export default {
     color: $bg-main;
     left: -25px;
   }
-  border-left: solid 2px $bg-main;
   transition: all .5s;
   z-index: 1;
   position: fixed;
   top: 0;
-  right: 0;
+  right: 20px;
 }
-.drawBtn{
+.searchBtn {
   cursor: pointer;
-  position: absolute;
-  top: 100px;
-  left: -50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background-color: $bg-yellow;
-  color: white;
-  height: 50px;
-  width: 50px;
-  line-height: 40px;
+  position: fixed;
+  bottom: 200px;
+  right: 100px;
+  background-color: lightgray;
   text-align: center;
-  font-size: 20px;
+  line-height: 60px;
+  font-size: 22px;
   font-weight: bold;
-  border-top: solid 5px $bg-main;
-  border-bottom: solid 5px white;
-  border-left: solid 5px white;
-  border-right: solid 5px $bg-main;
-  box-shadow: 0 0 3px black;
+  box-shadow: 0 1px 3px black;
+  z-index: 3;
+  & img {
+    height: 16px;
+    margin: 22px 0;
+  }
 }
 .container__main {
   padding: 90px 0;
@@ -483,7 +478,6 @@ export default {
       transform: rotate(-540deg);
       color: $bg-main;
     }
-    border-left: solid 2px $bg-main;
     transition: all .5s;
     z-index: 1;
     position: fixed;
@@ -495,6 +489,25 @@ export default {
   }
   .user__csv{
     display: none;
+  }
+  .searchBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    right: 80px;
+    background-color: lightgray;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 1px 3px black;
+    z-index: 3;
+    & img {
+      height: 10px;
+      margin: 15px 0;
+    }
   }
 }
 </style>

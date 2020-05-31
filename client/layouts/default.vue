@@ -334,6 +334,31 @@ footer {
       animation-duration: .1s;
     }
   }
+  .jumpBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: lightgray;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 1px 3px black;
+    z-index: 3;
+  }
+  .footer__content {
+    margin: 0 20px;
+    & a {
+      font-size: 18px;
+      line-height: 150px;
+    }
+  }
+  .footer__logo {
+    margin: 0;
+  }
   @keyframes draw {
     0% {
       height: 0;

@@ -5,10 +5,6 @@
       class="container__side"
       :class="slider()"
     >
-      <p
-        class="drawBtn"
-        @click="drawSlider()"
-      >＜</p>
       <search-form
         @search="search($event)"
         @cancel="cancel()"
@@ -31,6 +27,7 @@
       </div>
       <pagenate :page="page" @goPrev="goPrev()" @goNext="goNext()" v-if="!isSearch" />
     </div>
+    <p class="searchBtn" @click="drawSlider()"><img src="/search.svg" alt="search"></p>
   </div>
 </template>
 <script>
@@ -119,7 +116,7 @@ export default {
     search: function(e) {
       if (this.users[0]) {
         this.usersList = this.users.filter(
-          user => user.Name.indexOf(e.input) != -1
+          user => user.Name.toLowerCase().indexOf(e.input.toLowerCase()) != -1
         );
       }
       this.isSearch = true;
@@ -176,11 +173,11 @@ export default {
   color: #777777;
 }
 .container__side {
-  min-height: 100%;
-  padding-top: 70px;
-  width: 400px;
-  background-color: $bg-yellow;
-  box-shadow: 0 0 3px black;
+  margin-top: 70px;
+  padding: 10px 20px;
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 0 0 1px black;
 }
 .container__main {
   overflow: hidden;
@@ -239,36 +236,15 @@ export default {
   line-height: 51vh;
   font-size: 40px;
 }
-.drawBtn{
-  cursor: pointer;
-  position: absolute;
-  top: 100px;
-  left: -25px;
-  border-radius: 50%;
-  background-color: $bg-yellow;
-  color: white;
-  height: 50px;
-  width: 50px;
-  line-height: 40px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  border-top: solid 5px $bg-main;
-  border-bottom: solid 5px white;
-  border-left: solid 5px white;
-  border-right: solid 5px $bg-main;
-  box-shadow: 0 0 3px black;
-}
 .slider__off{
   & p {
     transition: all .5s;
   }
-  border-left: solid 2px white;
   transition: all .5s;
   z-index: 1;
   position: fixed;
   top: 0;
-  right: -350px;
+  right: -400px;
 }
 .slider__on{
   & p {
@@ -277,12 +253,31 @@ export default {
     color: $bg-main;
     // border: solid 2px $bg-main;
   }
-  border-left: solid 2px $bg-main;
   transition: all .5s;
   z-index: 1;
   position: fixed;
   top: 0;
-  right: 0;
+  right: 20px;
+}
+.searchBtn {
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 200px;
+  right: 100px;
+  background-color: lightgray;
+  text-align: center;
+  line-height: 60px;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 1px 3px black;
+  z-index: 3;
+  & img {
+    height: 16px;
+    margin: 22px 0;
+  }
 }
 @media screen and (max-width: $PhoneSize) {
   .user__container {
@@ -308,7 +303,6 @@ export default {
       transform: rotate(-540deg);
       color: $bg-main;
     }
-    border-left: solid 2px $bg-main;
     transition: all .5s;
     z-index: 1;
     position: fixed;
@@ -317,6 +311,25 @@ export default {
   }
   .container__side {
     width: 90%;
+  }
+  .searchBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    right: 80px;
+    background-color: lightgray;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 1px 3px black;
+    z-index: 3;
+    & img {
+      height: 10px;
+      margin: 15px 0;
+    }
   }
 }
 </style>

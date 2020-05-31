@@ -11,17 +11,13 @@
         minlength="1"
       />
     </div>
-    <div class="search-form-wrapper" v-if="searchType=='works'">
-      <p>
-        <input class="checkbtn" type="checkbox" checked v-model="isChecked" />
-        <span>ユーザー名も含めて検索</span>
-      </p>
-    </div>
-    <div class="search-form-wrapper" v-if="isSearch">
-      <button @click="cancel()" class="search-form__button__reset">
-        <p>検索状況を解除</p>
-      </button>
-    </div>
+    <p v-if="searchType=='works'">
+      <input class="checkbtn" type="checkbox" checked v-model="isChecked" />
+      <span>ユーザー名も含めて検索</span>
+    </p>
+    <button v-if="isSearch" @click="cancel()" class="search-form__button__reset">
+      <p>検索を解除</p>
+    </button>
   </div>
 </template>
 <script>
@@ -65,11 +61,17 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "assets/scss/app";
+input, button {
+  &:hover {
+    box-shadow: none; 
+  }
+}
 input[type="checkbox"] {
   transform: scale(1.5);
+  box-shadow: none;
 }
 .search-container {
-  margin: 100px auto;
+  // margin: 100px auto;
 }
 .search-form-wrapper {
   z-index: 0;
@@ -94,10 +96,13 @@ input[type="checkbox"] {
   width: 200px;
   left: 0;
   top: 0;
+  border-radius: 10px 0 0 10px;
+  border: none;
   background: #eee;
   font-weight: bold;
 }
 .search-form__button {
+  border-radius: 0 10px 10px 0;
   outline: 0;
   height: 50px;
   width: 70px;
@@ -120,9 +125,10 @@ input[type="checkbox"] {
 .search-form__button__reset {
   outline: 0;
   display: block;
-  width: 150px;
-  height: 50px;
-  margin: 100px auto 0 auto !important;
+  padding: 0 20px;
+  height: 30px;
+  border: none;
+  margin: 0 auto !important;
   background-color: red;
   color: white;
   font-weight: bold;
@@ -131,6 +137,7 @@ input[type="checkbox"] {
 .checkbtn {
   background-color: $bg-main;
   color: white;
+  margin-left: 8px;
 }
 .validation{
   color: red;
