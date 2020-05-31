@@ -70,6 +70,11 @@ func GetSkills(w http.ResponseWriter, r *http.Request) {
 // work_items SQL BY WHERE workItemID
 func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	workID := chi.URLParam(r, "workID")
+	type AssessmentUser struct {
+		ImageURL string
+		UserID   uint
+		Name     string
+	}
 	type ResultWork struct {
 		ID                  uint
 		Name                string
@@ -84,6 +89,7 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 		UserGithubToken     string
 		GHR                 string
 		Assessment          map[string]int
+		AssessmentUsers     []AssessmentUser
 		AssessmentUserCount int
 		WorkItems           []*WorkItem
 		Skills              []*Skill
@@ -108,6 +114,15 @@ func GetWorkByID(w http.ResponseWriter, r *http.Request) {
 	skills, _ := FetchSkillsByWorkID(DB, work.ID)
 	assessments, _ := FetchAssessmentsByWorkID(DB, work.ID)
 	assess := AverageAssessment(assessments)
+
+	for _, assessment := range assessments {
+		var assessmentUser AssessmentUser
+		assessmentUser.UserID = assessment.UserID
+		asUser, _ := FetchUserByID(DB, assessment.UserID)
+		assessmentUser.ImageURL = asUser.ImageURL
+		assessmentUser.Name = asUser.Name
+		rw.AssessmentUsers = append(rw.AssessmentUsers, assessmentUser)
+	}
 
 	rw.ID = work.ID
 	rw.Name = work.Name
