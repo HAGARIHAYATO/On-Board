@@ -683,8 +683,7 @@ func UpdateWorkItem(w http.ResponseWriter, r *http.Request) {
 		filename, err := CreateFile(file, fileHeader.Filename, uid)
 		result, err := UploadFileToBucket(filename)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			fmt.Println("--------%v--------", err)
 		}
 		item.ImageURL = string(result.Location)
 		err = RemoveFile(uid)
