@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
@@ -68,18 +67,18 @@ func UploadFileToBucket(filename string) (*s3manager.UploadOutput, error) {
 
 // DeleteFileByBucket is repository of aws functions
 func DeleteFileByBucket(filename string) error {
-	trimedName := strings.Trim(filename, "https://on-board-pub.s3.ap-northeast-1.amazonaws.com/")
-	_, err := SVC.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(trimedName)})
-	if err != nil {
-		fmt.Printf("------------%v------------", err)
-	}
-	err = SVC.WaitUntilObjectNotExists(&s3.HeadObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(trimedName),
-	})
-	if err != nil {
-		fmt.Printf("------------%v------------", err)
-	}
-	// var err error
+	// trimedName := strings.Trim(filename, "https://on-board-pub.s3.ap-northeast-1.amazonaws.com/")
+	// _, err := SVC.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(trimedName)})
+	// if err != nil {
+	// 	fmt.Printf("------------%v------------", err)
+	// }
+	// err = SVC.WaitUntilObjectNotExists(&s3.HeadObjectInput{
+	// 	Bucket: aws.String(bucket),
+	// 	Key:    aws.String(trimedName),
+	// })
+	// if err != nil {
+	// 	fmt.Printf("------------%v------------", err)
+	// }
+	var err error
 	return err
 }
