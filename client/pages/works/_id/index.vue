@@ -335,6 +335,7 @@ export default {
     },
     postLoading: function() {
       this.isOpenAssessModal = !this.isOpenAssessModal
+      this.showBubble();
       this.initDisplay()
     },
     initDisplay: function() {
@@ -408,7 +409,7 @@ h3 {
   text-align: left !important;
   padding: 20px;
   min-height: 20vh;
-  min-width: 300px;
+  width: 300px;
   color: grey;
   word-break: break-all;
   background-color: white;
