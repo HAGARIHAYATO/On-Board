@@ -1,32 +1,28 @@
 <template>
-  <div class="contact__form__wrapper">
-    <h2 class="page-title">お問い合わせ</h2>
-    <Validation :messages="errors"/>
-    <p :class="success ? 'success-card' : 'invisible'">送信完了<span @click="() => this.success = false">×</span></p>
-    <form @submit.prevent="submit" class="contact__form">
-      <p>
-        <label for="name">名前</label>
-        <input name="name" v-model="form.name" type="text" autocomplete="name" />
-      </p>
-      <p>
-        <label for="email">ご連絡用メールアドレス※返信をご希望の方</label>
-        <input name="email" v-model="form.email" type="email" autocomplete="email" />
-      </p>
-      <p>
-        <label for="text">お問い合わせ内容</label>
-        <textarea
-          name="contact"
-          cols="40"
-          rows="20"
-          v-model="form.content"
-        ></textarea>
-      </p>
-      <p>
-        <input class="form__btn" type="submit" value="送信" />
-      </p>
-    </form>
-  </div>
+<div class="contact__form__wrapper">
+  <h2 class="page-title">お問い合わせ</h2>
+  <Validation :messages="errors" />
+  <p :class="success ? 'success-card' : 'invisible'">送信完了<span @click="() => this.success = false">×</span></p>
+  <form @submit.prevent="submit" class="contact__form">
+    <p>
+      <label for="name">名前</label>
+      <input name="name" v-model="form.name" type="text" autocomplete="name" />
+    </p>
+    <p>
+      <label for="email">ご連絡用メールアドレス※返信をご希望の方</label>
+      <input name="email" v-model="form.email" type="email" autocomplete="email" />
+    </p>
+    <p>
+      <label for="text">お問い合わせ内容</label>
+      <textarea name="contact" cols="40" rows="20" v-model="form.content"></textarea>
+    </p>
+    <p>
+      <input class="form__btn" type="submit" value="送信" />
+    </p>
+  </form>
+</div>
 </template>
+
 <script>
 import axios from "axios"
 import Validation from "~/components/Validation.vue";
@@ -35,6 +31,7 @@ export default {
   components: {
     Validation
   },
+  middleware: ["auth"],
   data() {
     return {
       form: {
@@ -47,7 +44,7 @@ export default {
     }
   },
   methods: {
-    valCheck: function() {
+    valCheck: function () {
       this.errors = []
       if (this.form.name === "") {
         const empty = "名前は必須です。"
@@ -59,7 +56,7 @@ export default {
       }
     },
     async slack(payload) {
-      const webhookUrl = env.SLACK_WEB_HOOK ? env.SLACK_WEB_HOOK : "" 
+      const webhookUrl = env.SLACK_WEB_HOOK ? env.SLACK_WEB_HOOK : ""
       const res = await axios.post(webhookUrl, JSON.stringify(payload))
       return res.data
     },
@@ -71,24 +68,21 @@ export default {
       try {
         this.slack({
           text: "お問い合わせメッセージを受け付けました。",
-          attachments: [
-            {
-              color: "#2eb886",
-              author_name: this.$store.$auth.loggedIn ? this.$auth.user.Name : this.form.name,
-              author_link: this.$store.$auth.loggedIn ? `https://on-board-project.com/users/${this.$auth.user.ID}` : "",
-              author_icon: this.$store.$auth.loggedIn ? this.$auth.user.ImageURL : "",
-              fields: [
-                {
-                  title: this.$store.$auth.loggedIn ? `UserID : ${this.$auth.user.ID}` : "未ログインユーザー",
-                  value: this.form.content,
-                  short: false
-                },
-                {
-                  title: this.form.email ? `Email : ${this.form.email}` : "メールアドレスは指定されていません。"
-                }
-              ]
-            }
-          ]
+          attachments: [{
+            color: "#2eb886",
+            author_name: this.$store.$auth.loggedIn ? this.$auth.user.Name : this.form.name,
+            author_link: this.$store.$auth.loggedIn ? `https://on-board-project.com/users/${this.$auth.user.ID}` : "",
+            author_icon: this.$store.$auth.loggedIn ? this.$auth.user.ImageURL : "",
+            fields: [{
+                title: this.$store.$auth.loggedIn ? `UserID : ${this.$auth.user.ID}` : "未ログインユーザー",
+                value: this.form.content,
+                short: false
+              },
+              {
+                title: this.form.email ? `Email : ${this.form.email}` : "メールアドレスは指定されていません。"
+              }
+            ]
+          }]
         }).then(() => {
           this.success = true
           this.form = {}
@@ -102,26 +96,32 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 @import "assets/scss/app";
+
 .contact__form__wrapper {
   width: 600px;
   padding: 120px 0 50px 0;
-  margin: 0 auto; 
+  margin: 0 auto;
 }
+
 .contact__form {
   position: relative;
   border-radius: 10px;
   border: solid 1px black;
   padding: 20px 20px 40px 20px;
   font-weight: bold;
+
   & p {
     width: 340px;
     margin: 20px auto;
+
     & label {
       display: block;
       text-align: left;
     }
+
     & input {
       margin: 0;
       outline: 0;
@@ -133,6 +133,7 @@ export default {
       width: 100%;
       font-weight: bold;
     }
+
     & textarea {
       margin: 0;
       outline: 0;
@@ -146,6 +147,7 @@ export default {
     }
   }
 }
+
 .form__btn {
   outline: 0;
   position: absolute;
@@ -159,18 +161,22 @@ export default {
   font-size: 14px;
   border-radius: 15px 15px 0 0;
   background-color: $bg-main;
+
   &:hover {
     color: $bg-yellow;
   }
+
   &:active {
     color: silver;
   }
 }
+
 .page-title {
   text-align: center;
   font-size: 18px;
   color: grey;
 }
+
 .success-card {
   z-index: 2;
   background-color: lightgray;
@@ -185,6 +191,7 @@ export default {
   left: 50px;
   font-size: 20px;
   font-weight: bold;
+
   & span {
     cursor: pointer;
     position: absolute;
@@ -200,19 +207,23 @@ export default {
     right: 5px;
   }
 }
+
 .invisible {
   display: none;
 }
+
 @media screen and (max-width: $PhoneSize) {
   .contact__form__wrapper {
     padding: 100px 0;
     width: 90%;
   }
+
   .contact__form {
     & p {
       width: 95%;
     }
   }
+
   .success-card {
     width: 80%;
   }
